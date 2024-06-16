@@ -58,8 +58,10 @@ export const getProductBySlug = async (slug: string) => {
     },
   });
 
-  if (!data) {
-    throw Error("Failed to get product");
+  console.log(data.products);
+
+  if (data.products.length === 0) {
+    throw Error(`Failed to get ${slug}`);
   }
 
   return data;
