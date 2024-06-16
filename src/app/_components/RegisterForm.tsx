@@ -1,6 +1,6 @@
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { loginSchema } from "../login/loginSchema";
+import { registerSchema } from "../login/registerSchema";
 import {
   Form,
   FormControl,
@@ -11,28 +11,39 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { usePathname } from "next/navigation";
 
-type LoginFormInputs = {
+type RegisterFormInputs = {
+  name: string;
   email: string;
   password: string;
 };
 
-export const LoginForm = () => {
-  const form = useForm<LoginFormInputs>({
-    resolver: yupResolver(loginSchema),
+export const RegisterForm = () => {
+  const form = useForm<RegisterFormInputs>({
+    resolver: yupResolver(registerSchema),
   });
-
-  // const path = usePathname();
-  // console.log(path);
 
   const { handleSubmit, control } = form;
 
-  const onSubmit: SubmitHandler<LoginFormInputs> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<RegisterFormInputs> = (data) =>
+    console.log(data);
 
   return (
     <Form {...form}>
       <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+        <FormField
+          control={control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter your name" {...field} />
+              </FormControl>
+              <FormMessage className="first-letter:uppercase" />
+            </FormItem>
+          )}
+        />
         <FormField
           control={control}
           name="email"
@@ -60,7 +71,7 @@ export const LoginForm = () => {
           )}
         />
         <Button type="submit" className="w-full">
-          Sign in
+          Create account
         </Button>
       </form>
     </Form>
@@ -71,26 +82,34 @@ export const LoginForm = () => {
 // import { FormField } from "./FormField";
 // import { Button } from "./ui/button";
 // import { yupResolver } from "@hookform/resolvers/yup";
-// import { loginSchema } from "../login/loginSchema";
+// import { registerSchema } from "../login/registerSchema";
 
-// export type LoginFormInputs = {
+// export type RegisterFormInputs = {
+//   name: string;
 //   email: string;
 //   password: string;
 // };
 
-// export const LoginForm = () => {
+// export const RegisterForm = () => {
 //   const {
 //     register,
 //     handleSubmit,
 //     formState: { errors },
-//   } = useForm<LoginFormInputs>({
-//     resolver: yupResolver(loginSchema),
+//   } = useForm<RegisterFormInputs>({
+//     resolver: yupResolver(registerSchema),
 //   });
 
-//   const onSubmit: SubmitHandler<LoginFormInputs> = (data) => console.log(data);
+//   const onSubmit: SubmitHandler<RegisterFormInputs> = (data) =>
+//     console.log(data);
 
 //   return (
 //     <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+//       {/* <FormField
+//         label="name"
+//         register={register}
+//         placeholder="Enter your name"
+//         error={errors.name?.message}
+//       />
 //       <FormField
 //         label="email"
 //         register={register}
@@ -104,10 +123,9 @@ export const LoginForm = () => {
 //         placeholder="Enter your password"
 //         type="password"
 //         error={errors.password?.message}
-//       />
-//       {/* {errors.password && <p>{errors.password.message}</p>} */}
+//       /> */}
 //       <Button type="submit" className="w-full">
-//         Sign in
+//         Create account
 //       </Button>
 //     </form>
 //   );
