@@ -1,6 +1,6 @@
 import { getProductBySlug } from "../../../lib/graphql";
 
-export const Page = async ({ params }: { params: { productSlug: string } }) => {
+const Page = async ({ params }: { params: { productSlug: string } }) => {
   console.log(params);
   const {
     products: [product],
