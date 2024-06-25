@@ -13,7 +13,9 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
-import { usePathname } from "next/navigation";
+import { redirect, usePathname } from "next/navigation";
+import { getAccountByEmail } from "../../../lib/graphql";
+import { signIn, useSession } from "next-auth/react";
 
 type LoginFormInputs = {
   email: string;
@@ -34,11 +36,16 @@ export const LoginForm = () => {
 
   const { handleSubmit, control } = form;
 
-  const onSubmit: SubmitHandler<LoginFormInputs> = (data) => console.log(data);
+  const onSubmit = handleSubmit(async (data) => {
+    signIn("credentials", { ...data, redirect: true, callbackUrl: "/" });
+  });
+
+  const session = useSession();
 
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+      <pre>{JSON.stringify(session, null, 2)}</pre>
+      <form className="space-y-4" onSubmit={onSubmit}>
         <FormField
           control={control}
           name="email"
@@ -59,7 +66,11 @@ export const LoginForm = () => {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input placeholder="Enter your password" {...field} />
+                <Input
+                  type="password"
+                  placeholder="Enter your password"
+                  {...field}
+                />
               </FormControl>
               <FormMessage className="first-letter:uppercase" />
             </FormItem>

@@ -13,6 +13,9 @@ import {
 } from "./ui/form";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import { createAccountAction } from "../../../lib/actions/createAccount";
+import { toast } from "./ui/use-toast";
+import { useRouter } from "next/navigation";
 
 type RegisterFormInputs = {
   name: string;
@@ -30,14 +33,30 @@ export const RegisterForm = () => {
     },
   });
 
+  const router = useRouter();
+
   const { handleSubmit, control } = form;
 
-  const onSubmit: SubmitHandler<RegisterFormInputs> = (data) =>
-    console.log(data);
+  const onSubmit = handleSubmit(async (data) => {
+    const createdAccount = await createAccountAction(data);
+    if (createdAccount) {
+      toast({
+        description: "Your account has been successfully created!",
+      });
+      router.push("/login");
+    }
+    if (!createdAccount) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "There was a problem with your request.",
+      });
+    }
+  });
 
   return (
     <Form {...form}>
-      <form className="space-y-4" onSubmit={handleSubmit(onSubmit)}>
+      <form className="space-y-4" onSubmit={onSubmit}>
         <FormField
           control={control}
           name="name"
@@ -71,7 +90,11 @@ export const RegisterForm = () => {
             <FormItem>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input placeholder="Enter your password" {...field} />
+                <Input
+                  type="password"
+                  placeholder="Enter your password"
+                  {...field}
+                />
               </FormControl>
               <FormMessage className="first-letter:uppercase" />
             </FormItem>

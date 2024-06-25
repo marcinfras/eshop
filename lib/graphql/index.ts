@@ -1,5 +1,7 @@
 import { getEnv } from "@/app/utils/utils";
 import {
+  CreateAccountDocument,
+  GetAccountByEmailDocument,
   GetProductBySlugDocument,
   TypedDocumentString,
 } from "../hygraph/generated/graphql";
@@ -58,11 +60,63 @@ export const getProductBySlug = async (slug: string) => {
     },
   });
 
-  console.log(data.products);
+  console.log(data.product);
 
-  if (data.products.length === 0) {
+  if (!data.product) {
     throw Error(`Failed to get ${slug}`);
   }
 
-  return data;
+  return data.product;
+};
+
+export const createAccount = async ({
+  name,
+  email,
+  password,
+}: {
+  name: string;
+  email: string;
+  password: string;
+}) => {
+  const data = await fetcher({
+    query: CreateAccountDocument,
+    cache: "no-store",
+    headers: {
+      Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+    },
+    variables: {
+      name,
+      email,
+      password,
+    },
+  });
+
+  if (!data.createAccount) {
+    throw Error(`Failed to create account`);
+  }
+
+  return data.createAccount;
+};
+
+export const getAccountByEmail = async (email: string) => {
+  console.log("indextstralalallala");
+  const data = await fetcher({
+    query: GetAccountByEmailDocument,
+    cache: "no-store",
+    headers: {
+      Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+    },
+    variables: {
+      email,
+    },
+  });
+
+  console.log(data.account);
+
+  if (!data.account) {
+    // console.log("indextstralalallala");
+    throw Error(`Failed to find account`);
+  }
+
+  return data.account;
 };
