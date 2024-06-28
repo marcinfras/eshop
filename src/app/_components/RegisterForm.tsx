@@ -15,7 +15,11 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { createAccountAction } from "../../../lib/actions/createAccount";
 import { toast } from "./ui/use-toast";
+
 import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { LoadingButton } from "./LoadingButton";
+import { signOut } from "next-auth/react";
 
 type RegisterFormInputs = {
   name: string;
@@ -33,15 +37,21 @@ export const RegisterForm = () => {
     },
   });
 
+  const [isCreating, setIsCreating] = useState(false);
+
   const router = useRouter();
+
+  // signOut();
 
   const { handleSubmit, control } = form;
 
   const onSubmit = handleSubmit(async (data) => {
+    setIsCreating(true);
     const createdAccount = await createAccountAction(data);
     if (createdAccount) {
       toast({
-        description: "Your account has been successfully created!",
+        title: "Your account has been created",
+        description: "Now you can log in to it",
       });
       router.push("/login");
     }
@@ -52,6 +62,8 @@ export const RegisterForm = () => {
         description: "There was a problem with your request.",
       });
     }
+
+    setIsCreating(false);
   });
 
   return (
@@ -100,9 +112,14 @@ export const RegisterForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">
-          Create account
-        </Button>
+        {!isCreating && (
+          <Button type="submit" className="w-full">
+            Create account
+          </Button>
+        )}
+        {isCreating && (
+          <LoadingButton className="w-full">Creating</LoadingButton>
+        )}
       </form>
     </Form>
   );

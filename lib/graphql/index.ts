@@ -78,28 +78,32 @@ export const createAccount = async ({
   email: string;
   password: string;
 }) => {
-  const data = await fetcher({
-    query: CreateAccountDocument,
-    cache: "no-store",
-    headers: {
-      Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
-    },
-    variables: {
-      name,
-      email,
-      password,
-    },
-  });
+  try {
+    const data = await fetcher({
+      query: CreateAccountDocument,
+      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+      },
+      variables: {
+        name,
+        email,
+        password,
+      },
+    });
 
-  if (!data.createAccount) {
-    throw Error(`Failed to create account`);
+    if (!data.createAccount) {
+      throw Error(`Failed to create account`);
+    }
+
+    return data.createAccount;
+  } catch (error) {
+    console.error((error as Error).message);
+    return null;
   }
-
-  return data.createAccount;
 };
 
 export const getAccountByEmail = async (email: string) => {
-  console.log("indextstralalallala");
   const data = await fetcher({
     query: GetAccountByEmailDocument,
     cache: "no-store",
@@ -111,10 +115,7 @@ export const getAccountByEmail = async (email: string) => {
     },
   });
 
-  console.log(data.account);
-
   if (!data.account) {
-    // console.log("indextstralalallala");
     throw Error(`Failed to find account`);
   }
 

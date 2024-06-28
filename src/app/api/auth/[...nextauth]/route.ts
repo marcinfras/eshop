@@ -15,17 +15,17 @@ const route = NextAuth({
       },
       async authorize(credentials) {
         try {
-          console.log("11111111trallalalala");
           if (!credentials) return null;
-          console.log("2222222222222trallalalala");
+
           const account = await getAccountByEmail(credentials.email);
-          console.log("2chuj2chuj2chuj");
 
           if (!account) return null;
-          bcrypt.compare(credentials.password, account.password);
+
+          if (!(await bcrypt.compare(credentials.password, account.password)))
+            return null;
+
           return account;
         } catch (error) {
-          console.log("tralallalallalalalla");
           return null;
         }
       },

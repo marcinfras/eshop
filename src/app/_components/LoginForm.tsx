@@ -16,6 +16,10 @@ import { Button } from "./ui/button";
 import { redirect, usePathname } from "next/navigation";
 import { getAccountByEmail } from "../../../lib/graphql";
 import { signIn, useSession } from "next-auth/react";
+import { useState } from "react";
+import { toast } from "./ui/use-toast";
+import { useRouter } from "next/navigation";
+import { LoadingButton } from "./LoadingButton";
 
 type LoginFormInputs = {
   email: string;
@@ -31,13 +35,35 @@ export const LoginForm = () => {
     },
   });
 
+  const [isLogging, setIsLogging] = useState(false);
+
+  const router = useRouter();
+
   // const path = usePathname();
   // console.log(path);
 
   const { handleSubmit, control } = form;
 
   const onSubmit = handleSubmit(async (data) => {
-    signIn("credentials", { ...data, redirect: true, callbackUrl: "/" });
+    setIsLogging(true);
+
+    const res = await signIn("credentials", { ...data, redirect: false });
+    console.log(res);
+    if (res?.ok) {
+      toast({
+        title: "Successfully logged in",
+      });
+      router.push("/");
+    }
+    if (!res?.ok) {
+      toast({
+        variant: "destructive",
+        title: "Uh oh! Something went wrong.",
+        description: "There was a problem with your request.",
+      });
+    }
+
+    setIsLogging(false);
   });
 
   const session = useSession();
@@ -76,9 +102,17 @@ export const LoginForm = () => {
             </FormItem>
           )}
         />
-        <Button type="submit" className="w-full">
+        {!isLogging && (
+          <Button type="submit" className="w-full">
+            Sign in
+          </Button>
+        )}
+        {isLogging && (
+          <LoadingButton className="w-full">Signing in</LoadingButton>
+        )}
+        {/* <Button type="submit" className="w-full">
           Sign in
-        </Button>
+        </Button> */}
       </form>
     </Form>
   );
