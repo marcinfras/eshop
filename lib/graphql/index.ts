@@ -3,6 +3,7 @@ import {
   CreateAccountDocument,
   GetAccountByEmailDocument,
   GetProductBySlugDocument,
+  GetProductsDocument,
   TypedDocumentString,
 } from "../hygraph/generated/graphql";
 
@@ -51,6 +52,17 @@ export async function fetcher<Result, Variables>({
   return body.data;
 }
 
+export const getProducts = async () => {
+  const data = await fetcher({
+    query: GetProductsDocument,
+    cache: "no-store",
+  });
+
+  if (!data.products) throw Error("Failed to get products");
+
+  return data.products;
+};
+
 export const getProductBySlug = async (slug: string) => {
   const data = await fetcher({
     query: GetProductBySlugDocument,
@@ -59,8 +71,6 @@ export const getProductBySlug = async (slug: string) => {
       slug,
     },
   });
-
-  console.log(data.product);
 
   if (!data.product) {
     throw Error(`Failed to get ${slug}`);

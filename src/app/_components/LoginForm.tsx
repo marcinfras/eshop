@@ -59,7 +59,7 @@ export const LoginForm = () => {
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
-        description: "There was a problem with your request.",
+        description: "Wrong email or password",
       });
     }
 

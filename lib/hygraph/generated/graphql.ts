@@ -11526,6 +11526,11 @@ export type GetProductBySlugQueryVariables = Exact<{
 
 export type GetProductBySlugQuery = { product?: { name: string, price: number, id: string } | null };
 
+export type GetProductsQueryVariables = Exact<{ [key: string]: never; }>;
+
+
+export type GetProductsQuery = { products: Array<{ name: string, price: number, slug: string, images: Array<{ url: string }> }> };
+
 export class TypedDocumentString<TResult, TVariables>
   extends String
   implements DocumentTypeDecoration<TResult, TVariables>
@@ -11568,3 +11573,15 @@ export const GetProductBySlugDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<GetProductBySlugQuery, GetProductBySlugQueryVariables>;
+export const GetProductsDocument = new TypedDocumentString(`
+    query GetProducts {
+  products {
+    images {
+      url
+    }
+    name
+    price
+    slug
+  }
+}
+    `) as unknown as TypedDocumentString<GetProductsQuery, GetProductsQueryVariables>;

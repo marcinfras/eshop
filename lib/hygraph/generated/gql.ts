@@ -17,6 +17,7 @@ const documents = {
     "mutation CreateAccount($name: String!, $email: String!, $password: String!) {\n  createAccount(data: {name: $name, email: $email, password: $password}) {\n    id\n    email\n    name\n  }\n}": types.CreateAccountDocument,
     "query GetAccountByEmail($email: String!) {\n  account(where: {email: $email}, stage: DRAFT) {\n    id\n    password\n    email\n  }\n}": types.GetAccountByEmailDocument,
     "query GetProductBySlug($slug: String!) {\n  product(where: {slug: $slug}) {\n    name\n    price\n    id\n  }\n}": types.GetProductBySlugDocument,
+    "query GetProducts {\n  products {\n    images {\n      url\n    }\n    name\n    price\n    slug\n  }\n}": types.GetProductsDocument,
 };
 
 /**
@@ -31,6 +32,10 @@ export function graphql(source: "query GetAccountByEmail($email: String!) {\n  a
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "query GetProductBySlug($slug: String!) {\n  product(where: {slug: $slug}) {\n    name\n    price\n    id\n  }\n}"): typeof import('./graphql').GetProductBySlugDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "query GetProducts {\n  products {\n    images {\n      url\n    }\n    name\n    price\n    slug\n  }\n}"): typeof import('./graphql').GetProductsDocument;
 
 
 export function graphql(source: string) {
