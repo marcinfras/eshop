@@ -1,9 +1,24 @@
 import Image from "next/image";
 import { Button } from "./_components/ui/button";
 import { getProducts } from "../../lib/graphql";
+import Link from "next/navigation";
+import { ProductItem } from "./_components/ProductItem";
 
 export default async function Home() {
   const products = await getProducts();
+
+  const test = {
+    images: [
+      {
+        url: "https://media.graphassets.com/GwlxIi81SWvHXA8qsSC6",
+      },
+    ],
+    id: "1",
+    name: "Unisex Long Sleeve Tee",
+    price: 1999,
+    slug: "unisex-long-sleeve-tee",
+    test: true,
+  };
 
   console.log(products);
 
@@ -12,27 +27,7 @@ export default async function Home() {
       <h1 className="text-3xl font-bold mb-8">Our Products</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {products.map((product) => (
-          <div
-            key={product.slug}
-            className="bg-background rounded-lg overflow-hidden shadow-lg"
-          >
-            <Image
-              src={product.images[0].url}
-              alt={product.name}
-              width={800}
-              height={800}
-              className="w-full h-60 object-contain"
-            />
-            <div className="p-4">
-              <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
-              <div className="flex justify-between items-center">
-                <span className="text-primary font-semibold">
-                  ${product.price}
-                </span>
-                <Button size="sm">Add to Cart</Button>
-              </div>
-            </div>
-          </div>
+          <ProductItem key={product.id} product={product} />
         ))}
       </div>
     </main>

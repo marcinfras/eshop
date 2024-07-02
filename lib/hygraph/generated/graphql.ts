@@ -11529,7 +11529,7 @@ export type GetProductBySlugQuery = { product?: { name: string, price: number, i
 export type GetProductsQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type GetProductsQuery = { products: Array<{ name: string, price: number, slug: string, images: Array<{ url: string }> }> };
+export type GetProductsQuery = { products: Array<{ name: string, price: number, id: string, slug: string, images: Array<{ url: string }> }> };
 
 export class TypedDocumentString<TResult, TVariables>
   extends String
@@ -11581,6 +11581,7 @@ export const GetProductsDocument = new TypedDocumentString(`
     }
     name
     price
+    id
     slug
   }
 }

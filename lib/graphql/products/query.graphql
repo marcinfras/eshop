@@ -5,6 +5,7 @@ query GetProducts {
     }
     name
     price
+    id
     slug
   }
 }
