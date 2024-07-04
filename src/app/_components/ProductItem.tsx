@@ -33,7 +33,8 @@ export const ProductItem = ({
     getCurrentQuantityById,
   } = useCart();
 
-  const isInCart = getCurrentQuantityById(product.id) > 0;
+  const currentQuantity = getCurrentQuantityById(product.id);
+  const isInCart = currentQuantity > 0;
 
   const addToCartHandler = () => {
     const item = {
@@ -63,7 +64,9 @@ export const ProductItem = ({
       />
       <div className="p-4">
         <Link href={`/${product.slug}`}>
-          <h3 className="text-lg font-semibold mb-2">{product.name}</h3>
+          <h3 className="text-lg font-semibold mb-2 inline-block">
+            {product.name}
+          </h3>
         </Link>
         <div className="flex justify-between items-center">
           <span className="text-primary font-semibold">${product.price}</span>
@@ -72,7 +75,11 @@ export const ProductItem = ({
               Add to Cart
             </Button>
           ) : (
-            <UpdateItemQuantity size="small" />
+            <UpdateItemQuantity
+              size="small"
+              id={product.id}
+              currentQuantity={currentQuantity}
+            />
           )}
         </div>
       </div>

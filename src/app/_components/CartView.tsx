@@ -7,6 +7,8 @@ import { Button } from "./ui/button";
 export const CartView = () => {
   const {
     state: { cart },
+    getTotalPrice,
+    getTotalItems,
   } = useCart();
 
   return (
@@ -23,11 +25,13 @@ export const CartView = () => {
           <div className="mt-8 bg-muted/20 rounded-lg p-6">
             <div className="flex justify-between items-center mb-4">
               <span className="text-muted-foreground">Total Items:</span>
-              <span className="font-semibold">4</span>
+              <span className="font-semibold">{getTotalItems()}</span>
             </div>
             <div className="flex justify-between items-center mb-6">
               <span className="text-muted-foreground">Total Cost:</span>
-              <span className="font-semibold">$123</span>
+              <span className="font-semibold">
+                ${getTotalPrice().toFixed(2)}
+              </span>
             </div>
             <Button size="lg" className="w-full">
               Proceed to Checkout
