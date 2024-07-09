@@ -11524,7 +11524,7 @@ export type GetProductBySlugQueryVariables = Exact<{
 }>;
 
 
-export type GetProductBySlugQuery = { product?: { name: string, price: number, id: string } | null };
+export type GetProductBySlugQuery = { product?: { name: string, price: number, id: string, description: string, images: Array<{ url: string }>, variants: Array<{ size: ProductSize, id: string } | {}> } | null };
 
 export type GetProductsQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -11570,6 +11570,16 @@ export const GetProductBySlugDocument = new TypedDocumentString(`
     name
     price
     id
+    images {
+      url
+    }
+    description
+    variants {
+      ... on ProductSizeColorVariant {
+        size
+        id
+      }
+    }
   }
 }
     `) as unknown as TypedDocumentString<GetProductBySlugQuery, GetProductBySlugQueryVariables>;

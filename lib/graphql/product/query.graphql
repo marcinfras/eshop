@@ -3,5 +3,15 @@ query GetProductBySlug($slug: String!) {
     name
     price
     id
+    images {
+      url
+    }
+    description
+    variants {
+      ... on ProductSizeColorVariant {
+        size
+        id
+      }
+    }
   }
 }
