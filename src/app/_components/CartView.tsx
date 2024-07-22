@@ -1,5 +1,6 @@
 "use client";
 
+import { formatCurrency } from "../_helpers/helpers";
 import { CartItem } from "./CartItem";
 import { useCart } from "./contexts/CartContext/CartContext";
 import { Button } from "./ui/button";
@@ -30,7 +31,7 @@ export const CartView = () => {
             <div className="flex justify-between items-center mb-6">
               <span className="text-muted-foreground">Total Cost:</span>
               <span className="font-semibold">
-                ${getTotalPrice().toFixed(2)}
+                {formatCurrency(getTotalPrice())}
               </span>
             </div>
             <Button size="lg" className="w-full">

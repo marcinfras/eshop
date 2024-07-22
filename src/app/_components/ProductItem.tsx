@@ -6,6 +6,7 @@ import { Button } from "./ui/button";
 import Link from "next/link";
 import { UpdateItemQuantity } from "./UpdateItemQuantity";
 import { useCart } from "./contexts/CartContext/CartContext";
+import { formatCurrency } from "../_helpers/helpers";
 
 export const ProductItem = ({
   product,
@@ -69,7 +70,9 @@ export const ProductItem = ({
           </h3>
         </Link>
         <div className="flex justify-between items-center">
-          <span className="text-primary font-semibold">${product.price}</span>
+          <span className="text-primary font-semibold">
+            {formatCurrency(product.price)}
+          </span>
           {!isInCart ? (
             <Button onClick={addToCartHandler} size="sm">
               Add to Cart

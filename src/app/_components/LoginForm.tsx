@@ -52,6 +52,7 @@ export const LoginForm = () => {
     if (res?.ok) {
       toast({
         title: "Successfully logged in",
+        duration: 3000,
       });
       router.push("/");
     }

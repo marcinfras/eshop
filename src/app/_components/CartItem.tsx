@@ -3,6 +3,7 @@ import { Button } from "../_components/ui/button";
 import Image from "next/image";
 import { UpdateItemQuantity } from "./UpdateItemQuantity";
 import { useCart } from "./contexts/CartContext/CartContext";
+import { formatCurrency } from "../_helpers/helpers";
 
 export const CartItem = ({
   item,
@@ -31,7 +32,7 @@ export const CartItem = ({
       />
       <div>
         <h3 className="font-semibold">{item.name}</h3>
-        <p className="text-muted-foreground">${item.price.toFixed(2)}</p>
+        <p className="text-muted-foreground">{formatCurrency(item.price)}</p>
       </div>
       <UpdateItemQuantity id={item.id} currentQuantity={currentQuantity} />
       {/* <div className="flex items-center gap-2">

@@ -13,16 +13,25 @@ import { Button } from "../_components/ui/button";
 import { Separator } from "../_components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "../_components/ui/avatar";
 import { SVGProps } from "react";
+import { formatCurrency } from "../_helpers/helpers";
 
 const Page = async ({ params }: { params: { productSlug: string } }) => {
-  console.log(params);
+  console.log(params.productSlug);
   const product = await getProductBySlug(params.productSlug);
+
+  const {
+    name,
+    price,
+    description,
+    images: [{ url: imageUrl }],
+  } = product;
+
   return (
     <div className="grid md:grid-cols-2 gap-6 lg:gap-12 items-start max-w-6xl px-4 mx-auto py-6">
       <div className="grid gap-4 md:gap-8 justify-center">
         <div className="grid gap-4 w-[70vw] md:w-full">
           <Image
-            src={product.images[0].url}
+            src={imageUrl}
             alt="Product Image"
             width={600}
             height={900}
@@ -32,7 +41,7 @@ const Page = async ({ params }: { params: { productSlug: string } }) => {
       </div>
       <div className="grid gap-4 md:gap-10 items-start">
         <div className="grid gap-4">
-          <h1 className="font-bold text-3xl lg:text-4xl">Acme Prism T-Shirt</h1>
+          <h1 className="font-bold text-3xl lg:text-4xl">{name}</h1>
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-0.5">
               <StarIcon className="w-5 h-5 fill-primary" />
@@ -43,9 +52,9 @@ const Page = async ({ params }: { params: { productSlug: string } }) => {
             </div>
           </div>
           <div>
-            <p>60% combed ringspun cotton/40% polyester jersey tee.</p>
+            <p>{description}</p>
           </div>
-          <div className="text-4xl font-bold">$99</div>
+          <div className="text-4xl font-bold">{formatCurrency(price)}</div>
         </div>
         <form className="grid gap-4 md:gap-10">
           <div className="grid gap-2">
@@ -163,7 +172,7 @@ const Page = async ({ params }: { params: { productSlug: string } }) => {
           <h2 className="font-bold text-lg">Customer Reviews</h2>
           <div className="flex gap-4">
             <Avatar className="w-10 h-10 border">
-              <AvatarImage src="/placeholder-user.jpg" />
+              {/* <AvatarImage src="/placeholder-user.jpg" /> */}
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div className="grid gap-4">
