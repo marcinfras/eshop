@@ -6,7 +6,7 @@ import { Button } from "./ui/button";
 import Link from "next/link";
 import { UpdateItemQuantity } from "./UpdateItemQuantity";
 import { useCart } from "./contexts/CartContext/CartContext";
-import { formatCurrency } from "../_helpers/helpers";
+import { formatCurrency } from "../../helpers/helpers";
 
 export const ProductItem = ({
   product,

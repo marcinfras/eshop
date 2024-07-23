@@ -9,3 +9,9 @@ query GetProducts {
     slug
   }
 }
+
+query GetProductsBySlugs($slug: [String!]!) {
+  products(where: { slug_in: $slug }) {
+    price
+  }
+}

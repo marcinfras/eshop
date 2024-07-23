@@ -1,6 +1,7 @@
 import { getEnv } from "@/app/utils/utils";
 import {
   CreateAccountDocument,
+  CreateCartDocument,
   GetAccountByEmailDocument,
   GetProductBySlugDocument,
   GetProductsDocument,
@@ -130,4 +131,37 @@ export const getAccountByEmail = async (email: string) => {
   }
 
   return data.account;
+};
+
+export const createCartHygraph = async (product: {
+  slug: string;
+  quantity: number;
+}) => {
+  const data = await fetcher({
+    query: CreateCartDocument,
+    cache: "no-store",
+    headers: {
+      Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+    },
+    variables: {
+      cart: {
+        cartProduct: {
+          create: [
+            {
+              product: {
+                connect: { slug: product.slug },
+              },
+              quantity: product.quantity,
+            },
+          ],
+        },
+      },
+    },
+  });
+
+  if (!data.createCart) {
+    throw Error(`Failed to create cart`);
+  }
+
+  return data.createCart;
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { formatCurrency } from "../_helpers/helpers";
+import { formatCurrency } from "../../helpers/helpers";
 import { CartItem } from "./CartItem";
 import { useCart } from "./contexts/CartContext/CartContext";
 import { Button } from "./ui/button";

@@ -3,7 +3,7 @@ import { Button } from "../_components/ui/button";
 import Image from "next/image";
 import { UpdateItemQuantity } from "./UpdateItemQuantity";
 import { useCart } from "./contexts/CartContext/CartContext";
-import { formatCurrency } from "../_helpers/helpers";
+import { formatCurrency } from "../../helpers/helpers";
 
 export const CartItem = ({
   item,
