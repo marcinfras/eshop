@@ -11,6 +11,7 @@ type ProductType = {
   image: string;
 };
 
+//TODO
 type initialStateType = {
   cart: ProductType[];
   // totalPrice: number;
