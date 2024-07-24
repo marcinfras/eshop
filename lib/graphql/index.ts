@@ -1,11 +1,13 @@
 import { getEnv } from "@/app/utils/utils";
 import {
+  AddToCartDocument,
   CreateAccountDocument,
   CreateCartDocument,
   GetAccountByEmailDocument,
   GetProductBySlugDocument,
   GetProductsDocument,
   TypedDocumentString,
+  UpdateCartDocument,
 } from "../hygraph/generated/graphql";
 
 type GraphQlError = {
@@ -164,4 +166,62 @@ export const createCartHygraph = async (product: {
   }
 
   return data.createCart;
+};
+
+export const updateCartHygraph = async ({
+  cartId,
+  prodId,
+  quantity,
+}: {
+  cartId: string;
+  prodId: string;
+  quantity: number;
+}) => {
+  const data = await fetcher({
+    query: UpdateCartDocument,
+    cache: "no-store",
+    headers: {
+      Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+    },
+    variables: {
+      cartId,
+      prodId,
+      quantity,
+    },
+  });
+
+  if (!data.updateCart) {
+    throw Error(`Failed to create cart`);
+  }
+
+  return data.updateCart;
+};
+
+export const addToCartHygraph = async ({
+  cartId,
+  slug,
+  quantity,
+}: {
+  cartId: string;
+  slug: string;
+  quantity: number;
+}) => {
+  const data = await fetcher({
+    query: AddToCartDocument,
+    cache: "no-store",
+    headers: {
+      Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+    },
+    variables: {
+      cartId,
+      slug,
+      quantity,
+    },
+  });
+
+  if (!data.updateCart) {
+    throw Error(`Failed to add to cart`);
+  }
+
+  return data.updateCart;
 };

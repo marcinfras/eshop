@@ -12796,7 +12796,25 @@ export type CreateCartMutationVariables = Exact<{
 }>;
 
 
-export type CreateCartMutation = { createCart?: { id: string } | null };
+export type CreateCartMutation = { createCart?: { id: string, cartProduct: Array<{ id: string }> } | null };
+
+export type UpdateCartMutationVariables = Exact<{
+  cartId: Scalars['ID']['input'];
+  prodId: Scalars['ID']['input'];
+  quantity: Scalars['Int']['input'];
+}>;
+
+
+export type UpdateCartMutation = { updateCart?: { id: string } | null };
+
+export type AddToCartMutationVariables = Exact<{
+  cartId: Scalars['ID']['input'];
+  slug: Scalars['String']['input'];
+  quantity: Scalars['Int']['input'];
+}>;
+
+
+export type AddToCartMutation = { updateCart?: { cartProduct: Array<{ id: string }> } | null };
 
 export type GetProductBySlugQueryVariables = Exact<{
   slug: Scalars['String']['input'];
@@ -12853,10 +12871,35 @@ export const GetAccountByEmailDocument = new TypedDocumentString(`
 export const CreateCartDocument = new TypedDocumentString(`
     mutation CreateCart($cart: CartCreateInput!) {
   createCart(data: $cart) {
+    cartProduct {
+      id
+    }
     id
   }
 }
     `) as unknown as TypedDocumentString<CreateCartMutation, CreateCartMutationVariables>;
+export const UpdateCartDocument = new TypedDocumentString(`
+    mutation UpdateCart($cartId: ID!, $prodId: ID!, $quantity: Int!) {
+  updateCart(
+    where: {id: $cartId}
+    data: {cartProduct: {update: {where: {id: $prodId}, data: {quantity: $quantity}}}}
+  ) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<UpdateCartMutation, UpdateCartMutationVariables>;
+export const AddToCartDocument = new TypedDocumentString(`
+    mutation AddToCart($cartId: ID!, $slug: String!, $quantity: Int!) {
+  updateCart(
+    data: {cartProduct: {create: {quantity: $quantity, product: {connect: {slug: $slug}}}}}
+    where: {id: $cartId}
+  ) {
+    cartProduct {
+      id
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<AddToCartMutation, AddToCartMutationVariables>;
 export const GetProductBySlugDocument = new TypedDocumentString(`
     query GetProductBySlug($slug: String!) {
   product(where: {slug: $slug}) {

@@ -1,9 +1,14 @@
 "use client";
 
 import { createContext, useContext, useReducer } from "react";
+import { createCart } from "../../../../../lib/actions/createCart";
+import { updateCart } from "../../../../../lib/actions/updateCart";
+import { addToCartAction } from "../../../../../lib/actions/addToCart";
 
 type ProductType = {
   id: string;
+  hygraphId: string;
+  slug: string;
   name: string;
   price: number;
   totalPrice: number;
@@ -82,11 +87,19 @@ const reducer = (state: initialStateType, action: ActionType) => {
 
 const CartContext = createContext<{
   state: initialStateType;
-  addToCart: (item: ProductType) => void;
+  addToCart: (item: {
+    id: string;
+    slug: string;
+    name: string;
+    price: number;
+    totalPrice: number;
+    quantity: number;
+    image: string;
+  }) => void;
   getCurrentQuantityById: (id: string) => number;
   deleteFromCart: (id: string) => void;
-  increaseItemQuantity: (id: string) => void;
-  decreaseItemQuantity: (id: string) => void;
+  increaseItemQuantity: (id: string, quantity: number) => void;
+  decreaseItemQuantity: (id: string, quantity: number) => void;
   getTotalPrice: () => number;
   getTotalItems: () => number;
 } | null>(null);
@@ -94,10 +107,34 @@ const CartContext = createContext<{
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  const addToCart = (item: ProductType) => {
+  const addToCart = async (item: {
+    id: string;
+    slug: string;
+    name: string;
+    price: number;
+    totalPrice: number;
+    quantity: number;
+    image: string;
+  }) => {
     if (!item) return;
 
-    dispatch({ type: "cart/addProduct", payload: item });
+    let hygraphId;
+    if (state.cart.length === 0) {
+      hygraphId = await createCart({
+        quantity: item.quantity,
+        slug: item.slug,
+      });
+    } else {
+      hygraphId = await addToCartAction({
+        slug: item.slug,
+        quantity: item.quantity,
+      });
+    }
+
+    console.log(hygraphId);
+    if (!hygraphId) return;
+
+    dispatch({ type: "cart/addProduct", payload: { ...item, hygraphId } });
   };
 
   const deleteFromCart = (id: string) => {
@@ -105,13 +142,25 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     dispatch({ type: "cart/deleteProduct", payload: id });
   };
 
-  const increaseItemQuantity = (id: string) => {
+  const increaseItemQuantity = async (id: string, quantity: number) => {
     if (!id) return;
+    //TODO
+    //Przekazywać cartId, prodId, quantity zamiast id
+    const hygraphId =
+      state.cart.find((item) => item.id === id)?.hygraphId ?? null;
+    if (!hygraphId) return;
+    const res = await updateCart({ prodId: hygraphId, quantity });
+    console.log(res);
     dispatch({ type: "cart/increaseQuantity", payload: id });
   };
 
-  const decreaseItemQuantity = (id: string) => {
+  const decreaseItemQuantity = async (id: string, quantity: number) => {
     if (!id) return;
+    const hygraphId =
+      state.cart.find((item) => item.id === id)?.hygraphId ?? null;
+    if (!hygraphId) return;
+    const res = await updateCart({ prodId: hygraphId, quantity });
+    console.log(res);
     dispatch({ type: "cart/decreaseQuantity", payload: id });
   };
 

@@ -24,7 +24,7 @@ export const UpdateItemQuantity = ({
         size="icon"
         className={size === "small" ? "w-7 h-7" : ""}
         variant="outline"
-        onClick={() => decreaseItemQuantity(id)}
+        onClick={() => decreaseItemQuantity(id, currentQuantity - 1)}
         disabled={currentQuantity === 1}
       >
         <MinusIcon className="w-4 h-4" />
@@ -34,7 +34,7 @@ export const UpdateItemQuantity = ({
         size="icon"
         className={size === "small" ? "w-7 h-7" : ""}
         variant="outline"
-        onClick={() => increaseItemQuantity(id)}
+        onClick={() => increaseItemQuantity(id, currentQuantity + 1)}
       >
         <PlusIcon className="w-4 h-4" />
       </Button>

@@ -1,5 +1,36 @@
 mutation CreateCart($cart: CartCreateInput!) {
   createCart(data: $cart) {
+    cartProduct {
+      id
+    }
     id
+  }
+}
+
+mutation UpdateCart($cartId: ID!, $prodId: ID!, $quantity: Int!) {
+  updateCart(
+    where: { id: $cartId }
+    data: {
+      cartProduct: {
+        update: { where: { id: $prodId }, data: { quantity: $quantity } }
+      }
+    }
+  ) {
+    id
+  }
+}
+
+mutation AddToCart($cartId: ID!, $slug: String!, $quantity: Int!) {
+  updateCart(
+    data: {
+      cartProduct: {
+        create: { quantity: $quantity, product: { connect: { slug: $slug } } }
+      }
+    }
+    where: { id: $cartId }
+  ) {
+    cartProduct {
+      id
+    }
   }
 }
