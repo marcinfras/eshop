@@ -12784,6 +12784,14 @@ export type CreateAccountMutationVariables = Exact<{
 
 export type CreateAccountMutation = { createAccount?: { id: string, email: string, name: string } | null };
 
+export type ConnectAccountWithCartMutationVariables = Exact<{
+  email: Scalars['String']['input'];
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type ConnectAccountWithCartMutation = { updateAccount?: { id: string } | null };
+
 export type GetAccountByEmailQueryVariables = Exact<{
   email: Scalars['String']['input'];
 }>;
@@ -12859,6 +12867,13 @@ export const CreateAccountDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<CreateAccountMutation, CreateAccountMutationVariables>;
+export const ConnectAccountWithCartDocument = new TypedDocumentString(`
+    mutation ConnectAccountWithCart($email: String!, $id: ID!) {
+  updateAccount(data: {cart: {connect: {id: $id}}}, where: {email: $email}) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<ConnectAccountWithCartMutation, ConnectAccountWithCartMutationVariables>;
 export const GetAccountByEmailDocument = new TypedDocumentString(`
     query GetAccountByEmail($email: String!) {
   account(where: {email: $email}, stage: DRAFT) {

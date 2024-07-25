@@ -4,6 +4,7 @@ import { createContext, useContext, useReducer } from "react";
 import { createCart } from "../../../../../lib/actions/createCart";
 import { updateCart } from "../../../../../lib/actions/updateCart";
 import { addToCartAction } from "../../../../../lib/actions/addToCart";
+import { useSession } from "next-auth/react";
 
 type ProductType = {
   id: string;
@@ -107,6 +108,9 @@ const CartContext = createContext<{
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
+  const session = useSession();
+  console.log(session);
+
   const addToCart = async (item: {
     id: string;
     slug: string;
@@ -119,11 +123,14 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     if (!item) return;
 
     let hygraphId;
-    if (state.cart.length === 0) {
-      hygraphId = await createCart({
-        quantity: item.quantity,
-        slug: item.slug,
-      });
+    if (state.cart.length === 0 && session.data?.user?.email) {
+      hygraphId = await createCart(
+        {
+          quantity: item.quantity,
+          slug: item.slug,
+        },
+        session.data?.user?.email
+      );
     } else {
       hygraphId = await addToCartAction({
         slug: item.slug,

@@ -14,7 +14,7 @@ import * as types from './graphql';
  * Therefore it is highly recommended to use the babel or swc plugin for production.
  */
 const documents = {
-    "mutation CreateAccount($name: String!, $email: String!, $password: String!) {\n  createAccount(data: {name: $name, email: $email, password: $password}) {\n    id\n    email\n    name\n  }\n}": types.CreateAccountDocument,
+    "mutation CreateAccount($name: String!, $email: String!, $password: String!) {\n  createAccount(data: {name: $name, email: $email, password: $password}) {\n    id\n    email\n    name\n  }\n}\n\nmutation ConnectAccountWithCart($email: String!, $id: ID!) {\n  updateAccount(data: {cart: {connect: {id: $id}}}, where: {email: $email}) {\n    id\n  }\n}": types.CreateAccountDocument,
     "query GetAccountByEmail($email: String!) {\n  account(where: {email: $email}, stage: DRAFT) {\n    id\n    password\n    email\n  }\n}": types.GetAccountByEmailDocument,
     "mutation CreateCart($cart: CartCreateInput!) {\n  createCart(data: $cart) {\n    cartProduct {\n      id\n    }\n    id\n  }\n}\n\nmutation UpdateCart($cartId: ID!, $prodId: ID!, $quantity: Int!) {\n  updateCart(\n    where: {id: $cartId}\n    data: {cartProduct: {update: {where: {id: $prodId}, data: {quantity: $quantity}}}}\n  ) {\n    id\n  }\n}\n\nmutation AddToCart($cartId: ID!, $slug: String!, $quantity: Int!) {\n  updateCart(\n    data: {cartProduct: {create: {quantity: $quantity, product: {connect: {slug: $slug}}}}}\n    where: {id: $cartId}\n  ) {\n    cartProduct {\n      id\n    }\n  }\n}": types.CreateCartDocument,
     "query GetProductBySlug($slug: String!) {\n  product(where: {slug: $slug}) {\n    name\n    price\n    id\n    images {\n      url\n    }\n    description\n    variants {\n      ... on ProductSizeColorVariant {\n        size\n        id\n      }\n    }\n  }\n}": types.GetProductBySlugDocument,
@@ -24,7 +24,7 @@ const documents = {
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "mutation CreateAccount($name: String!, $email: String!, $password: String!) {\n  createAccount(data: {name: $name, email: $email, password: $password}) {\n    id\n    email\n    name\n  }\n}"): typeof import('./graphql').CreateAccountDocument;
+export function graphql(source: "mutation CreateAccount($name: String!, $email: String!, $password: String!) {\n  createAccount(data: {name: $name, email: $email, password: $password}) {\n    id\n    email\n    name\n  }\n}\n\nmutation ConnectAccountWithCart($email: String!, $id: ID!) {\n  updateAccount(data: {cart: {connect: {id: $id}}}, where: {email: $email}) {\n    id\n  }\n}"): typeof import('./graphql').CreateAccountDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

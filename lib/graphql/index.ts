@@ -1,6 +1,7 @@
 import { getEnv } from "@/app/utils/utils";
 import {
   AddToCartDocument,
+  ConnectAccountWithCartDocument,
   CreateAccountDocument,
   CreateCartDocument,
   GetAccountByEmailDocument,
@@ -133,6 +134,32 @@ export const getAccountByEmail = async (email: string) => {
   }
 
   return data.account;
+};
+
+export const connectAccountWithCart = async ({
+  cartId,
+  email,
+}: {
+  cartId: string;
+  email: string;
+}) => {
+  const data = await fetcher({
+    query: ConnectAccountWithCartDocument,
+    cache: "no-store",
+    headers: {
+      Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+    },
+    variables: {
+      email,
+      id: cartId,
+    },
+  });
+
+  if (!data.updateAccount) {
+    throw Error(`Failed to connect cart with account`);
+  }
+
+  return data.updateAccount;
 };
 
 export const createCartHygraph = async (product: {
