@@ -1,12 +1,14 @@
 "use client";
 
-import { createContext, useContext, useReducer } from "react";
+import { createContext, useContext, useEffect, useReducer } from "react";
 import { createCart } from "../../../../../lib/actions/createCart";
 import { updateCart } from "../../../../../lib/actions/updateCart";
 import { addToCartAction } from "../../../../../lib/actions/addToCart";
 import { useSession } from "next-auth/react";
+import { fetchCart } from "../../../../../lib/actions/fetchCart";
+import { usePathname, useRouter } from "next/navigation";
 
-type ProductType = {
+export type ProductType = {
   id: string;
   hygraphId: string;
   slug: string;
@@ -30,19 +32,25 @@ const initialState = {
 
 type ActionType = {
   type:
+    | "cart/initialize"
     | "cart/addProduct"
     | "cart/deleteProduct"
     | "cart/increaseQuantity"
     | "cart/decreaseQuantity";
-  payload?: ProductType | string;
+  payload?: ProductType[] | ProductType | string;
 };
 
 const reducer = (state: initialStateType, action: ActionType) => {
   switch (action.type) {
+    case "cart/initialize":
+      if (!Array.isArray(action.payload)) return state;
+      return {
+        cart: action.payload,
+      };
     case "cart/addProduct":
       if (!action.payload || typeof action.payload === "string") return state;
       return {
-        cart: [...state.cart, action.payload],
+        cart: [...state.cart, action.payload as ProductType],
       };
     case "cart/deleteProduct":
       if (!action.payload) return state;
@@ -109,7 +117,22 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const session = useSession();
+  const router = useRouter();
   console.log(session);
+
+  useEffect(() => {
+    const initializeCart = async () => {
+      if (!session.data?.user?.email) return;
+
+      const initialState = await fetchCart(session.data?.user?.email);
+
+      if (!initialState) return;
+      router.push("/");
+      dispatch({ type: "cart/initialize", payload: initialState });
+    };
+
+    initializeCart();
+  }, [session.data?.user?.email, router]);
 
   const addToCart = async (item: {
     id: string;

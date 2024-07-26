@@ -5,6 +5,7 @@ import {
   CreateAccountDocument,
   CreateCartDocument,
   GetAccountByEmailDocument,
+  GetCartByEmailDocument,
   GetProductBySlugDocument,
   GetProductsDocument,
   TypedDocumentString,
@@ -134,6 +135,25 @@ export const getAccountByEmail = async (email: string) => {
   }
 
   return data.account;
+};
+
+export const getCartByEmail = async (email: string) => {
+  const data = await fetcher({
+    query: GetCartByEmailDocument,
+    cache: "no-store",
+    headers: {
+      Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+    },
+    variables: {
+      email,
+    },
+  });
+
+  if (!data.account?.cart) {
+    throw Error(`Failed to get cart`);
+  }
+
+  return data.account.cart;
 };
 
 export const connectAccountWithCart = async ({

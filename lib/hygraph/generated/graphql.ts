@@ -12799,6 +12799,13 @@ export type GetAccountByEmailQueryVariables = Exact<{
 
 export type GetAccountByEmailQuery = { account?: { id: string, password: string, email: string } | null };
 
+export type GetCartByEmailQueryVariables = Exact<{
+  email: Scalars['String']['input'];
+}>;
+
+
+export type GetCartByEmailQuery = { account?: { cart?: { id: string, cartProduct: Array<{ id: string, quantity: number, product?: { id: string, slug: string, name: string, price: number, images: Array<{ url: string }> } | null }> } | null } | null };
+
 export type CreateCartMutationVariables = Exact<{
   cart: CartCreateInput;
 }>;
@@ -12883,6 +12890,28 @@ export const GetAccountByEmailDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<GetAccountByEmailQuery, GetAccountByEmailQueryVariables>;
+export const GetCartByEmailDocument = new TypedDocumentString(`
+    query GetCartByEmail($email: String!) {
+  account(where: {email: $email}, stage: DRAFT) {
+    cart {
+      id
+      cartProduct {
+        id
+        product {
+          id
+          slug
+          name
+          price
+          images {
+            url
+          }
+        }
+        quantity
+      }
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<GetCartByEmailQuery, GetCartByEmailQueryVariables>;
 export const CreateCartDocument = new TypedDocumentString(`
     mutation CreateCart($cart: CartCreateInput!) {
   createCart(data: $cart) {
