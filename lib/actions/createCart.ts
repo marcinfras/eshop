@@ -1,7 +1,12 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { connectAccountWithCart, createCartHygraph } from "../graphql";
+import {
+  addToCartHygraph,
+  connectAccountWithCart,
+  createCartHygraph,
+} from "../graphql";
+import { addToCartAction } from "./addToCart";
 
 export const createCart = async (
   product: {
@@ -27,7 +32,15 @@ export const createCart = async (
     return cart.cartProduct[0].id;
   }
 
-  // 3 sprawdz czy produkty sa dostepne jesli nie usun je z koszyka
-
   // 4 jesni bedzie ma aktualizowac cartProduct
+
+  // addToCartAction({ slug: product.slug, quantity: product.quantity });
+  const hygraphId = await addToCartHygraph({
+    cartId: cartId.value,
+    slug: product.slug,
+    quantity: product.quantity,
+  });
+
+  //   console.log(hygraphId.cartProduct[hygraphId.cartProduct.length - 1].id);
+  return hygraphId.cartProduct[hygraphId.cartProduct.length - 1].id;
 };

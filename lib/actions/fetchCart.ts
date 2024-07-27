@@ -7,13 +7,16 @@ import { ProductType } from "@/app/_components/contexts/CartContext/CartContext"
 export const fetchCart = async (email: string) => {
   const cart = await getCartByEmail(email);
 
-  if (!cart) return;
+  if (!cart) {
+    cookies().delete("cart");
+    return [];
+  }
 
   cookies().set("cart", cart.id, { httpOnly: true });
 
   const reducerCart = cart.cartProduct.map((item) => {
     if (!item.product) {
-      return null;
+      return [];
     }
 
     return {

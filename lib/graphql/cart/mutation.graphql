@@ -34,3 +34,12 @@ mutation AddToCart($cartId: ID!, $slug: String!, $quantity: Int!) {
     }
   }
 }
+
+mutation RemoveFromCart($cartId: ID!, $prodId: ID!) {
+  updateCart(
+    data: { cartProduct: { delete: { id: $prodId } } }
+    where: { id: $cartId }
+  ) {
+    id
+  }
+}

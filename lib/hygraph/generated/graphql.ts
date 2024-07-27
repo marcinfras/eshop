@@ -12831,6 +12831,14 @@ export type AddToCartMutationVariables = Exact<{
 
 export type AddToCartMutation = { updateCart?: { cartProduct: Array<{ id: string }> } | null };
 
+export type RemoveFromCartMutationVariables = Exact<{
+  cartId: Scalars['ID']['input'];
+  prodId: Scalars['ID']['input'];
+}>;
+
+
+export type RemoveFromCartMutation = { updateCart?: { id: string } | null };
+
 export type GetProductBySlugQueryVariables = Exact<{
   slug: Scalars['String']['input'];
 }>;
@@ -12944,6 +12952,13 @@ export const AddToCartDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<AddToCartMutation, AddToCartMutationVariables>;
+export const RemoveFromCartDocument = new TypedDocumentString(`
+    mutation RemoveFromCart($cartId: ID!, $prodId: ID!) {
+  updateCart(data: {cartProduct: {delete: {id: $prodId}}}, where: {id: $cartId}) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<RemoveFromCartMutation, RemoveFromCartMutationVariables>;
 export const GetProductBySlugDocument = new TypedDocumentString(`
     query GetProductBySlug($slug: String!) {
   product(where: {slug: $slug}) {

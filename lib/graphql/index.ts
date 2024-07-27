@@ -8,6 +8,7 @@ import {
   GetCartByEmailDocument,
   GetProductBySlugDocument,
   GetProductsDocument,
+  RemoveFromCartDocument,
   TypedDocumentString,
   UpdateCartDocument,
 } from "../hygraph/generated/graphql";
@@ -149,11 +150,11 @@ export const getCartByEmail = async (email: string) => {
     },
   });
 
-  if (!data.account?.cart) {
-    throw Error(`Failed to get cart`);
-  }
+  // if (!data.account?.cart) {
+  //   throw Error(`Failed to get cart`);
+  // }
 
-  return data.account.cart;
+  return data?.account?.cart;
 };
 
 export const connectAccountWithCart = async ({
@@ -268,6 +269,32 @@ export const addToCartHygraph = async ({
 
   if (!data.updateCart) {
     throw Error(`Failed to add to cart`);
+  }
+
+  return data.updateCart;
+};
+
+export const removeFromCartHygraph = async ({
+  cartId,
+  prodId,
+}: {
+  cartId: string;
+  prodId: string;
+}) => {
+  const data = await fetcher({
+    query: RemoveFromCartDocument,
+    cache: "no-store",
+    headers: {
+      Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+    },
+    variables: {
+      cartId,
+      prodId,
+    },
+  });
+
+  if (!data.updateCart) {
+    throw Error(`Failed to remove from cart`);
   }
 
   return data.updateCart;

@@ -1,16 +1,24 @@
 "use client";
 
-import { createContext, useContext, useEffect, useReducer } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
 import { createCart } from "../../../../../lib/actions/createCart";
 import { updateCart } from "../../../../../lib/actions/updateCart";
 import { addToCartAction } from "../../../../../lib/actions/addToCart";
 import { useSession } from "next-auth/react";
 import { fetchCart } from "../../../../../lib/actions/fetchCart";
 import { usePathname, useRouter } from "next/navigation";
+import { removeFromCart } from "../../../../../lib/actions/removeFromCart";
+import { Loader } from "../../Loader";
 
 export type ProductType = {
   id: string;
-  hygraphId: string;
+  hygraphId?: string;
   slug: string;
   name: string;
   price: number;
@@ -22,12 +30,10 @@ export type ProductType = {
 //TODO
 type initialStateType = {
   cart: ProductType[];
-  // totalPrice: number;
 };
 
 const initialState = {
   cart: [],
-  // totalPrice: 0,
 } satisfies initialStateType;
 
 type ActionType = {
@@ -37,6 +43,7 @@ type ActionType = {
     | "cart/deleteProduct"
     | "cart/increaseQuantity"
     | "cart/decreaseQuantity";
+
   payload?: ProductType[] | ProductType | string;
 };
 
@@ -45,11 +52,13 @@ const reducer = (state: initialStateType, action: ActionType) => {
     case "cart/initialize":
       if (!Array.isArray(action.payload)) return state;
       return {
+        ...state,
         cart: action.payload,
       };
     case "cart/addProduct":
       if (!action.payload || typeof action.payload === "string") return state;
       return {
+        ...state,
         cart: [...state.cart, action.payload as ProductType],
       };
     case "cart/deleteProduct":
@@ -58,12 +67,14 @@ const reducer = (state: initialStateType, action: ActionType) => {
         (item) => item.id !== action.payload
       );
       return {
+        ...state,
         cart: updatedCart,
       };
     case "cart/increaseQuantity":
       if (!action.payload) return state;
 
       return {
+        ...state,
         cart: state.cart.map((item) =>
           item.id === action.payload
             ? {
@@ -78,6 +89,7 @@ const reducer = (state: initialStateType, action: ActionType) => {
       if (!action.payload) return state;
 
       return {
+        ...state,
         cart: state.cart.map((item) =>
           item.id === action.payload
             ? {
@@ -115,6 +127,7 @@ const CartContext = createContext<{
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [isLoadingCart, setIsLoading] = useState(false);
 
   const session = useSession();
   const router = useRouter();
@@ -123,12 +136,13 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     const initializeCart = async () => {
       if (!session.data?.user?.email) return;
-
+      setIsLoading(true);
       const initialState = await fetchCart(session.data?.user?.email);
 
-      if (!initialState) return;
+      // if (!initialState) return;
       router.push("/");
       dispatch({ type: "cart/initialize", payload: initialState });
+      setIsLoading(false);
     };
 
     initializeCart();
@@ -146,7 +160,8 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     if (!item) return;
 
     let hygraphId;
-    if (state.cart.length === 0 && session.data?.user?.email) {
+    if (session.data?.user?.email) {
+      setIsLoading(true);
       hygraphId = await createCart(
         {
           quantity: item.quantity,
@@ -154,43 +169,61 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         },
         session.data?.user?.email
       );
-    } else {
-      hygraphId = await addToCartAction({
-        slug: item.slug,
-        quantity: item.quantity,
-      });
+      console.log(hygraphId);
+      if (!hygraphId) return;
+      dispatch({ type: "cart/addProduct", payload: { ...item, hygraphId } });
+      setIsLoading(false);
+      return;
     }
 
-    console.log(hygraphId);
-    if (!hygraphId) return;
-
-    dispatch({ type: "cart/addProduct", payload: { ...item, hygraphId } });
+    dispatch({ type: "cart/addProduct", payload: { ...item } });
   };
 
-  const deleteFromCart = (id: string) => {
+  const deleteFromCart = async (id: string) => {
     if (!id) return;
+
+    if (session.data?.user?.email) {
+      setIsLoading(true);
+      const hygraphId =
+        state.cart.find((item) => item.id === id)?.hygraphId ?? null;
+      if (!hygraphId) return;
+
+      const res = await removeFromCart({ prodId: hygraphId });
+      console.log(res);
+      setIsLoading(false);
+    }
+
     dispatch({ type: "cart/deleteProduct", payload: id });
   };
 
   const increaseItemQuantity = async (id: string, quantity: number) => {
     if (!id) return;
-    //TODO
-    //Przekazywać cartId, prodId, quantity zamiast id
-    const hygraphId =
-      state.cart.find((item) => item.id === id)?.hygraphId ?? null;
-    if (!hygraphId) return;
-    const res = await updateCart({ prodId: hygraphId, quantity });
-    console.log(res);
+
+    if (session.data?.user?.email) {
+      setIsLoading(true);
+      const hygraphId =
+        state.cart.find((item) => item.id === id)?.hygraphId ?? null;
+      if (!hygraphId) return;
+      const res = await updateCart({ prodId: hygraphId, quantity });
+      console.log(res);
+      setIsLoading(false);
+    }
+
     dispatch({ type: "cart/increaseQuantity", payload: id });
   };
 
   const decreaseItemQuantity = async (id: string, quantity: number) => {
     if (!id) return;
-    const hygraphId =
-      state.cart.find((item) => item.id === id)?.hygraphId ?? null;
-    if (!hygraphId) return;
-    const res = await updateCart({ prodId: hygraphId, quantity });
-    console.log(res);
+    if (session.data?.user?.email) {
+      setIsLoading(true);
+      const hygraphId =
+        state.cart.find((item) => item.id === id)?.hygraphId ?? null;
+      if (!hygraphId) return;
+      const res = await updateCart({ prodId: hygraphId, quantity });
+      console.log(res);
+      setIsLoading(false);
+    }
+
     dispatch({ type: "cart/decreaseQuantity", payload: id });
   };
 
@@ -219,6 +252,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         getTotalItems,
       }}
     >
+      {isLoadingCart && <Loader />}
       {children}
     </CartContext.Provider>
   );
