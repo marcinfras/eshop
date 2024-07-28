@@ -9,12 +9,13 @@ import {
 } from "react";
 import { createCart } from "../../../../../lib/actions/createCart";
 import { updateCart } from "../../../../../lib/actions/updateCart";
-import { addToCartAction } from "../../../../../lib/actions/addToCart";
+// import { addToCartAction } from "../../../../../lib/actions/addToCart";
 import { useSession } from "next-auth/react";
 import { fetchCart } from "../../../../../lib/actions/fetchCart";
 import { usePathname, useRouter } from "next/navigation";
 import { removeFromCart } from "../../../../../lib/actions/removeFromCart";
 import { Loader } from "../../Loader";
+import { toast } from "../../ui/use-toast";
 
 export type ProductType = {
   id: string;
@@ -169,8 +170,15 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         },
         session.data?.user?.email
       );
-      console.log(hygraphId);
       if (!hygraphId) return;
+      if (typeof hygraphId !== "string" && "error" in hygraphId) {
+        toast({
+          variant: "destructive",
+          title: hygraphId.error,
+        });
+        setIsLoading(false);
+        return;
+      }
       dispatch({ type: "cart/addProduct", payload: { ...item, hygraphId } });
       setIsLoading(false);
       return;
@@ -189,6 +197,14 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
       if (!hygraphId) return;
 
       const res = await removeFromCart({ prodId: hygraphId });
+      if ("error" in res) {
+        toast({
+          variant: "destructive",
+          title: res.error,
+        });
+        setIsLoading(false);
+        return;
+      }
       console.log(res);
       setIsLoading(false);
     }
@@ -205,6 +221,14 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         state.cart.find((item) => item.id === id)?.hygraphId ?? null;
       if (!hygraphId) return;
       const res = await updateCart({ prodId: hygraphId, quantity });
+      if (typeof res !== "string" && "error" in res) {
+        toast({
+          variant: "destructive",
+          title: res.error,
+        });
+        setIsLoading(false);
+        return;
+      }
       console.log(res);
       setIsLoading(false);
     }
@@ -220,6 +244,14 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         state.cart.find((item) => item.id === id)?.hygraphId ?? null;
       if (!hygraphId) return;
       const res = await updateCart({ prodId: hygraphId, quantity });
+      if (typeof res !== "string" && "error" in res) {
+        toast({
+          variant: "destructive",
+          title: res.error,
+        });
+        setIsLoading(false);
+        return;
+      }
       console.log(res);
       setIsLoading(false);
     }

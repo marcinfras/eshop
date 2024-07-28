@@ -6,12 +6,16 @@ import { removeFromCartHygraph } from "../graphql";
 export const removeFromCart = async ({ prodId }: { prodId: string }) => {
   const cartId = cookies().get("cart");
 
-  if (!cartId?.value) return;
+  if (!cartId?.value) return { error: "Failed to remove item from cart" };
 
   const res = await removeFromCartHygraph({
     cartId: cartId.value,
     prodId,
   });
+
+  if ("error" in res) {
+    return { error: res.error };
+  }
 
   return res;
 

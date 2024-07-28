@@ -16,7 +16,7 @@ export const updateCart = async ({
   // console.log(prodId);
   // console.log(quantity);
   // console.log(":titiitiit");
-  if (!cartId?.value) return;
+  if (!cartId?.value) return { error: "Failed to update cart" };
   // console.log("tratatata");
 
   const res = await updateCartHygraph({
@@ -24,6 +24,10 @@ export const updateCart = async ({
     prodId,
     quantity,
   });
+
+  if ("error" in res) {
+    return { error: res.error };
+  }
 
   return res.id;
 };

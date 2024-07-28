@@ -6,7 +6,7 @@ import {
   connectAccountWithCart,
   createCartHygraph,
 } from "../graphql";
-import { addToCartAction } from "./addToCart";
+// import { addToCartAction } from "./addToCart";
 
 export const createCart = async (
   product: {
@@ -23,7 +23,16 @@ export const createCart = async (
 
   if (!cartId) {
     const cart = await createCartHygraph(product);
-    await connectAccountWithCart({ cartId: cart.id, email });
+
+    if ("error" in cart) {
+      return { error: cart.error };
+    }
+    // console.log("Cartttttttttttttt: " + cart);
+    const id = await connectAccountWithCart({ cartId: cart.id, email });
+
+    if ("error" in id) {
+      return { error: id.error };
+    }
     // console.log(cart);
 
     cookies().set("cart", cart.id, { httpOnly: true });
@@ -40,6 +49,10 @@ export const createCart = async (
     slug: product.slug,
     quantity: product.quantity,
   });
+
+  if ("error" in hygraphId) {
+    return { error: hygraphId.error };
+  }
 
   //   console.log(hygraphId.cartProduct[hygraphId.cartProduct.length - 1].id);
   return hygraphId.cartProduct[hygraphId.cartProduct.length - 1].id;
