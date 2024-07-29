@@ -3,7 +3,7 @@
 import { cookies } from "next/headers";
 import {
   addToCartHygraph,
-  connectAccountWithCart,
+  // connectAccountWithCart,
   createCartHygraph,
 } from "../graphql";
 // import { addToCartAction } from "./addToCart";
@@ -22,18 +22,18 @@ export const createCart = async (
   // 2 jesli nie bedzie ma tworzyc tutaj
 
   if (!cartId) {
-    const cart = await createCartHygraph(product);
+    const cart = await createCartHygraph(product, email);
 
     if ("error" in cart) {
       return { error: cart.error };
     }
-    // console.log("Cartttttttttttttt: " + cart);
-    const id = await connectAccountWithCart({ cartId: cart.id, email });
+    // // console.log("Cartttttttttttttt: " + cart);
+    // const id = await connectAccountWithCart({ cartId: cart.id, email });
 
-    if ("error" in id) {
-      return { error: id.error };
-    }
-    // console.log(cart);
+    // if ("error" in id) {
+    //   return { error: id.error };
+    // }
+    // // console.log(cart);
 
     cookies().set("cart", cart.id, { httpOnly: true });
 

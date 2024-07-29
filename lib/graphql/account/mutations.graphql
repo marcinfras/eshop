@@ -6,11 +6,11 @@ mutation CreateAccount($name: String!, $email: String!, $password: String!) {
   }
 }
 
-mutation ConnectAccountWithCart($email: String!, $id: ID!) {
-  updateAccount(
-    data: { cart: { connect: { id: $id } } }
-    where: { email: $email }
-  ) {
-    id
-  }
-}
+# mutation ConnectAccountWithCart($email: String!, $id: ID!) {
+#   updateAccount(
+#     data: { cart: { connect: { id: $id } } }
+#     where: { email: $email }
+#   ) {
+#     id
+#   }
+# }

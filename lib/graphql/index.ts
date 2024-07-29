@@ -1,7 +1,7 @@
 import { getEnv } from "@/app/utils/utils";
 import {
   AddToCartDocument,
-  ConnectAccountWithCartDocument,
+  // ConnectAccountWithCartDocument,
   CreateAccountDocument,
   CreateCartDocument,
   GetAccountByEmailDocument,
@@ -157,42 +157,45 @@ export const getCartByEmail = async (email: string) => {
   return data?.account?.cart;
 };
 
-export const connectAccountWithCart = async ({
-  cartId,
-  email,
-}: {
-  cartId: string;
-  email: string;
-}) => {
-  try {
-    const data = await fetcher({
-      query: ConnectAccountWithCartDocument,
-      cache: "no-store",
-      headers: {
-        Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
-      },
-      variables: {
-        email,
-        id: cartId,
-      },
-    });
+// export const connectAccountWithCart = async ({
+//   cartId,
+//   email,
+// }: {
+//   cartId: string;
+//   email: string;
+// }) => {
+//   try {
+//     const data = await fetcher({
+//       query: ConnectAccountWithCartDocument,
+//       cache: "no-store",
+//       headers: {
+//         Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+//       },
+//       variables: {
+//         email,
+//         id: cartId,
+//       },
+//     });
 
-    if (!data.updateAccount) {
-      console.error(`Failed to connect cart with account`);
-      return { error: "Failed to connect cart with account" };
-    }
+//     if (!data.updateAccount) {
+//       console.error(`Failed to connect cart with account`);
+//       return { error: "Failed to connect cart with account" };
+//     }
 
-    return data.updateAccount;
-  } catch (error) {
-    console.error((error as Error).message);
-    return { error: "Failed to connect cart with account" };
-  }
-};
+//     return data.updateAccount;
+//   } catch (error) {
+//     console.error((error as Error).message);
+//     return { error: "Failed to connect cart with account" };
+//   }
+// };
 
-export const createCartHygraph = async (product: {
-  slug: string;
-  quantity: number;
-}) => {
+export const createCartHygraph = async (
+  product: {
+    slug: string;
+    quantity: number;
+  },
+  email: string
+) => {
   try {
     const data = await fetcher({
       query: CreateCartDocument,
@@ -201,18 +204,9 @@ export const createCartHygraph = async (product: {
         Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
       },
       variables: {
-        cart: {
-          cartProduct: {
-            create: [
-              {
-                product: {
-                  connect: { slug: product.slug },
-                },
-                quantity: product.quantity,
-              },
-            ],
-          },
-        },
+        quantity: product.quantity,
+        slug: product.slug,
+        email,
       },
     });
 
