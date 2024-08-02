@@ -34,6 +34,21 @@ const route = NextAuth({
   pages: {
     signIn: "/login",
   },
+  callbacks: {
+    async session({ session, token }) {
+      // Assuming the account object contains a 'name' property
+      if (!session.user) return session;
+      session.user.name = token.name as string;
+      return session;
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        // Assuming the user object contains a 'name' property
+        token.name = user.name;
+      }
+      return token;
+    },
+  },
 }) satisfies NextAuthOptions;
 
 export { route as GET, route as POST };

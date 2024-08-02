@@ -12798,7 +12798,7 @@ export type GetAccountByEmailQueryVariables = Exact<{
 }>;
 
 
-export type GetAccountByEmailQuery = { account?: { id: string, password: string, email: string } | null };
+export type GetAccountByEmailQuery = { account?: { id: string, password: string, email: string, name: string } | null };
 
 export type GetCartByEmailQueryVariables = Exact<{
   email: Scalars['String']['input'];
@@ -12891,6 +12891,7 @@ export const GetAccountByEmailDocument = new TypedDocumentString(`
     id
     password
     email
+    name
   }
 }
     `) as unknown as TypedDocumentString<GetAccountByEmailQuery, GetAccountByEmailQueryVariables>;
