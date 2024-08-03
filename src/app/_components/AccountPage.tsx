@@ -1,15 +1,17 @@
 "use client";
 
-import { signOut, useSession } from "next-auth/react";
+import { getSession, signOut, useSession } from "next-auth/react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
 
-export const AccountPage = () => {
+export const AccountPage = async () => {
   const { data } = useSession();
+  // const test = await getSession();
 
+  // console.log(test);
   return (
     <>
       <header className="bg-muted py-6 px-4 md:px-6">
