@@ -5,7 +5,6 @@ export function middleware(request: NextRequest) {
   //   const currentUser = request.cookies.get('currentUser')?.value
 
   const isAuth = request.cookies.get("next-auth.session-token")?.value;
-  console.log("Authhhhhhhhhhhhhhhhhhhhhhhhhhhh: " + isAuth);
 
   //   if (currentUser && !request.nextUrl.pathname.startsWith('/dashboard')) {
   //     return Response.redirect(new URL('/dashboard', request.url))

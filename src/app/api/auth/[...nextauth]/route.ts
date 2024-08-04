@@ -8,7 +8,6 @@ const route = NextAuth({
   providers: [
     CredentialsProvider({
       name: "Credentials",
-
       credentials: {
         email: { label: "email", type: "text" },
         password: { label: "password", type: "password" },
@@ -21,8 +20,11 @@ const route = NextAuth({
 
           if (!account) return null;
 
-          if (!(await bcrypt.compare(credentials.password, account.password)))
-            return null;
+          const isValidPassword = await bcrypt.compare(
+            credentials.password,
+            account.password
+          );
+          if (!isValidPassword) return null;
 
           return account;
         } catch (error) {
@@ -35,17 +37,29 @@ const route = NextAuth({
     signIn: "/login",
   },
   callbacks: {
-    async session({ session, token }) {
-      // Assuming the account object contains a 'name' property
-      if (!session.user) return session;
+    async session({ session, token, trigger, newSession }) {
+      // Ensure session.user exists
+      if (!session.user) {
+        session.user = {};
+      }
+
       session.user.name = token.name as string;
+
+      if (trigger === "update" && newSession?.name) {
+        session.user.name = newSession.name;
+      }
+
       return session;
     },
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger, session }) {
       if (user) {
-        // Assuming the user object contains a 'name' property
         token.name = user.name;
       }
+
+      if (trigger === "update" && session?.name) {
+        token.name = session.name;
+      }
+
       return token;
     },
   },

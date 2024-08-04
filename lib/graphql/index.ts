@@ -11,6 +11,7 @@ import {
   RemoveFromCartDocument,
   TypedDocumentString,
   UpdateCartDocument,
+  UpdateNameDocument,
 } from "../hygraph/generated/graphql";
 
 type GraphQlError = {
@@ -157,38 +158,6 @@ export const getCartByEmail = async (email: string) => {
   return data?.account?.cart;
 };
 
-// export const connectAccountWithCart = async ({
-//   cartId,
-//   email,
-// }: {
-//   cartId: string;
-//   email: string;
-// }) => {
-//   try {
-//     const data = await fetcher({
-//       query: ConnectAccountWithCartDocument,
-//       cache: "no-store",
-//       headers: {
-//         Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
-//       },
-//       variables: {
-//         email,
-//         id: cartId,
-//       },
-//     });
-
-//     if (!data.updateAccount) {
-//       console.error(`Failed to connect cart with account`);
-//       return { error: "Failed to connect cart with account" };
-//     }
-
-//     return data.updateAccount;
-//   } catch (error) {
-//     console.error((error as Error).message);
-//     return { error: "Failed to connect cart with account" };
-//   }
-// };
-
 export const createCartHygraph = async (
   product: {
     slug: string;
@@ -321,5 +290,36 @@ export const removeFromCartHygraph = async ({
   } catch (error) {
     console.error((error as Error).message);
     return { error: "Failed to remove item from cart" };
+  }
+};
+
+export const updateNameHygraph = async ({
+  name,
+  email,
+}: {
+  name: string;
+  email: string;
+}) => {
+  try {
+    const data = await fetcher({
+      query: UpdateNameDocument,
+      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+      },
+      variables: {
+        name,
+        email,
+      },
+    });
+
+    if (!data.updateAccount) {
+      return { error: "Failed to update your name" };
+    }
+
+    return data.updateAccount;
+  } catch (error) {
+    console.error((error as Error).message);
+    return { error: "Failed to update your name" };
   }
 };
