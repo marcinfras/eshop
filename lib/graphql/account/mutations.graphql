@@ -12,6 +12,12 @@ mutation UpdateName($email: String!, $name: String!) {
   }
 }
 
+mutation UpdatePassword($email: String!, $password: String!) {
+  updateAccount(data: { password: $password }, where: { email: $email }) {
+    id
+  }
+}
+
 # mutation ConnectAccountWithCart($email: String!, $id: ID!) {
 #   updateAccount(
 #     data: { cart: { connect: { id: $id } } }

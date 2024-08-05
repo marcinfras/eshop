@@ -9,8 +9,6 @@ export const updateNameAction = async ({
   name: string;
   email: string;
 }) => {
-  // console.log("tratatata");
-
   const res = await updateNameHygraph({
     name,
     email,

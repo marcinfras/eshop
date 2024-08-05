@@ -12801,6 +12801,14 @@ export type UpdateNameMutationVariables = Exact<{
 
 export type UpdateNameMutation = { updateAccount?: { name: string } | null };
 
+export type UpdatePasswordMutationVariables = Exact<{
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+}>;
+
+
+export type UpdatePasswordMutation = { updateAccount?: { id: string } | null };
+
 export type GetAccountByEmailQueryVariables = Exact<{
   email: Scalars['String']['input'];
 }>;
@@ -12900,6 +12908,13 @@ export const UpdateNameDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<UpdateNameMutation, UpdateNameMutationVariables>;
+export const UpdatePasswordDocument = new TypedDocumentString(`
+    mutation UpdatePassword($email: String!, $password: String!) {
+  updateAccount(data: {password: $password}, where: {email: $email}) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<UpdatePasswordMutation, UpdatePasswordMutationVariables>;
 export const GetAccountByEmailDocument = new TypedDocumentString(`
     query GetAccountByEmail($email: String!) {
   account(where: {email: $email}, stage: DRAFT) {

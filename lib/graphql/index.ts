@@ -12,6 +12,7 @@ import {
   TypedDocumentString,
   UpdateCartDocument,
   UpdateNameDocument,
+  UpdatePasswordDocument,
 } from "../hygraph/generated/graphql";
 
 type GraphQlError = {
@@ -321,5 +322,36 @@ export const updateNameHygraph = async ({
   } catch (error) {
     console.error((error as Error).message);
     return { error: "Failed to update your name" };
+  }
+};
+
+export const updatePasswordHygraph = async ({
+  password,
+  email,
+}: {
+  password: string;
+  email: string;
+}) => {
+  try {
+    const data = await fetcher({
+      query: UpdatePasswordDocument,
+      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+      },
+      variables: {
+        password,
+        email,
+      },
+    });
+
+    if (!data.updateAccount) {
+      return { error: "Failed to update your password" };
+    }
+
+    return data.updateAccount;
+  } catch (error) {
+    console.error((error as Error).message);
+    return { error: "Failed to update your password" };
   }
 };
