@@ -3,5 +3,27 @@ query GetAccountByEmail($email: String!) {
     id
     password
     email
+    name
+  }
+}
+
+query GetCartByEmail($email: String!) {
+  account(where: { email: $email }, stage: DRAFT) {
+    cart {
+      id
+      cartProduct {
+        id
+        product {
+          id
+          slug
+          name
+          price
+          images {
+            url
+          }
+        }
+        quantity
+      }
+    }
   }
 }

@@ -1,9 +1,26 @@
 "use client";
 
-import { createContext, useContext, useReducer } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useReducer,
+  useState,
+} from "react";
+import { createCart } from "../../../../../lib/actions/createCart";
+import { updateCart } from "../../../../../lib/actions/updateCart";
+// import { addToCartAction } from "../../../../../lib/actions/addToCart";
+import { useSession } from "next-auth/react";
+import { fetchCart } from "../../../../../lib/actions/fetchCart";
+import { usePathname, useRouter } from "next/navigation";
+import { removeFromCart } from "../../../../../lib/actions/removeFromCart";
+import { Loader } from "../../Loader";
+import { toast } from "../../ui/use-toast";
 
-type ProductType = {
+export type ProductType = {
   id: string;
+  hygraphId?: string;
+  slug: string;
   name: string;
   price: number;
   totalPrice: number;
@@ -11,31 +28,39 @@ type ProductType = {
   image: string;
 };
 
+//TODO
 type initialStateType = {
   cart: ProductType[];
-  // totalPrice: number;
 };
 
 const initialState = {
   cart: [],
-  // totalPrice: 0,
 } satisfies initialStateType;
 
 type ActionType = {
   type:
+    | "cart/initialize"
     | "cart/addProduct"
     | "cart/deleteProduct"
     | "cart/increaseQuantity"
     | "cart/decreaseQuantity";
-  payload?: ProductType | string;
+
+  payload?: ProductType[] | ProductType | string;
 };
 
 const reducer = (state: initialStateType, action: ActionType) => {
   switch (action.type) {
+    case "cart/initialize":
+      if (!Array.isArray(action.payload)) return state;
+      return {
+        ...state,
+        cart: action.payload,
+      };
     case "cart/addProduct":
       if (!action.payload || typeof action.payload === "string") return state;
       return {
-        cart: [...state.cart, action.payload],
+        ...state,
+        cart: [...state.cart, action.payload as ProductType],
       };
     case "cart/deleteProduct":
       if (!action.payload) return state;
@@ -43,12 +68,14 @@ const reducer = (state: initialStateType, action: ActionType) => {
         (item) => item.id !== action.payload
       );
       return {
+        ...state,
         cart: updatedCart,
       };
     case "cart/increaseQuantity":
       if (!action.payload) return state;
 
       return {
+        ...state,
         cart: state.cart.map((item) =>
           item.id === action.payload
             ? {
@@ -63,6 +90,7 @@ const reducer = (state: initialStateType, action: ActionType) => {
       if (!action.payload) return state;
 
       return {
+        ...state,
         cart: state.cart.map((item) =>
           item.id === action.payload
             ? {
@@ -81,36 +109,153 @@ const reducer = (state: initialStateType, action: ActionType) => {
 
 const CartContext = createContext<{
   state: initialStateType;
-  addToCart: (item: ProductType) => void;
+  addToCart: (item: {
+    id: string;
+    slug: string;
+    name: string;
+    price: number;
+    totalPrice: number;
+    quantity: number;
+    image: string;
+  }) => void;
   getCurrentQuantityById: (id: string) => number;
   deleteFromCart: (id: string) => void;
-  increaseItemQuantity: (id: string) => void;
-  decreaseItemQuantity: (id: string) => void;
+  increaseItemQuantity: (id: string, quantity: number) => void;
+  decreaseItemQuantity: (id: string, quantity: number) => void;
   getTotalPrice: () => number;
   getTotalItems: () => number;
 } | null>(null);
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [isLoadingCart, setIsLoading] = useState(false);
 
-  const addToCart = (item: ProductType) => {
+  const session = useSession();
+  const router = useRouter();
+  console.log(session);
+
+  useEffect(() => {
+    const initializeCart = async () => {
+      if (!session.data?.user?.email) return;
+      setIsLoading(true);
+      const initialState = await fetchCart(session.data?.user?.email);
+
+      // if (!initialState) return;
+      router.push("/");
+      dispatch({ type: "cart/initialize", payload: initialState });
+      setIsLoading(false);
+    };
+
+    initializeCart();
+  }, [session.data?.user?.email, router]);
+
+  const addToCart = async (item: {
+    id: string;
+    slug: string;
+    name: string;
+    price: number;
+    totalPrice: number;
+    quantity: number;
+    image: string;
+  }) => {
     if (!item) return;
 
-    dispatch({ type: "cart/addProduct", payload: item });
+    let hygraphId;
+    if (session.data?.user?.email) {
+      setIsLoading(true);
+      hygraphId = await createCart(
+        {
+          quantity: item.quantity,
+          slug: item.slug,
+        },
+        session.data?.user?.email
+      );
+      if (!hygraphId) return;
+      if (typeof hygraphId !== "string" && "error" in hygraphId) {
+        toast({
+          variant: "destructive",
+          title: hygraphId.error,
+        });
+        setIsLoading(false);
+        return;
+      }
+      dispatch({ type: "cart/addProduct", payload: { ...item, hygraphId } });
+      setIsLoading(false);
+      return;
+    }
+
+    dispatch({ type: "cart/addProduct", payload: { ...item } });
   };
 
-  const deleteFromCart = (id: string) => {
+  const deleteFromCart = async (id: string) => {
     if (!id) return;
+
+    if (session.data?.user?.email) {
+      setIsLoading(true);
+      const hygraphId =
+        state.cart.find((item) => item.id === id)?.hygraphId ?? null;
+      if (!hygraphId) return;
+
+      const res = await removeFromCart({ prodId: hygraphId });
+      if ("error" in res) {
+        toast({
+          variant: "destructive",
+          title: res.error,
+        });
+        setIsLoading(false);
+        return;
+      }
+      console.log(res);
+      setIsLoading(false);
+    }
+
     dispatch({ type: "cart/deleteProduct", payload: id });
   };
 
-  const increaseItemQuantity = (id: string) => {
+  const increaseItemQuantity = async (id: string, quantity: number) => {
     if (!id) return;
+
+    if (session.data?.user?.email) {
+      setIsLoading(true);
+      const hygraphId =
+        state.cart.find((item) => item.id === id)?.hygraphId ?? null;
+      if (!hygraphId) return;
+      const res = await updateCart({ prodId: hygraphId, quantity });
+      if (typeof res !== "string" && "error" in res) {
+        toast({
+          variant: "destructive",
+          title: res.error,
+        });
+        setIsLoading(false);
+        return;
+      }
+      console.log(res);
+      setIsLoading(false);
+    }
+
     dispatch({ type: "cart/increaseQuantity", payload: id });
   };
 
-  const decreaseItemQuantity = (id: string) => {
+  const decreaseItemQuantity = async (id: string, quantity: number) => {
     if (!id) return;
+    if (session.data?.user?.email) {
+      setIsLoading(true);
+      const hygraphId =
+        state.cart.find((item) => item.id === id)?.hygraphId ?? null;
+      if (!hygraphId) return;
+      const res = await updateCart({ prodId: hygraphId, quantity });
+      if (typeof res !== "string" && "error" in res) {
+        toast({
+          variant: "destructive",
+          title: res.error,
+        });
+        setIsLoading(false);
+        return;
+      }
+      console.log(res);
+      setIsLoading(false);
+    }
+
     dispatch({ type: "cart/decreaseQuantity", payload: id });
   };
 
@@ -139,6 +284,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
         getTotalItems,
       }}
     >
+      {isLoadingCart && <Loader />}
       {children}
     </CartContext.Provider>
   );

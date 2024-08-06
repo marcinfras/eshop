@@ -1,11 +1,18 @@
 import { getEnv } from "@/app/utils/utils";
 import {
+  AddToCartDocument,
+  // ConnectAccountWithCartDocument,
   CreateAccountDocument,
   CreateCartDocument,
   GetAccountByEmailDocument,
+  GetCartByEmailDocument,
   GetProductBySlugDocument,
   GetProductsDocument,
+  RemoveFromCartDocument,
   TypedDocumentString,
+  UpdateCartDocument,
+  UpdateNameDocument,
+  UpdatePasswordDocument,
 } from "../hygraph/generated/graphql";
 
 type GraphQlError = {
@@ -133,35 +140,218 @@ export const getAccountByEmail = async (email: string) => {
   return data.account;
 };
 
-export const createCartHygraph = async (product: {
-  slug: string;
-  quantity: number;
-}) => {
+export const getCartByEmail = async (email: string) => {
   const data = await fetcher({
-    query: CreateCartDocument,
+    query: GetCartByEmailDocument,
     cache: "no-store",
     headers: {
       Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
     },
     variables: {
-      cart: {
-        cartProduct: {
-          create: [
-            {
-              product: {
-                connect: { slug: product.slug },
-              },
-              quantity: product.quantity,
-            },
-          ],
-        },
-      },
+      email,
     },
   });
 
-  if (!data.createCart) {
-    throw Error(`Failed to create cart`);
-  }
+  // if (!data.account?.cart) {
+  //   throw Error(`Failed to get cart`);
+  // }
 
-  return data.createCart;
+  return data?.account?.cart;
+};
+
+export const createCartHygraph = async (
+  product: {
+    slug: string;
+    quantity: number;
+  },
+  email: string
+) => {
+  try {
+    const data = await fetcher({
+      query: CreateCartDocument,
+      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+      },
+      variables: {
+        quantity: product.quantity,
+        slug: product.slug,
+        email,
+      },
+    });
+
+    if (!data.createCart) {
+      console.error(`Failed to create cart`);
+      return { error: "Failed to create cart" };
+    }
+
+    return data.createCart;
+  } catch (error) {
+    console.error((error as Error).message);
+    return { error: "Failed to create cart" };
+  }
+};
+
+export const updateCartHygraph = async ({
+  cartId,
+  prodId,
+  quantity,
+}: {
+  cartId: string;
+  prodId: string;
+  quantity: number;
+}) => {
+  try {
+    const data = await fetcher({
+      query: UpdateCartDocument,
+      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+      },
+      variables: {
+        cartId,
+        prodId,
+        quantity,
+      },
+    });
+
+    if (!data.updateCart) {
+      console.error(`Failed to update cart`);
+      return { error: "Failed to update cart" };
+    }
+
+    return data.updateCart;
+  } catch (error) {
+    console.error((error as Error).message);
+    return { error: "Failed to update cart" };
+  }
+};
+
+export const addToCartHygraph = async ({
+  cartId,
+  slug,
+  quantity,
+}: {
+  cartId: string;
+  slug: string;
+  quantity: number;
+}) => {
+  try {
+    const data = await fetcher({
+      query: AddToCartDocument,
+      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+      },
+      variables: {
+        cartId,
+        slug,
+        quantity,
+      },
+    });
+
+    if (!data.updateCart) {
+      console.error(`Failed to add to cart`);
+      return { error: "Failed to add to cart" };
+    }
+
+    return data.updateCart;
+  } catch (error) {
+    console.error((error as Error).message);
+    return { error: "Failed to add to cart" };
+  }
+};
+
+export const removeFromCartHygraph = async ({
+  cartId,
+  prodId,
+}: {
+  cartId: string;
+  prodId: string;
+}) => {
+  try {
+    const data = await fetcher({
+      query: RemoveFromCartDocument,
+      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+      },
+      variables: {
+        cartId,
+        prodId,
+      },
+    });
+
+    if (!data.updateCart) {
+      console.error(`Failed to remove item from cart`);
+      return { error: "Failed to remove item from cart" };
+    }
+
+    return data.updateCart;
+  } catch (error) {
+    console.error((error as Error).message);
+    return { error: "Failed to remove item from cart" };
+  }
+};
+
+export const updateNameHygraph = async ({
+  name,
+  email,
+}: {
+  name: string;
+  email: string;
+}) => {
+  try {
+    const data = await fetcher({
+      query: UpdateNameDocument,
+      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+      },
+      variables: {
+        name,
+        email,
+      },
+    });
+
+    if (!data.updateAccount) {
+      return { error: "Failed to update your name" };
+    }
+
+    return data.updateAccount;
+  } catch (error) {
+    console.error((error as Error).message);
+    return { error: "Failed to update your name" };
+  }
+};
+
+export const updatePasswordHygraph = async ({
+  password,
+  email,
+}: {
+  password: string;
+  email: string;
+}) => {
+  try {
+    const data = await fetcher({
+      query: UpdatePasswordDocument,
+      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+      },
+      variables: {
+        password,
+        email,
+      },
+    });
+
+    if (!data.updateAccount) {
+      return { error: "Failed to update your password" };
+    }
+
+    return data.updateAccount;
+  } catch (error) {
+    console.error((error as Error).message);
+    return { error: "Failed to update your password" };
+  }
 };

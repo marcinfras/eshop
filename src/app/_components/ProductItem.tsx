@@ -40,6 +40,7 @@ export const ProductItem = ({
   const addToCartHandler = () => {
     const item = {
       id: product.id,
+      slug: product.slug,
       name: product.name,
       price: product.price,
       totalPrice: product.price,
