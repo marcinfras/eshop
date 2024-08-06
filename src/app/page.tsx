@@ -7,19 +7,6 @@ import { ProductItem } from "./_components/ProductItem";
 export default async function Home() {
   const products = await getProducts();
 
-  // const test = {
-  //   images: [
-  //     {
-  //       url: "https://media.graphassets.com/GwlxIi81SWvHXA8qsSC6",
-  //     },
-  //   ],
-  //   id: "1",
-  //   name: "Unisex Long Sleeve Tee",
-  //   price: 1999,
-  //   slug: "unisex-long-sleeve-tee",
-  //   test: true,
-  // };
-
   // console.log(products);
 
   return (

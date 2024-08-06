@@ -6,6 +6,18 @@ mutation CreateAccount($name: String!, $email: String!, $password: String!) {
   }
 }
 
+mutation UpdateName($email: String!, $name: String!) {
+  updateAccount(data: { name: $name }, where: { email: $email }) {
+    name
+  }
+}
+
+mutation UpdatePassword($email: String!, $password: String!) {
+  updateAccount(data: { password: $password }, where: { email: $email }) {
+    id
+  }
+}
+
 # mutation ConnectAccountWithCart($email: String!, $id: ID!) {
 #   updateAccount(
 #     data: { cart: { connect: { id: $id } } }

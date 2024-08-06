@@ -12793,12 +12793,28 @@ export type CreateAccountMutationVariables = Exact<{
 
 export type CreateAccountMutation = { createAccount?: { id: string, email: string, name: string } | null };
 
+export type UpdateNameMutationVariables = Exact<{
+  email: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+}>;
+
+
+export type UpdateNameMutation = { updateAccount?: { name: string } | null };
+
+export type UpdatePasswordMutationVariables = Exact<{
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+}>;
+
+
+export type UpdatePasswordMutation = { updateAccount?: { id: string } | null };
+
 export type GetAccountByEmailQueryVariables = Exact<{
   email: Scalars['String']['input'];
 }>;
 
 
-export type GetAccountByEmailQuery = { account?: { id: string, password: string, email: string } | null };
+export type GetAccountByEmailQuery = { account?: { id: string, password: string, email: string, name: string } | null };
 
 export type GetCartByEmailQueryVariables = Exact<{
   email: Scalars['String']['input'];
@@ -12885,12 +12901,27 @@ export const CreateAccountDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<CreateAccountMutation, CreateAccountMutationVariables>;
+export const UpdateNameDocument = new TypedDocumentString(`
+    mutation UpdateName($email: String!, $name: String!) {
+  updateAccount(data: {name: $name}, where: {email: $email}) {
+    name
+  }
+}
+    `) as unknown as TypedDocumentString<UpdateNameMutation, UpdateNameMutationVariables>;
+export const UpdatePasswordDocument = new TypedDocumentString(`
+    mutation UpdatePassword($email: String!, $password: String!) {
+  updateAccount(data: {password: $password}, where: {email: $email}) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<UpdatePasswordMutation, UpdatePasswordMutationVariables>;
 export const GetAccountByEmailDocument = new TypedDocumentString(`
     query GetAccountByEmail($email: String!) {
   account(where: {email: $email}, stage: DRAFT) {
     id
     password
     email
+    name
   }
 }
     `) as unknown as TypedDocumentString<GetAccountByEmailQuery, GetAccountByEmailQueryVariables>;

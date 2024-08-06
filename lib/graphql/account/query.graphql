@@ -3,6 +3,7 @@ query GetAccountByEmail($email: String!) {
     id
     password
     email
+    name
   }
 }
 
