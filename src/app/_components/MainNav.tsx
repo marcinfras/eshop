@@ -1,15 +1,15 @@
 "use client";
 
 import Link from "next/link";
-import { useCart } from "./contexts/CartContext/CartContext";
+// import { useCart } from "./contexts/CartContext/CartContext";
 import { useSession } from "next-auth/react";
 import { AccountNavIcon } from "./AccountIcon";
 import { Loader } from "./Loader";
 
 export const MainNav = () => {
-  const {
-    state: { cart },
-  } = useCart();
+  // const {
+  //   state: { cart },
+  // } = useCart();
 
   const { status, data } = useSession();
 
@@ -29,11 +29,11 @@ export const MainNav = () => {
         >
           <div className="w-5 h-5" />
           <span className="inline">Cart</span>
-          {cart.length > 0 && (
+          {/* {cart.length > 0 && (
             <span className="bg-primary text-primary-foreground rounded-full px-2 py-0.5 text-xs font-medium">
               {cart.length}
             </span>
-          )}
+          )} */}
         </Link>
         {/* <AccountNavIcon />
         <Link

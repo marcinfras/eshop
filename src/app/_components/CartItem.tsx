@@ -2,29 +2,19 @@ import { MinusIcon, PlusIcon, XIcon } from "lucide-react";
 import { Button } from "../_components/ui/button";
 import Image from "next/image";
 import { UpdateItemQuantity } from "./UpdateItemQuantity";
-import { useCart } from "./contexts/CartContext/CartContext";
+// import { useCart } from "./contexts/CartContext/CartContext";
 import { formatCurrency } from "../../helpers/helpers";
+import { ProductCart } from "../../../lib/graphql/mappers";
 
-export const CartItem = ({
-  item,
-}: {
-  item: {
-    id: string;
-    name: string;
-    price: number;
-    totalPrice: number;
-    quantity: number;
-    image: string;
-  };
-}) => {
-  const { getCurrentQuantityById } = useCart();
+export const CartItem = ({ item }: { item: ProductCart }) => {
+  // const { getCurrentQuantityById } = useCart();
 
-  const currentQuantity = getCurrentQuantityById(item.id);
+  // const currentQuantity = getCurrentQuantityById(item.id);
 
   return (
     <div className="grid grid-cols-[100px_1fr_100px] items-center gap-4">
       <Image
-        src={item.image}
+        src={item.images.url}
         alt={item.name}
         width={800}
         height={800}
@@ -34,7 +24,7 @@ export const CartItem = ({
         <h3 className="font-semibold">{item.name}</h3>
         <p className="text-muted-foreground">{formatCurrency(item.price)}</p>
       </div>
-      <UpdateItemQuantity id={item.id} currentQuantity={currentQuantity} />
+      <UpdateItemQuantity id={item.id} currentQuantity={item.quantity} />
       {/* <div className="flex items-center gap-2">
         <Button size="icon" variant="outline">
           <MinusIcon className="w-4 h-4" />

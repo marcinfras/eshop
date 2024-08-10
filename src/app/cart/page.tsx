@@ -1,50 +1,53 @@
 import { MinusIcon, PlusIcon, XIcon } from "lucide-react";
 import { Button } from "../_components/ui/button";
 import Image from "next/image";
-import { useCart } from "../_components/contexts/CartContext/CartContext";
+// import { useCart } from "../_components/contexts/CartContext/CartContext";
 import { CartItem } from "../_components/CartItem";
 import { CartView } from "../_components/CartView";
+import { fetchCart } from "../../../lib/actions/fetchCart";
+import { formatCurrency } from "@/helpers/helpers";
 
-const Page = () => {
-  const cart = [
-    {
-      images: [
-        {
-          url: "https://media.graphassets.com/GwlxIi81SWvHXA8qsSC6",
-        },
-      ],
-      id: "1",
-      name: "Unisex Long Sleeve Tee",
-      price: 1999,
-      slug: "unisex-long-sleeve-tee",
-    },
-    {
-      images: [
-        {
-          url: "https://media.graphassets.com/pRwUMCYSoOrHycP1VgIm",
-        },
-      ],
-      id: "2",
-      name: "Snapback",
-      price: 1299,
-      slug: "snapback",
-    },
-    {
-      images: [
-        {
-          url: "https://media.graphassets.com/Li6gjg0ySmeWOY8zh72w",
-        },
-      ],
-      id: "3",
-      name: "Unisex Zip Hoodie",
-      price: 3999,
-      slug: "unisex-zip-hoodie",
-    },
-  ];
+const Page = async () => {
+  const cart = await fetchCart();
 
+  const totalItems = cart?.reduce((acc, cur) => cur?.quantity + acc, 0);
+
+  const totalPrice = cart
+    ?.map((item) => {
+      const totalPrice = item?.quantity * item?.price;
+      return totalPrice;
+    })
+    .reduce((acc, cur) => acc + cur, 0);
+
+  //acc cur
   return (
     <div className="container mx-auto px-4 py-8 max-w-2xl">
-      <CartView />
+      <h1 className="text-3xl font-bold mb-6">Shopping Cart</h1>
+      {(!cart || cart.length === 0) && <p>Your cart is empty!</p>}
+      {cart && cart.length > 0 && (
+        <>
+          <div className="grid gap-6">
+            {cart.map((item) => (
+              <CartItem key={item.id} item={item} />
+            ))}
+          </div>
+          <div className="mt-8 bg-muted/20 rounded-lg p-6">
+            <div className="flex justify-between items-center mb-4">
+              <span className="text-muted-foreground">Total Items:</span>
+              <span className="font-semibold">{totalItems}</span>
+            </div>
+            <div className="flex justify-between items-center mb-6">
+              <span className="text-muted-foreground">Total Cost:</span>
+              <span className="font-semibold">
+                {formatCurrency(totalPrice as number)}
+              </span>
+            </div>
+            <Button size="lg" className="w-full">
+              Proceed to Checkout
+            </Button>
+          </div>
+        </>
+      )}
     </div>
   );
 };

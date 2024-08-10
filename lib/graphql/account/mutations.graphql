@@ -18,11 +18,11 @@ mutation UpdatePassword($email: String!, $password: String!) {
   }
 }
 
-# mutation ConnectAccountWithCart($email: String!, $id: ID!) {
-#   updateAccount(
-#     data: { cart: { connect: { id: $id } } }
-#     where: { email: $email }
-#   ) {
-#     id
-#   }
-# }
+mutation ConnectAccountWithCart($email: String!, $cartId: ID!) {
+  updateAccount(
+    data: { cart: { connect: { id: $cartId } } }
+    where: { email: $email }
+  ) {
+    id
+  }
+}

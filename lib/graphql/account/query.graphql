@@ -4,6 +4,9 @@ query GetAccountByEmail($email: String!) {
     password
     email
     name
+    cart {
+      id
+    }
   }
 }
 

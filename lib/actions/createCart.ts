@@ -5,7 +5,10 @@ import {
   addToCartHygraph,
   // connectAccountWithCart,
   createCartHygraph,
+  getCartByIdHygraph,
 } from "../graphql";
+import { mapperCart } from "../graphql/mappers";
+import { revalidateTag } from "next/cache";
 // import { addToCartAction } from "./addToCart";
 
 export const createCart = async (
@@ -13,47 +16,36 @@ export const createCart = async (
     quantity: number;
     slug: string;
   },
-  email: string
+  email: string | undefined | null
 ) => {
-  // 1 pobieramy koszyk
+  const cartCookie = getCartFromCookie();
 
-  const cartId = cookies().get("cart");
-  console.log(cartId);
-  // 2 jesli nie bedzie ma tworzyc tutaj
+  console.log("cartCookie: " + cartCookie);
 
-  if (!cartId) {
+  if (!cartCookie) {
     const cart = await createCartHygraph(product, email);
 
-    if ("error" in cart) {
-      return { error: cart.error };
-    }
-    // // console.log("Cartttttttttttttt: " + cart);
-    // const id = await connectAccountWithCart({ cartId: cart.id, email });
-
-    // if ("error" in id) {
-    //   return { error: id.error };
-    // }
-    // // console.log(cart);
-
-    cookies().set("cart", cart.id, { httpOnly: true });
-
-    // console.log("createCart " + cart.cartProduct[0].id);
-    return cart.cartProduct[0].id;
+    if ("error" in cart) return cart;
+    cookies().set("cart", cart.id, { httpOnly: true, secure: true });
+    return;
   }
 
-  // 4 jesni bedzie ma aktualizowac cartProduct
-
-  // addToCartAction({ slug: product.slug, quantity: product.quantity });
-  const hygraphId = await addToCartHygraph({
-    cartId: cartId.value,
+  const res = await addToCartHygraph({
+    cartId: cartCookie,
     slug: product.slug,
     quantity: product.quantity,
   });
 
-  if ("error" in hygraphId) {
-    return { error: hygraphId.error };
-  }
+  if ("error" in res) return res;
 
-  //   console.log(hygraphId.cartProduct[hygraphId.cartProduct.length - 1].id);
-  return hygraphId.cartProduct[hygraphId.cartProduct.length - 1].id;
+  const cart = await getCartByIdHygraph(cartCookie);
+
+  revalidateTag("cart");
+
+  return mapperCart(cart);
+};
+
+const getCartFromCookie = () => {
+  const cartId = cookies().get("cart");
+  return cartId?.value;
 };

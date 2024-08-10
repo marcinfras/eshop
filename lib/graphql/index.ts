@@ -1,11 +1,13 @@
 import { getEnv } from "@/app/utils/utils";
 import {
   AddToCartDocument,
+  ConnectAccountWithCartDocument,
   // ConnectAccountWithCartDocument,
   CreateAccountDocument,
   CreateCartDocument,
   GetAccountByEmailDocument,
   GetCartByEmailDocument,
+  GetCartDocument,
   GetProductBySlugDocument,
   GetProductsDocument,
   RemoveFromCartDocument,
@@ -159,12 +161,53 @@ export const getCartByEmail = async (email: string) => {
   return data?.account?.cart;
 };
 
+export const connectAccountWithCartHygraph = async ({
+  email,
+  cartId,
+}: {
+  email: string;
+  cartId: string;
+}) => {
+  const data = await fetcher({
+    query: ConnectAccountWithCartDocument,
+    cache: "no-store",
+    headers: {
+      Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+    },
+    variables: {
+      email,
+      cartId,
+    },
+  });
+
+  // if (!data.account?.cart) {
+  //   throw Error(`Failed to get cart`);
+  // }
+
+  return data.updateAccount;
+};
+
+export const getCartByIdHygraph = async (id: string) => {
+  const data = await fetcher({
+    query: GetCartDocument,
+    cache: "no-store",
+    headers: {
+      Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+    },
+    variables: {
+      id,
+    },
+  });
+
+  return data.cart;
+};
+
 export const createCartHygraph = async (
   product: {
     slug: string;
     quantity: number;
   },
-  email: string
+  email: string | undefined | null
 ) => {
   try {
     const data = await fetcher({
@@ -174,9 +217,17 @@ export const createCartHygraph = async (
         Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
       },
       variables: {
-        quantity: product.quantity,
-        slug: product.slug,
-        email,
+        cart: {
+          cartProduct: {
+            create: [
+              {
+                quantity: product.quantity,
+                product: { connect: { slug: product.slug } },
+              },
+            ],
+          },
+          ...(email ? { account: { connect: { email } } } : {}),
+        },
       },
     });
 

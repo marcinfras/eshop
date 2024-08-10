@@ -1,6 +1,10 @@
+"use client";
+
 import { MinusIcon, PlusIcon, XIcon } from "lucide-react";
 import { Button } from "./ui/button";
-import { useCart } from "./contexts/CartContext/CartContext";
+// import { useCart } from "./contexts/CartContext/CartContext";
+import { removeFromCart } from "../../../lib/actions/removeFromCart";
+import { updateCart } from "../../../lib/actions/updateCart";
 
 export const UpdateItemQuantity = ({
   size,
@@ -11,20 +15,15 @@ export const UpdateItemQuantity = ({
   id: string;
   currentQuantity: number;
 }) => {
-  const {
-    deleteFromCart,
-    increaseItemQuantity,
-
-    decreaseItemQuantity,
-  } = useCart();
-
   return (
     <div className={`flex items-center gap-2`}>
       <Button
         size="icon"
         className={size === "small" ? "w-7 h-7" : ""}
         variant="outline"
-        onClick={() => decreaseItemQuantity(id, currentQuantity - 1)}
+        onClick={() =>
+          updateCart({ prodId: id, quantity: currentQuantity - 1 })
+        }
         disabled={currentQuantity === 1}
       >
         <MinusIcon className="w-4 h-4" />
@@ -34,7 +33,9 @@ export const UpdateItemQuantity = ({
         size="icon"
         className={size === "small" ? "w-7 h-7" : ""}
         variant="outline"
-        onClick={() => increaseItemQuantity(id, currentQuantity + 1)}
+        onClick={() =>
+          updateCart({ prodId: id, quantity: currentQuantity + 1 })
+        }
       >
         <PlusIcon className="w-4 h-4" />
       </Button>
@@ -42,7 +43,10 @@ export const UpdateItemQuantity = ({
         size="icon"
         className={size === "small" ? "w-7 h-7" : ""}
         variant="outline"
-        onClick={() => deleteFromCart(id)}
+        onClick={async () => {
+          const res = await removeFromCart(id);
+          console.log(res);
+        }}
       >
         <XIcon className="w-4 h-4" />
       </Button>

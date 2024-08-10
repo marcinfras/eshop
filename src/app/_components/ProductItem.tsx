@@ -5,8 +5,12 @@ import Image from "next/image";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { UpdateItemQuantity } from "./UpdateItemQuantity";
-import { useCart } from "./contexts/CartContext/CartContext";
+// import { useCart } from "./contexts/CartContext/CartContext";
 import { formatCurrency } from "../../helpers/helpers";
+import { useSession } from "next-auth/react";
+import { createCart } from "../../../lib/actions/createCart";
+import { useTransition } from "react";
+import { Loader } from "./Loader";
 
 export const ProductItem = ({
   product,
@@ -19,44 +23,22 @@ export const ProductItem = ({
     images: {
       url: string;
     }[];
+    currentQuantity: number;
+    idInCart?: string;
   };
 }) => {
-  //     id: string;
-  //   name: string;
-  //   price: number;
-  //   totalPrice: number;
-  //   quantity: number;
-  //   image: string;
+  const session = useSession();
+  const [isPending, startTransition] = useTransition();
 
-  const {
-    state: { cart },
-    addToCart,
-    getCurrentQuantityById,
-  } = useCart();
-
-  const currentQuantity = getCurrentQuantityById(product.id);
-  const isInCart = currentQuantity > 0;
-
-  const addToCartHandler = () => {
-    const item = {
-      id: product.id,
-      slug: product.slug,
-      name: product.name,
-      price: product.price,
-      totalPrice: product.price,
-      quantity: 1,
-      image: product.images[0].url,
-    };
-
-    console.log(item);
-
-    addToCart(item);
-  };
-
-  console.log(cart);
+  // const {
+  //   state: { cart },
+  //   addToCart,
+  //   getCurrentQuantityById,
+  // } = useCart();
 
   return (
     <div className="bg-background rounded-lg overflow-hidden shadow-lg">
+      {isPending && <Loader />}
       <Image
         src={product.images[0].url}
         alt={product.name}
@@ -74,15 +56,25 @@ export const ProductItem = ({
           <span className="text-primary font-semibold">
             {formatCurrency(product.price)}
           </span>
-          {!isInCart ? (
-            <Button onClick={addToCartHandler} size="sm">
+          {product.currentQuantity === 0 ? (
+            <Button
+              onClick={() => {
+                startTransition(() => {
+                  createCart(
+                    { quantity: 1, slug: product.slug },
+                    session.data?.user?.email
+                  );
+                });
+              }}
+              size="sm"
+            >
               Add to Cart
             </Button>
           ) : (
             <UpdateItemQuantity
               size="small"
-              id={product.id}
-              currentQuantity={currentQuantity}
+              id={product.idInCart as string}
+              currentQuantity={product.currentQuantity}
             />
           )}
         </div>

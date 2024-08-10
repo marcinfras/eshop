@@ -2,6 +2,7 @@
 
 import { cookies } from "next/headers";
 import { updateCartHygraph } from "../graphql";
+import { revalidateTag } from "next/cache";
 
 export const updateCart = async ({
   prodId,
@@ -12,12 +13,7 @@ export const updateCart = async ({
 }) => {
   const cartId = cookies().get("cart");
 
-  // console.log(cartId?.value);
-  // console.log(prodId);
-  // console.log(quantity);
-  // console.log(":titiitiit");
   if (!cartId?.value) return { error: "Failed to update cart" };
-  // console.log("tratatata");
 
   const res = await updateCartHygraph({
     cartId: cartId.value,
@@ -28,6 +24,8 @@ export const updateCart = async ({
   if ("error" in res) {
     return { error: res.error };
   }
+
+  revalidateTag("cart");
 
   return res.id;
 };

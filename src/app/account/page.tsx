@@ -1,4 +1,4 @@
-import { UpdateNameForm } from "../_components/updateNameForm";
+import { UpdateNameForm } from "../_components/UpdateNameForm";
 import { Separator } from "../_components/ui/separator";
 import { UpdatePasswordForm } from "../_components/UpdatePasswordForm";
 

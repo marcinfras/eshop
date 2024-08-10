@@ -1,11 +1,8 @@
-# mutation CreateCart($cart: CartCreateInput!) {
-#   createCart(data: $cart) {
-#     cartProduct {
-#       id
-#     }
-#     id
-#   }
-# }
+mutation CreateCart($cart: CartCreateInput!) {
+  createCart(data: $cart) {
+    id
+  }
+}
 
 # mutation CreateCart($quantity: Int!, $slug: String!, $email: String!) {
 #   createCart(
@@ -23,21 +20,18 @@
 #   }
 # }
 
-mutation CreateCart($quantity: Int!, $slug: String!, $email: String!) {
-  createCart(
-    data: {
-      cartProduct: {
-        create: { quantity: $quantity, product: { connect: { slug: $slug } } }
-      }
-      account: { connect: { email: $email } }
-    }
-  ) {
-    id
-    cartProduct {
-      id
-    }
-  }
-}
+# mutation CreateCart($quantity: Int!, $slug: String!, $email: String) {
+#   createCart(
+#     data: {
+#       cartProduct: {
+#         create: { quantity: $quantity, product: { connect: { slug: $slug } } }
+#       }
+#       account: { connect: { email: $email } }
+#     }
+#   ) {
+#     id
+#   }
+# }
 
 mutation UpdateCart($cartId: ID!, $prodId: ID!, $quantity: Int!) {
   updateCart(
@@ -61,9 +55,7 @@ mutation AddToCart($cartId: ID!, $slug: String!, $quantity: Int!) {
     }
     where: { id: $cartId }
   ) {
-    cartProduct {
-      id
-    }
+    id
   }
 }
 

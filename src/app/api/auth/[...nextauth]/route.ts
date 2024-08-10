@@ -2,7 +2,11 @@ import { NextAuthOptions } from "next-auth";
 import bcrypt from "bcrypt";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
-import { getAccountByEmail } from "../../../../../lib/graphql";
+import {
+  connectAccountWithCartHygraph,
+  getAccountByEmail,
+} from "../../../../../lib/graphql";
+import { cookies } from "next/headers";
 
 const route = NextAuth({
   providers: [
@@ -25,6 +29,22 @@ const route = NextAuth({
             account.password
           );
           if (!isValidPassword) return null;
+
+          const cookieCart = cookies().get("cart");
+
+          if (cookieCart?.value) {
+            await connectAccountWithCartHygraph({
+              email: account.email,
+              cartId: cookieCart.value,
+            });
+          }
+
+          if (!cookieCart?.value && account.cart?.id) {
+            cookies().set("cart", account.cart.id, {
+              httpOnly: true,
+              secure: true,
+            });
+          }
 
           return account;
         } catch (error) {
