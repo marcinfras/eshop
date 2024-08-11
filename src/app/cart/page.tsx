@@ -1,7 +1,7 @@
 import { MinusIcon, PlusIcon, XIcon } from "lucide-react";
 import { Button } from "../_components/ui/button";
 import Image from "next/image";
-// import { useCart } from "../_components/contexts/CartContext/CartContext";
+// import { useCart } from "../_components/contexts/CartContext/CartContext";git
 import { CartItem } from "../_components/CartItem";
 import { CartView } from "../_components/CartView";
 import { fetchCart } from "../../../lib/actions/fetchCart";

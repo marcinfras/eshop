@@ -11,6 +11,7 @@ import { useSession } from "next-auth/react";
 import { createCart } from "../../../lib/actions/createCart";
 import { useTransition } from "react";
 import { Loader } from "./Loader";
+import { useLoader } from "./contexts/LoaderContext.tsx/LoaderContext";
 
 export const ProductItem = ({
   product,
@@ -28,7 +29,7 @@ export const ProductItem = ({
   };
 }) => {
   const session = useSession();
-  const [isPending, startTransition] = useTransition();
+  const { startTransition } = useLoader();
 
   // const {
   //   state: { cart },
@@ -38,7 +39,6 @@ export const ProductItem = ({
 
   return (
     <div className="bg-background rounded-lg overflow-hidden shadow-lg">
-      {isPending && <Loader />}
       <Image
         src={product.images[0].url}
         alt={product.name}

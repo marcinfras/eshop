@@ -7,6 +7,7 @@ import {
   getAccountByEmail,
 } from "../../../../../lib/graphql";
 import { cookies } from "next/headers";
+import { revalidateTag } from "next/cache";
 
 const route = NextAuth({
   providers: [
@@ -45,6 +46,8 @@ const route = NextAuth({
               secure: true,
             });
           }
+
+          revalidateTag("cart");
 
           return account;
         } catch (error) {

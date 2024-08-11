@@ -5,6 +5,7 @@ import { Button } from "./ui/button";
 // import { useCart } from "./contexts/CartContext/CartContext";
 import { removeFromCart } from "../../../lib/actions/removeFromCart";
 import { updateCart } from "../../../lib/actions/updateCart";
+import { useLoader } from "./contexts/LoaderContext.tsx/LoaderContext";
 
 export const UpdateItemQuantity = ({
   size,
@@ -15,15 +16,19 @@ export const UpdateItemQuantity = ({
   id: string;
   currentQuantity: number;
 }) => {
+  const { startTransition } = useLoader();
+
   return (
     <div className={`flex items-center gap-2`}>
       <Button
         size="icon"
         className={size === "small" ? "w-7 h-7" : ""}
         variant="outline"
-        onClick={() =>
-          updateCart({ prodId: id, quantity: currentQuantity - 1 })
-        }
+        onClick={() => {
+          startTransition(() => {
+            updateCart({ prodId: id, quantity: currentQuantity - 1 });
+          });
+        }}
         disabled={currentQuantity === 1}
       >
         <MinusIcon className="w-4 h-4" />
@@ -33,9 +38,11 @@ export const UpdateItemQuantity = ({
         size="icon"
         className={size === "small" ? "w-7 h-7" : ""}
         variant="outline"
-        onClick={() =>
-          updateCart({ prodId: id, quantity: currentQuantity + 1 })
-        }
+        onClick={() => {
+          startTransition(() => {
+            updateCart({ prodId: id, quantity: currentQuantity + 1 });
+          });
+        }}
       >
         <PlusIcon className="w-4 h-4" />
       </Button>
@@ -43,9 +50,10 @@ export const UpdateItemQuantity = ({
         size="icon"
         className={size === "small" ? "w-7 h-7" : ""}
         variant="outline"
-        onClick={async () => {
-          const res = await removeFromCart(id);
-          console.log(res);
+        onClick={() => {
+          startTransition(async () => {
+            await removeFromCart(id);
+          });
         }}
       >
         <XIcon className="w-4 h-4" />

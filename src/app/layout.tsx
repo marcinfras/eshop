@@ -4,7 +4,8 @@ import "./globals.css";
 import { Toaster } from "./_components/ui/toaster";
 import { ClientContext } from "./_components/contexts/ClientContext/ClientContext";
 import { MainNav } from "./_components/MainNav";
-import { CartProvider } from "./_components/contexts/CartContext/CartContext";
+import { LoaderProvider } from "./_components/contexts/LoaderContext.tsx/LoaderContext";
+// import { CartProvider } from "./_components/contexts/CartContext/CartContext";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -22,11 +23,11 @@ export default function RootLayout({
     <ClientContext>
       <html lang="en">
         <body className={inter.className}>
-          {/* <CartProvider> */}
-          <MainNav />
-          {children}
-          <Toaster />
-          {/* </CartProvider> */}
+          <LoaderProvider>
+            <MainNav />
+            {children}
+            <Toaster />
+          </LoaderProvider>
         </body>
       </html>
     </ClientContext>

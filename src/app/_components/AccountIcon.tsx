@@ -9,9 +9,16 @@ import {
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import Link from "next/link";
+import { deleteCartCookie } from "../../../lib/actions/deleteCartCookie";
 
 export const AccountNavIcon = () => {
   const { data } = useSession();
+
+  const logoutHander = () => {
+    deleteCartCookie();
+
+    signOut({ callbackUrl: "/login" });
+  };
 
   return (
     <DropdownMenu>
@@ -38,10 +45,7 @@ export const AccountNavIcon = () => {
           </DropdownMenuItem>
         </Link>
         <DropdownMenuSeparator />
-        <DropdownMenuItem
-          onClick={() => signOut({ callbackUrl: "/login" })}
-          className="cursor-pointer"
-        >
+        <DropdownMenuItem onClick={logoutHander} className="cursor-pointer">
           <span>Log out</span>
           <span className="ml-auto text-xs">⇧⌘Q</span>
         </DropdownMenuItem>

@@ -19,7 +19,6 @@ import { toast } from "./ui/use-toast";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LoadingButton } from "./LoadingButton";
-import { signOut } from "next-auth/react";
 
 type RegisterFormInputs = {
   name: string;
@@ -40,8 +39,6 @@ export const RegisterForm = () => {
   const [isCreating, setIsCreating] = useState(false);
 
   const router = useRouter();
-
-  // signOut();
 
   const { handleSubmit, control } = form;
 
