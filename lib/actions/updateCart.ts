@@ -27,5 +27,5 @@ export const updateCart = async ({
 
   revalidateTag("cart");
 
-  return res.id;
+  return res;
 };

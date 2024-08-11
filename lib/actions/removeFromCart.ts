@@ -15,13 +15,12 @@ export const removeFromCart = async (prodId: string) => {
   });
 
   if ("error" in res) {
-    console.log("Resssssssssssss: " + res);
     return { error: res.error };
   }
 
   revalidateTag("cart");
 
-  return res.id;
+  return res;
 
   //   console.log(hygraphId.cartProduct[hygraphId.cartProduct.length - 1].id);
   //   return hygraphId.cartProduct[hygraphId.cartProduct.length - 1].id;

@@ -6,6 +6,7 @@ import { Button } from "./ui/button";
 import { removeFromCart } from "../../../lib/actions/removeFromCart";
 import { updateCart } from "../../../lib/actions/updateCart";
 import { useLoader } from "./contexts/LoaderContext.tsx/LoaderContext";
+import { toast } from "./ui/use-toast";
 
 export const UpdateItemQuantity = ({
   size,
@@ -25,8 +26,17 @@ export const UpdateItemQuantity = ({
         className={size === "small" ? "w-7 h-7" : ""}
         variant="outline"
         onClick={() => {
-          startTransition(() => {
-            updateCart({ prodId: id, quantity: currentQuantity - 1 });
+          startTransition(async () => {
+            const res = await updateCart({
+              prodId: id,
+              quantity: currentQuantity - 1,
+            });
+
+            if ("error" in res)
+              toast({
+                variant: "destructive",
+                title: res.error,
+              });
           });
         }}
         disabled={currentQuantity === 1}
@@ -39,8 +49,17 @@ export const UpdateItemQuantity = ({
         className={size === "small" ? "w-7 h-7" : ""}
         variant="outline"
         onClick={() => {
-          startTransition(() => {
-            updateCart({ prodId: id, quantity: currentQuantity + 1 });
+          startTransition(async () => {
+            const res = await updateCart({
+              prodId: id,
+              quantity: currentQuantity + 1,
+            });
+
+            if ("error" in res)
+              toast({
+                variant: "destructive",
+                title: res.error,
+              });
           });
         }}
       >
@@ -52,7 +71,14 @@ export const UpdateItemQuantity = ({
         variant="outline"
         onClick={() => {
           startTransition(async () => {
-            await removeFromCart(id);
+            const res = await removeFromCart("dasdaads");
+
+            if ("error" in res)
+              toast({
+                variant: "destructive",
+                title: res.error,
+                duration: 3000,
+              });
           });
         }}
       >

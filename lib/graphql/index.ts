@@ -266,7 +266,7 @@ export const updateCartHygraph = async ({
       },
     });
 
-    if (!data.updateCart) {
+    if (!data.updateCart?.updatedProduct[0].id) {
       console.error(`Failed to update cart`);
       return { error: "Failed to update cart" };
     }

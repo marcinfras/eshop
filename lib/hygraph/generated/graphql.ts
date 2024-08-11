@@ -12845,7 +12845,7 @@ export type UpdateCartMutationVariables = Exact<{
 }>;
 
 
-export type UpdateCartMutation = { updateCart?: { id: string } | null };
+export type UpdateCartMutation = { updateCart?: { updatedProduct: Array<{ id: string }> } | null };
 
 export type AddToCartMutationVariables = Exact<{
   cartId: Scalars['ID']['input'];
@@ -12983,7 +12983,9 @@ export const UpdateCartDocument = new TypedDocumentString(`
     where: {id: $cartId}
     data: {cartProduct: {update: {where: {id: $prodId}, data: {quantity: $quantity}}}}
   ) {
-    id
+    updatedProduct: cartProduct(where: {id: $prodId}) {
+      id
+    }
   }
 }
     `) as unknown as TypedDocumentString<UpdateCartMutation, UpdateCartMutationVariables>;

@@ -26,6 +26,7 @@ export const createCart = async (
     const cart = await createCartHygraph(product, email);
 
     if ("error" in cart) return cart;
+
     cookies().set("cart", cart.id, { httpOnly: true, secure: true });
     return;
   }

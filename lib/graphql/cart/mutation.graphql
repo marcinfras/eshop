@@ -42,7 +42,9 @@ mutation UpdateCart($cartId: ID!, $prodId: ID!, $quantity: Int!) {
       }
     }
   ) {
-    id
+    updatedProduct: cartProduct(where: { id: $prodId }) {
+      id
+    }
   }
 }
 

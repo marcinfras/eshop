@@ -12,6 +12,7 @@ import { createCart } from "../../../lib/actions/createCart";
 import { useTransition } from "react";
 import { Loader } from "./Loader";
 import { useLoader } from "./contexts/LoaderContext.tsx/LoaderContext";
+import { toast } from "./ui/use-toast";
 
 export const ProductItem = ({
   product,
@@ -59,11 +60,17 @@ export const ProductItem = ({
           {product.currentQuantity === 0 ? (
             <Button
               onClick={() => {
-                startTransition(() => {
-                  createCart(
+                startTransition(async () => {
+                  const res = await createCart(
                     { quantity: 1, slug: product.slug },
                     session.data?.user?.email
                   );
+
+                  if (res && "error" in res)
+                    toast({
+                      variant: "destructive",
+                      title: res.error,
+                    });
                 });
               }}
               size="sm"
