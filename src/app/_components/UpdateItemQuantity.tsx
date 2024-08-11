@@ -71,7 +71,7 @@ export const UpdateItemQuantity = ({
         variant="outline"
         onClick={() => {
           startTransition(async () => {
-            const res = await removeFromCart("dasdaads");
+            const res = await removeFromCart(id);
 
             if ("error" in res)
               toast({
