@@ -7,6 +7,7 @@ import { removeFromCart } from "../../../lib/actions/removeFromCart";
 import { updateCart } from "../../../lib/actions/updateCart";
 import { useLoader } from "./contexts/LoaderContext.tsx/LoaderContext";
 import { toast } from "./ui/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const UpdateItemQuantity = ({
   size,
@@ -18,6 +19,8 @@ export const UpdateItemQuantity = ({
   currentQuantity: number;
 }) => {
   const { startTransition } = useLoader();
+
+  const queryClient = useQueryClient();
 
   return (
     <div className={`flex items-center gap-2`}>
@@ -37,6 +40,7 @@ export const UpdateItemQuantity = ({
                 variant: "destructive",
                 title: res.error,
               });
+            queryClient.invalidateQueries({ queryKey: ["cart"] });
           });
         }}
         disabled={currentQuantity === 1}
@@ -60,6 +64,8 @@ export const UpdateItemQuantity = ({
                 variant: "destructive",
                 title: res.error,
               });
+
+            queryClient.invalidateQueries({ queryKey: ["cart"] });
           });
         }}
       >
@@ -79,6 +85,8 @@ export const UpdateItemQuantity = ({
                 title: res.error,
                 duration: 3000,
               });
+
+            queryClient.invalidateQueries({ queryKey: ["cart"] });
           });
         }}
       >

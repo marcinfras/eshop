@@ -1,21 +1,26 @@
 "use client";
 
 import Link from "next/link";
-// import { useCart } from "./contexts/CartContext/CartContext";
+import { useQuery } from "@tanstack/react-query";
 import { useSession } from "next-auth/react";
 import { AccountNavIcon } from "./AccountIcon";
 import { Loader } from "./Loader";
+import { fetchCart } from "../../../lib/actions/fetchCart";
 
 export const MainNav = () => {
-  // const {
-  //   state: { cart },
-  // } = useCart();
-
   const { status, data } = useSession();
 
-  console.log(data);
+  const { data: cart, isPending } = useQuery({
+    queryKey: ["cart"],
+    queryFn: async () => {
+      const data = await fetchCart();
+      return data;
+    },
+  });
 
-  if (status === "loading") return <Loader />;
+  console.log(data, cart);
+
+  if (status === "loading" || isPending) return <Loader />;
 
   return (
     <nav className="flex items-center justify-between h-16 px-4 bg-background border-b md:px-6">
@@ -29,11 +34,11 @@ export const MainNav = () => {
         >
           <div className="w-5 h-5" />
           <span className="inline">Cart</span>
-          {/* {cart.length > 0 && (
+          {cart && cart.length > 0 && (
             <span className="bg-primary text-primary-foreground rounded-full px-2 py-0.5 text-xs font-medium">
               {cart.length}
             </span>
-          )} */}
+          )}
         </Link>
         {/* <AccountNavIcon />
         <Link
