@@ -4,10 +4,16 @@ import { getProducts } from "../../lib/graphql";
 import Link from "next/navigation";
 import { ProductItem } from "./_components/ProductItem";
 import { fetchCart } from "../../lib/actions/fetchCart";
+import { cookies } from "next/headers";
+import { NewsletterPopup } from "./_components/NewsletterPopup";
 
 export default async function Home() {
   const products = await getProducts();
   const cart = await fetchCart();
+
+  const mailerLite = cookies().get("mailerlite");
+
+  console.log("mailerLiteeeeeeeeeeeeee: " + mailerLite);
 
   // console.log(cart);
 
@@ -15,6 +21,8 @@ export default async function Home() {
 
   return (
     <main className="container mx-auto px-4 md:px-6 py-12">
+      {/* {JSON.stringify(mailerLite, null, 2)} */}
+      {!mailerLite?.value && <NewsletterPopup />}
       <h1 className="text-3xl font-bold mb-8">Our Products</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
         {products.map((product) => {
