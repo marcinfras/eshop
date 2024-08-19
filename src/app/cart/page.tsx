@@ -1,11 +1,10 @@
-import { MinusIcon, PlusIcon, XIcon } from "lucide-react";
-import { Button } from "../_components/ui/button";
 import Image from "next/image";
 // import { useCart } from "../_components/contexts/CartContext/CartContext";git
 import { CartItem } from "../_components/CartItem";
-import { CartView } from "../_components/CartView";
 import { fetchCart } from "../../../lib/actions/fetchCart";
 import { formatCurrency } from "@/helpers/helpers";
+
+import { CheckoutButton } from "../_components/CheckoutButton";
 
 const Page = async () => {
   const cart = await fetchCart();
@@ -42,9 +41,7 @@ const Page = async () => {
                 {formatCurrency(totalPrice as number)}
               </span>
             </div>
-            <Button size="lg" className="w-full">
-              Proceed to Checkout
-            </Button>
+            <CheckoutButton />
           </div>
         </>
       )}

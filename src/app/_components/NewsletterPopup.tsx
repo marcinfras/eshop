@@ -7,7 +7,10 @@ import { Form, FormControl, FormField, FormItem, FormMessage } from "./ui/form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useSession } from "next-auth/react";
 import { useState } from "react";
-import { signNewsletter } from "../../../lib/actions/signNewsletter";
+import {
+  cancelNewsletter,
+  signNewsletter,
+} from "../../../lib/actions/signNewsletter";
 import { toast } from "./ui/use-toast";
 
 type EmailFormInput = {
@@ -32,6 +35,7 @@ export const NewsletterPopup = () => {
   const { handleSubmit, control } = form;
 
   const closePopup = () => {
+    cancelNewsletter();
     setIsOpen(false);
   };
 
