@@ -5,11 +5,13 @@ import {
   // ConnectAccountWithCartDocument,
   CreateAccountDocument,
   CreateCartDocument,
+  CreateOrderDocument,
   GetAccountByEmailDocument,
   GetCartByEmailDocument,
   GetCartDocument,
   GetProductBySlugDocument,
   GetProductsDocument,
+  OrderStatus,
   RemoveFromCartDocument,
   TypedDocumentString,
   UpdateCartDocument,
@@ -404,5 +406,55 @@ export const updatePasswordHygraph = async ({
   } catch (error) {
     console.error((error as Error).message);
     return { error: "Failed to update your password" };
+  }
+};
+
+export const createOrderHygraph = async (orderData: {
+  email: string;
+  total: number;
+  orderItems: {
+    quantity: number;
+    total: number;
+    slug: string;
+  }[];
+  stripeCheckoutId: string;
+  currentStatus: OrderStatus;
+}) => {
+  const { email, total, orderItems, stripeCheckoutId, currentStatus } =
+    orderData;
+  try {
+    const data = await fetcher({
+      query: CreateOrderDocument,
+      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+      },
+      variables: {
+        data: {
+          email,
+          total,
+          stripeCheckoutId,
+          currentStatus,
+          orderItems: {
+            create: orderItems.map((item) => ({
+              quantity: item.quantity,
+              total: item.total,
+              product: {
+                connect: { slug: item.slug },
+              },
+            })),
+          },
+        },
+      },
+    });
+
+    if (!data.createOrder?.id) {
+      return { error: "Failed to create order" };
+    }
+
+    return data.createOrder.id;
+  } catch (error) {
+    console.error((error as Error).message);
+    return { error: "Failed to create order" };
   }
 };

@@ -18,6 +18,7 @@ const documents = {
     "query GetAccountByEmail($email: String!) {\n  account(where: {email: $email}, stage: DRAFT) {\n    id\n    password\n    email\n    name\n    cart {\n      id\n    }\n  }\n}\n\nquery GetCartByEmail($email: String!) {\n  account(where: {email: $email}, stage: DRAFT) {\n    cart {\n      id\n      cartProduct {\n        id\n        product {\n          id\n          slug\n          name\n          price\n          images {\n            url\n          }\n        }\n        quantity\n      }\n    }\n  }\n}": types.GetAccountByEmailDocument,
     "mutation CreateCart($cart: CartCreateInput!) {\n  createCart(data: $cart) {\n    id\n  }\n}\n\nmutation UpdateCart($cartId: ID!, $prodId: ID!, $quantity: Int!) {\n  updateCart(\n    where: {id: $cartId}\n    data: {cartProduct: {update: {where: {id: $prodId}, data: {quantity: $quantity}}}}\n  ) {\n    updatedProduct: cartProduct(where: {id: $prodId}) {\n      id\n    }\n  }\n}\n\nmutation AddToCart($cartId: ID!, $slug: String!, $quantity: Int!) {\n  updateCart(\n    data: {cartProduct: {create: {quantity: $quantity, product: {connect: {slug: $slug}}}}}\n    where: {id: $cartId}\n  ) {\n    id\n  }\n}\n\nmutation RemoveFromCart($cartId: ID!, $prodId: ID!) {\n  updateCart(data: {cartProduct: {delete: {id: $prodId}}}, where: {id: $cartId}) {\n    id\n  }\n}": types.CreateCartDocument,
     "query GetCart($id: ID!) {\n  cart(where: {id: $id}, stage: DRAFT) {\n    id\n    cartProduct {\n      id\n      product {\n        id\n        slug\n        name\n        price\n        images {\n          url\n        }\n      }\n      quantity\n    }\n  }\n}": types.GetCartDocument,
+    "mutation CreateOrder($data: OrderCreateInput!) {\n  createOrder(data: $data) {\n    id\n  }\n}": types.CreateOrderDocument,
     "query GetProductBySlug($slug: String!) {\n  product(where: {slug: $slug}) {\n    name\n    price\n    id\n    images {\n      url\n    }\n    description\n    variants {\n      ... on ProductSizeColorVariant {\n        size\n        id\n      }\n    }\n  }\n}": types.GetProductBySlugDocument,
     "query GetProducts {\n  products {\n    images {\n      url\n    }\n    name\n    price\n    id\n    slug\n  }\n}\n\nquery GetProductsBySlugs($slug: [String!]!) {\n  products(where: {slug_in: $slug}) {\n    price\n  }\n}": types.GetProductsDocument,
 };
@@ -38,6 +39,10 @@ export function graphql(source: "mutation CreateCart($cart: CartCreateInput!) {\
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
 export function graphql(source: "query GetCart($id: ID!) {\n  cart(where: {id: $id}, stage: DRAFT) {\n    id\n    cartProduct {\n      id\n      product {\n        id\n        slug\n        name\n        price\n        images {\n          url\n        }\n      }\n      quantity\n    }\n  }\n}"): typeof import('./graphql').GetCartDocument;
+/**
+ * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
+ */
+export function graphql(source: "mutation CreateOrder($data: OrderCreateInput!) {\n  createOrder(data: $data) {\n    id\n  }\n}"): typeof import('./graphql').CreateOrderDocument;
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */

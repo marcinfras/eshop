@@ -6382,6 +6382,7 @@ export type Order = Entity & Node & {
   createdAt: Scalars['DateTime']['output'];
   /** User that created this document */
   createdBy?: Maybe<User>;
+  currentStatus: OrderStatus;
   /** Get the document in other stages */
   documentInStages: Array<Order>;
   email: Scalars['String']['output'];
@@ -6480,6 +6481,7 @@ export type OrderConnection = {
 
 export type OrderCreateInput = {
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  currentStatus: OrderStatus;
   email: Scalars['String']['input'];
   orderItems?: InputMaybe<OrderItemCreateManyInlineInput>;
   stripeCheckoutId: Scalars['String']['input'];
@@ -7012,6 +7014,13 @@ export type OrderManyWhereInput = {
   /** All values that are not contained in given list. */
   createdAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
   createdBy?: InputMaybe<UserWhereInput>;
+  currentStatus?: InputMaybe<OrderStatus>;
+  /** All values that are contained in given list. */
+  currentStatus_in?: InputMaybe<Array<InputMaybe<OrderStatus>>>;
+  /** Any other value that exists and is not equal to the given value. */
+  currentStatus_not?: InputMaybe<OrderStatus>;
+  /** All values that are not contained in given list. */
+  currentStatus_not_in?: InputMaybe<Array<InputMaybe<OrderStatus>>>;
   documentInStages_every?: InputMaybe<OrderWhereStageInput>;
   documentInStages_none?: InputMaybe<OrderWhereStageInput>;
   documentInStages_some?: InputMaybe<OrderWhereStageInput>;
@@ -7130,6 +7139,8 @@ export type OrderManyWhereInput = {
 export enum OrderOrderByInput {
   CreatedAtAsc = 'createdAt_ASC',
   CreatedAtDesc = 'createdAt_DESC',
+  CurrentStatusAsc = 'currentStatus_ASC',
+  CurrentStatusDesc = 'currentStatus_DESC',
   EmailAsc = 'email_ASC',
   EmailDesc = 'email_DESC',
   IdAsc = 'id_ASC',
@@ -7144,7 +7155,16 @@ export enum OrderOrderByInput {
   UpdatedAtDesc = 'updatedAt_DESC'
 }
 
+export enum OrderStatus {
+  InProgress = 'IN_PROGRESS',
+  New = 'NEW',
+  Paid = 'PAID',
+  Recived = 'RECIVED',
+  Send = 'SEND'
+}
+
 export type OrderUpdateInput = {
+  currentStatus?: InputMaybe<OrderStatus>;
   email?: InputMaybe<Scalars['String']['input']>;
   orderItems?: InputMaybe<OrderItemUpdateManyInlineInput>;
   stripeCheckoutId?: InputMaybe<Scalars['String']['input']>;
@@ -7169,6 +7189,7 @@ export type OrderUpdateManyInlineInput = {
 };
 
 export type OrderUpdateManyInput = {
+  currentStatus?: InputMaybe<OrderStatus>;
   email?: InputMaybe<Scalars['String']['input']>;
   stripeCheckoutId?: InputMaybe<Scalars['String']['input']>;
   total?: InputMaybe<Scalars['Int']['input']>;
@@ -7249,6 +7270,13 @@ export type OrderWhereInput = {
   /** All values that are not contained in given list. */
   createdAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
   createdBy?: InputMaybe<UserWhereInput>;
+  currentStatus?: InputMaybe<OrderStatus>;
+  /** All values that are contained in given list. */
+  currentStatus_in?: InputMaybe<Array<InputMaybe<OrderStatus>>>;
+  /** Any other value that exists and is not equal to the given value. */
+  currentStatus_not?: InputMaybe<OrderStatus>;
+  /** All values that are not contained in given list. */
+  currentStatus_not_in?: InputMaybe<Array<InputMaybe<OrderStatus>>>;
   documentInStages_every?: InputMaybe<OrderWhereStageInput>;
   documentInStages_none?: InputMaybe<OrderWhereStageInput>;
   documentInStages_some?: InputMaybe<OrderWhereStageInput>;
@@ -12871,6 +12899,13 @@ export type GetCartQueryVariables = Exact<{
 
 export type GetCartQuery = { cart?: { id: string, cartProduct: Array<{ id: string, quantity: number, product?: { id: string, slug: string, name: string, price: number, images: Array<{ url: string }> } | null }> } | null };
 
+export type CreateOrderMutationVariables = Exact<{
+  data: OrderCreateInput;
+}>;
+
+
+export type CreateOrderMutation = { createOrder?: { id: string } | null };
+
 export type GetProductBySlugQueryVariables = Exact<{
   slug: Scalars['String']['input'];
 }>;
@@ -13026,6 +13061,13 @@ export const GetCartDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<GetCartQuery, GetCartQueryVariables>;
+export const CreateOrderDocument = new TypedDocumentString(`
+    mutation CreateOrder($data: OrderCreateInput!) {
+  createOrder(data: $data) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<CreateOrderMutation, CreateOrderMutationVariables>;
 export const GetProductBySlugDocument = new TypedDocumentString(`
     query GetProductBySlug($slug: String!) {
   product(where: {slug: $slug}) {
