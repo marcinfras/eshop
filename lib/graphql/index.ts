@@ -6,9 +6,11 @@ import {
   CreateAccountDocument,
   CreateCartDocument,
   CreateOrderDocument,
+  DeleteCartDocument,
   GetAccountByEmailDocument,
   GetCartByEmailDocument,
   GetCartDocument,
+  GetOrderByStripeCheckoutIdDocument,
   GetProductBySlugDocument,
   GetProductsDocument,
   OrderStatus,
@@ -347,6 +349,31 @@ export const removeFromCartHygraph = async ({
   }
 };
 
+export const deleteCartHygraph = async (cartId: string) => {
+  try {
+    const data = await fetcher({
+      query: DeleteCartDocument,
+      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+      },
+      variables: {
+        cartId,
+      },
+    });
+
+    if (!data.deleteCart) {
+      console.error("Failed to delete cart");
+      return { error: "Failed to delete cart" };
+    }
+
+    return { id: data.deleteCart.id };
+  } catch (error) {
+    console.error((error as Error).message);
+    return { error: "Failed to delete cart" };
+  }
+};
+
 export const updateNameHygraph = async ({
   name,
   email,
@@ -456,5 +483,33 @@ export const createOrderHygraph = async (orderData: {
   } catch (error) {
     console.error((error as Error).message);
     return { error: "Failed to create order" };
+  }
+};
+
+export const getOrderByStripeCheckoutIdHygraph = async (
+  stripeCheckoutId: string
+) => {
+  try {
+    const data = await fetcher({
+      query: GetOrderByStripeCheckoutIdDocument,
+      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+      },
+      variables: {
+        stripeCheckoutId,
+      },
+    });
+
+    console.log(data);
+
+    if (!data.order) {
+      return { error: "Failed to get order" };
+    }
+
+    return data.order;
+  } catch (error) {
+    console.error((error as Error).message);
+    return { error: "Failed to get order" };
   }
 };

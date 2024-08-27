@@ -40,7 +40,7 @@ export const UpdateItemQuantity = ({
                 variant: "destructive",
                 title: res.error,
               });
-            queryClient.invalidateQueries({ queryKey: ["cart"] });
+            await queryClient.invalidateQueries({ queryKey: ["cart"] });
           });
         }}
         disabled={currentQuantity === 1}
@@ -65,7 +65,7 @@ export const UpdateItemQuantity = ({
                 title: res.error,
               });
 
-            queryClient.invalidateQueries({ queryKey: ["cart"] });
+            await queryClient.invalidateQueries({ queryKey: ["cart"] });
           });
         }}
       >
@@ -86,7 +86,7 @@ export const UpdateItemQuantity = ({
                 duration: 3000,
               });
 
-            queryClient.invalidateQueries({ queryKey: ["cart"] });
+            await queryClient.invalidateQueries({ queryKey: ["cart"] });
           });
         }}
       >

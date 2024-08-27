@@ -4,6 +4,7 @@ import { getEnv } from "@/app/utils/utils";
 import { cookies } from "next/headers";
 import { createOrderHygraph } from "../../../../lib/graphql";
 import { OrderStatus } from "../../../../lib/hygraph/generated/graphql";
+import { deleteCartCookie } from "../../../../lib/actions/deleteCartCookie";
 
 const stripeKey = getEnv(process.env.STRIPE_KEY);
 
@@ -20,7 +21,7 @@ const handler = async (req: NextRequest) => {
       sig,
       getEnv(process.env.STRIPE_WEBHOOK)
     );
-    eventStripeWebhook(event, stripe);
+    eventStripeWebhook(event);
   } catch (error) {
     if (error instanceof Error) {
       return NextResponse.json({
@@ -35,7 +36,7 @@ const handler = async (req: NextRequest) => {
   });
 };
 
-const eventStripeWebhook = async (event: Stripe.Event, stripe: Stripe) => {
+const eventStripeWebhook = async (event: Stripe.Event) => {
   const type = event.type;
 
   switch (type) {
@@ -61,13 +62,18 @@ const eventStripeWebhook = async (event: Stripe.Event, stripe: Stripe) => {
           total: item.quantity * item.price,
           slug: item.slug,
         }));
-        await createOrderHygraph({
+
+        const total = orderItems.reduce((acc, cur) => cur.total + acc, 0);
+
+        const orderId = await createOrderHygraph({
           email: metadata.email,
-          total: 100,
+          total,
           orderItems,
           stripeCheckoutId: id,
           currentStatus: OrderStatus.Paid,
         });
+
+        console.log("Orderiddddddddddddddd: " + orderId);
       }
 
       return;

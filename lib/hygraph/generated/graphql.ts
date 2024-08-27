@@ -7191,7 +7191,6 @@ export type OrderUpdateManyInlineInput = {
 export type OrderUpdateManyInput = {
   currentStatus?: InputMaybe<OrderStatus>;
   email?: InputMaybe<Scalars['String']['input']>;
-  stripeCheckoutId?: InputMaybe<Scalars['String']['input']>;
   total?: InputMaybe<Scalars['Int']['input']>;
 };
 
@@ -7409,6 +7408,7 @@ export type OrderWhereStageInput = {
 /** References Order record uniquely */
 export type OrderWhereUniqueInput = {
   id?: InputMaybe<Scalars['ID']['input']>;
+  stripeCheckoutId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Information about pagination in a connection. */
@@ -12892,6 +12892,13 @@ export type RemoveFromCartMutationVariables = Exact<{
 
 export type RemoveFromCartMutation = { updateCart?: { id: string } | null };
 
+export type DeleteCartMutationVariables = Exact<{
+  cartId: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteCartMutation = { deleteCart?: { id: string } | null };
+
 export type GetCartQueryVariables = Exact<{
   id: Scalars['ID']['input'];
 }>;
@@ -12905,6 +12912,13 @@ export type CreateOrderMutationVariables = Exact<{
 
 
 export type CreateOrderMutation = { createOrder?: { id: string } | null };
+
+export type GetOrderByStripeCheckoutIdQueryVariables = Exact<{
+  stripeCheckoutId: Scalars['String']['input'];
+}>;
+
+
+export type GetOrderByStripeCheckoutIdQuery = { order?: { total: number, orderItems: Array<{ quantity: number, total: number, product?: { name: string } | null }> } | null };
 
 export type GetProductBySlugQueryVariables = Exact<{
   slug: Scalars['String']['input'];
@@ -13041,6 +13055,13 @@ export const RemoveFromCartDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<RemoveFromCartMutation, RemoveFromCartMutationVariables>;
+export const DeleteCartDocument = new TypedDocumentString(`
+    mutation DeleteCart($cartId: ID!) {
+  deleteCart(where: {id: $cartId}) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<DeleteCartMutation, DeleteCartMutationVariables>;
 export const GetCartDocument = new TypedDocumentString(`
     query GetCart($id: ID!) {
   cart(where: {id: $id}, stage: DRAFT) {
@@ -13068,6 +13089,20 @@ export const CreateOrderDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<CreateOrderMutation, CreateOrderMutationVariables>;
+export const GetOrderByStripeCheckoutIdDocument = new TypedDocumentString(`
+    query GetOrderByStripeCheckoutId($stripeCheckoutId: String!) {
+  order(where: {stripeCheckoutId: $stripeCheckoutId}, stage: DRAFT) {
+    total
+    orderItems {
+      quantity
+      total
+      product {
+        name
+      }
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<GetOrderByStripeCheckoutIdQuery, GetOrderByStripeCheckoutIdQueryVariables>;
 export const GetProductBySlugDocument = new TypedDocumentString(`
     query GetProductBySlug($slug: String!) {
   product(where: {slug: $slug}) {

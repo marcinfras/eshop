@@ -1,0 +1,12 @@
+query GetOrderByStripeCheckoutId($stripeCheckoutId: String!) {
+  order(where: { stripeCheckoutId: $stripeCheckoutId }, stage: DRAFT) {
+    total
+    orderItems {
+      quantity
+      total
+      product {
+        name
+      }
+    }
+  }
+}

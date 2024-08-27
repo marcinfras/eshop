@@ -69,3 +69,9 @@ mutation RemoveFromCart($cartId: ID!, $prodId: ID!) {
     id
   }
 }
+
+mutation DeleteCart($cartId: ID!) {
+  deleteCart(where: { id: $cartId }) {
+    id
+  }
+}
