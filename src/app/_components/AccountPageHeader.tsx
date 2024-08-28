@@ -2,9 +2,17 @@
 
 import { useSession } from "next-auth/react";
 import { Avatar, AvatarFallback } from "./ui/avatar";
+import { useRouter } from "next/navigation";
 
 export const AccountPageHeader = () => {
-  const { data } = useSession();
+  const { data, status } = useSession();
+
+  const router = useRouter();
+
+  if (status === "unauthenticated") {
+    router.push("/login");
+    return null;
+  }
 
   return (
     <header className="bg-muted py-6 px-4 md:px-6">

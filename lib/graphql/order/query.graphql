@@ -10,3 +10,12 @@ query GetOrderByStripeCheckoutId($stripeCheckoutId: String!) {
     }
   }
 }
+
+query GetOrdersByEmail($email: String!) {
+  orders(where: { email: $email }, stage: DRAFT) {
+    id
+    total
+    createdAt
+    currentStatus
+  }
+}

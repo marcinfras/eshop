@@ -11,6 +11,7 @@ import {
   GetCartByEmailDocument,
   GetCartDocument,
   GetOrderByStripeCheckoutIdDocument,
+  GetOrdersByEmailDocument,
   GetProductBySlugDocument,
   GetProductsDocument,
   OrderStatus,
@@ -511,5 +512,31 @@ export const getOrderByStripeCheckoutIdHygraph = async (
   } catch (error) {
     console.error((error as Error).message);
     return { error: "Failed to get order" };
+  }
+};
+
+export const getOrdersByEmailHygraph = async (email: string) => {
+  try {
+    const data = await fetcher({
+      query: GetOrdersByEmailDocument,
+      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+      },
+      variables: {
+        email,
+      },
+    });
+
+    console.log(data);
+
+    if (!data.orders) {
+      return [];
+    }
+
+    return data.orders;
+  } catch (error) {
+    console.error((error as Error).message);
+    return { error: "Failed to get orders" };
   }
 };

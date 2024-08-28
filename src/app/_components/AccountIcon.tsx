@@ -38,9 +38,16 @@ export const AccountNavIcon = () => {
           <p className="text-xs text-muted-foreground">{data?.user?.email}</p>
         </div>
         <DropdownMenuSeparator />
-        <Link href="/account" className="cursor-pointer bg-red-800">
+        <Link href="/account" className="cursor-pointer">
           <DropdownMenuItem className="cursor-pointer">
             <span>Account</span>
+            <span className="ml-auto text-xs">⇧⌘P</span>
+          </DropdownMenuItem>
+        </Link>
+        <DropdownMenuSeparator />
+        <Link href="/account/orders" className="cursor-pointer">
+          <DropdownMenuItem className="cursor-pointer">
+            <span>Orders</span>
             <span className="ml-auto text-xs">⇧⌘P</span>
           </DropdownMenuItem>
         </Link>
