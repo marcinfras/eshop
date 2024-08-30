@@ -11,7 +11,6 @@ export const AccountPageHeader = () => {
 
   if (status === "unauthenticated") {
     router.push("/login");
-    return null;
   }
 
   return (

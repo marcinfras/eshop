@@ -12920,6 +12920,13 @@ export type GetOrderByStripeCheckoutIdQueryVariables = Exact<{
 
 export type GetOrderByStripeCheckoutIdQuery = { order?: { total: number, orderItems: Array<{ quantity: number, total: number, product?: { name: string } | null }> } | null };
 
+export type GetOrderByIdQueryVariables = Exact<{
+  orderId: Scalars['ID']['input'];
+}>;
+
+
+export type GetOrderByIdQuery = { order?: { email: string, currentStatus: OrderStatus, createdAt: string, total: number, orderItems: Array<{ quantity: number, total: number, product?: { name: string, price: number, images: Array<{ url: string }> } | null }> } | null };
+
 export type GetOrdersByEmailQueryVariables = Exact<{
   email: Scalars['String']['input'];
 }>;
@@ -13110,6 +13117,27 @@ export const GetOrderByStripeCheckoutIdDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<GetOrderByStripeCheckoutIdQuery, GetOrderByStripeCheckoutIdQueryVariables>;
+export const GetOrderByIdDocument = new TypedDocumentString(`
+    query GetOrderById($orderId: ID!) {
+  order(where: {id: $orderId}, stage: DRAFT) {
+    email
+    currentStatus
+    createdAt
+    total
+    orderItems {
+      quantity
+      total
+      product {
+        images {
+          url
+        }
+        name
+        price
+      }
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<GetOrderByIdQuery, GetOrderByIdQueryVariables>;
 export const GetOrdersByEmailDocument = new TypedDocumentString(`
     query GetOrdersByEmail($email: String!) {
   orders(where: {email: $email}, stage: DRAFT) {

@@ -10,13 +10,17 @@ export function middleware(request: NextRequest) {
   //     return Response.redirect(new URL('/dashboard', request.url))
   //   }
 
+  if (!isAuth && request.nextUrl.pathname.startsWith("/success")) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
   if (!isAuth && request.nextUrl.pathname.startsWith("/account")) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 }
 
 export const config = {
-  matcher: ["/account"],
+  matcher: ["/account", "/account/(.*)", "/success"],
 };
 
 // import { NextRequest, NextResponse } from "next/server";

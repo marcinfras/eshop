@@ -16,6 +16,7 @@ import {
 } from "./ui/select";
 import { Label } from "./ui/label";
 import { SVGProps } from "react";
+import { OrdersItem } from "./OrdersItem";
 
 export const OrdersList = () => {
   const session = useSession();
@@ -27,27 +28,6 @@ export const OrdersList = () => {
       return data;
     },
   });
-
-  //   const filteredOrders = [
-  //     {
-  //       id: "ORD001",
-  //       date: "2023-04-15",
-  //       total: 149.99,
-  //       status: "Delivered",
-  //     },
-  //     {
-  //       id: "ORD002",
-  //       date: "2023-03-28",
-  //       total: 79.99,
-  //       status: "Cancelled",
-  //     },
-  //     {
-  //       id: "ORD003",
-  //       date: "2023-02-12",
-  //       total: 199.99,
-  //       status: "Shipped",
-  //     },
-  //   ];
 
   console.log(orders);
 
@@ -97,26 +77,7 @@ export const OrdersList = () => {
         <div>
           {orders &&
             !("error" in orders) &&
-            orders.map((order) => (
-              <div
-                key={order.id}
-                className="flex flex-col sm:flex-row justify-between border rounded-lg p-3 mb-4"
-              >
-                <div>
-                  <p className="font-medium text-sm">{order.id}</p>
-                  <div>{formatCurrency(order.total)}</div>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <div className="self-end">{formatData(order.createdAt)}</div>
-                  <Badge className="self-end" variant={"outline"}>
-                    {order.currentStatus}
-                  </Badge>
-                  <Button variant="outline" size="sm">
-                    View Details
-                  </Button>
-                </div>
-              </div>
-            ))}
+            orders.map((order) => <OrdersItem key={order.id} order={order} />)}
         </div>
       </div>
     </>

@@ -11,8 +11,6 @@ export default async function Home() {
   const products = await getProducts();
   const cart = await fetchCart();
 
-  console.log(cart);
-
   const newsletter = cookies().get("newsletter");
 
   // console.log(cart);

@@ -10,6 +10,7 @@ import {
   GetAccountByEmailDocument,
   GetCartByEmailDocument,
   GetCartDocument,
+  GetOrderByIdDocument,
   GetOrderByStripeCheckoutIdDocument,
   GetOrdersByEmailDocument,
   GetProductBySlugDocument,
@@ -499,6 +500,32 @@ export const getOrderByStripeCheckoutIdHygraph = async (
       },
       variables: {
         stripeCheckoutId,
+      },
+    });
+
+    console.log(data);
+
+    if (!data.order) {
+      return { error: "Failed to get order" };
+    }
+
+    return data.order;
+  } catch (error) {
+    console.error((error as Error).message);
+    return { error: "Failed to get order" };
+  }
+};
+
+export const getOrderByIdHygraph = async (orderId: string) => {
+  try {
+    const data = await fetcher({
+      query: GetOrderByIdDocument,
+      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+      },
+      variables: {
+        orderId,
       },
     });
 
