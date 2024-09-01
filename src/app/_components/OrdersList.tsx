@@ -85,6 +85,7 @@ export const OrdersList = () => {
       const data = await fetchOrders(session.data?.user?.email as string);
       return data;
     },
+    enabled: !!session.data?.user?.email,
   });
 
   console.log(orders);
