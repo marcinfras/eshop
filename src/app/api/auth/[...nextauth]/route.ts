@@ -8,8 +8,10 @@ import {
 } from "../../../../../lib/graphql";
 import { cookies } from "next/headers";
 import { revalidateTag } from "next/cache";
+import { getEnv } from "@/app/utils/utils";
 
 const route = NextAuth({
+  secret: getEnv(process.env.NEXTAUTH_SECRET),
   providers: [
     CredentialsProvider({
       name: "Credentials",
