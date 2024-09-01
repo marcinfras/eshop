@@ -7,13 +7,15 @@ import { redirect } from "next/navigation";
 export const fetchOrders = async (email: string) => {
   if (!email) return [];
 
-  const orders = getOrdersByEmailHygraph(email);
+  const orders = await getOrdersByEmailHygraph(email);
 
   if ("error" in orders) {
     return { error: orders.error };
   }
 
   revalidateTag("orders");
+
+  console.log(orders);
 
   return orders;
 };

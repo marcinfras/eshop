@@ -5,6 +5,6 @@ export const formatCurrency = (value: number) => {
   }).format(value / 100);
 };
 
-export const formatData = (value: string) => {
+export const formatDate = (value: string) => {
   return new Intl.DateTimeFormat("en-GB").format(new Date(value));
 };

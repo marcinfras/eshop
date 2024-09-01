@@ -10,7 +10,7 @@ import { fetchOrderById } from "../../../lib/actions/fetchOrder";
 import { useSession } from "next-auth/react";
 import { Loader } from "./Loader";
 import { OrderDetailItem } from "./OrderDetailItem";
-import { formatCurrency } from "@/helpers/helpers";
+import { formatCurrency, formatDate } from "@/helpers/helpers";
 
 export const OrderDetail = ({ orderId }: { orderId: string }) => {
   const session = useSession();
@@ -28,9 +28,10 @@ export const OrderDetail = ({ orderId }: { orderId: string }) => {
       });
       return data;
     },
+    enabled: !!session.data?.user?.email,
   });
 
-  if (isPending) return <Loader />;
+  if (isPending || session.status === "loading") return <Loader />;
 
   if (order && "error" in order) {
     throw Error(order.error);
@@ -62,7 +63,7 @@ export const OrderDetail = ({ orderId }: { orderId: string }) => {
             Paid
           </Badge>
           <div className="text-sm text-muted-foreground">
-            Placed on June 23, 2023
+            Placed on {formatDate(order.createdAt)}
           </div>
         </div>
       </div>

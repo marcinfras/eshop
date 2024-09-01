@@ -1,4 +1,4 @@
-import { formatCurrency, formatData } from "@/helpers/helpers";
+import { formatCurrency, formatDate } from "@/helpers/helpers";
 import { OrderStatus } from "../../../lib/hygraph/generated/graphql";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
@@ -19,11 +19,11 @@ export const OrdersItem = ({
   return (
     <div className="flex flex-col sm:flex-row justify-between border rounded-lg p-3 mb-4">
       <div>
-        <p className="font-medium text-sm">{id}</p>
+        <p className="font-medium text-sm">#{id}</p>
         <div>{formatCurrency(total)}</div>
       </div>
       <div className="flex flex-col gap-2">
-        <div className="self-end">{formatData(createdAt)}</div>
+        <div className="self-end">{formatDate(createdAt)}</div>
         <Badge className="self-end" variant={"outline"}>
           {currentStatus}
         </Badge>

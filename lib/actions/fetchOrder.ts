@@ -23,7 +23,7 @@ export const fetchOrderById = async ({
   email: string;
   orderId: string;
 }) => {
-  // if (!email) throw new Error("Failed to get order");
+  if (!email) throw new Error("Failed to get order");
 
   const order = await getOrderByIdHygraph(orderId);
 

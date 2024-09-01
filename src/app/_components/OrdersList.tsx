@@ -3,10 +3,10 @@
 import { useSession } from "next-auth/react";
 import { Badge } from "./ui/badge";
 import { Button } from "./ui/button";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchOrders } from "../../../lib/actions/fetchOrders";
 import { Loader } from "./Loader";
-import { formatCurrency, formatData } from "@/helpers/helpers";
+
 import {
   Select,
   SelectContent,
@@ -59,12 +59,15 @@ const filterOptions = [
 const sortByOptions = [];
 
 export const OrdersList = () => {
+  const queryClient = useQueryClient();
   const session = useSession();
   const searchParams = useSearchParams();
   const router = useRouter();
   const pathname = usePathname();
 
   console.log(searchParams);
+
+  // queryClient.invalidateQueries({ queryKey: ["orders"] });
 
   const createQueryString = useCallback(
     (name: string, value: string) => {
@@ -98,17 +101,48 @@ export const OrdersList = () => {
     return <p>You havent ordered anything yet</p>;
   }
 
-  const filteredOrders = orders?.filter((order) =>
-    // searchParams.get("filter")
-    //   ? order.currentStatus === searchParams.get("filter")
-    //   : order
+  const filteredOrders = orders
+    ?.filter((order) =>
+      // searchParams.get("filter")
+      //   ? order.currentStatus === searchParams.get("filter")
+      //   : order
 
-    !searchParams.get("filter") || searchParams.get("filter") === "ALL"
-      ? order
-      : searchParams.get("filter")
-      ? order.currentStatus === searchParams.get("filter")
-      : order
-  );
+      !searchParams.get("filter") || searchParams.get("filter") === "ALL"
+        ? order
+        : searchParams.get("filter")
+        ? order.currentStatus === searchParams.get("filter")
+        : order
+    )
+    .sort((a, b) => {
+      const sortDirection = searchParams.get("sortDirection");
+      switch (searchParams.get("sortBy")) {
+        case "DATE":
+          // return !sortDirection || sortDirection === "DESC"
+          //   ? new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf()
+          //   : new Date(a.createdAt).valueOf() - new Date(b.createdAt).valueOf();
+
+          return !sortDirection
+            ? new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf()
+            : sortDirection === "ASC"
+            ? new Date(a.createdAt).valueOf() - new Date(b.createdAt).valueOf()
+            : new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf();
+        case "TOTAL":
+          // !sortDirection ? b.total - a.total : sortDirection === "ASC" ? a.total - b.total :
+
+          return !sortDirection || sortDirection === "DESC"
+            ? b.total - a.total
+            : a.total - b.total;
+
+        default:
+          return !sortDirection || sortDirection === "DESC"
+            ? new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf()
+            : new Date(a.createdAt).valueOf() - new Date(b.createdAt).valueOf();
+        // return (
+        //   new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf()
+        // );
+      }
+      // return new Date(b.createdAt).valueOf() - new Date(a.createdAt).valueOf();
+    });
 
   return (
     <>
@@ -135,23 +169,11 @@ export const OrdersList = () => {
               {option.displayed}
             </Button>
           ))}
-
-          {/* <Button
-            onClick={() => {
-              router.push(pathname + "?" + createQueryString("filter", "new"));
-            }}
-          >
-            New
-          </Button>
-          <Button>Paid</Button>
-          <Button>Recived</Button>
-          <Button>Send</Button>
-          <Button>In progress</Button> */}
         </div>
         <div className="flex items-center gap-2">
           <Label htmlFor="sort">Sort by:</Label>
           <Select
-            value={searchParams.get("sortBy") || "date"}
+            value={searchParams.get("sortBy") || "DATE"}
             onValueChange={(e) => {
               router.push(pathname + "?" + createQueryString("sortBy", e));
             }}
@@ -160,19 +182,38 @@ export const OrdersList = () => {
               <SelectValue placeholder="Select" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="date">Date</SelectItem>
-              <SelectItem value="total">Total</SelectItem>
-              <SelectItem value="status">Status</SelectItem>
+              <SelectItem value="DATE">Date</SelectItem>
+              <SelectItem value="TOTAL">Total</SelectItem>
             </SelectContent>
           </Select>
-          <Button variant="outline" size="icon">
+          <Button
+            className={
+              searchParams.get("sortDirection") === "ASC" ? "bg-stone-100" : ""
+            }
+            onClick={() => {
+              router.push(
+                pathname +
+                  "?" +
+                  createQueryString(
+                    "sortDirection",
+                    !searchParams.get("sortDirection")
+                      ? "ASC"
+                      : searchParams.get("sortDirection") === "ASC"
+                      ? "DESC"
+                      : "ASC"
+                  )
+              );
+            }}
+            variant="outline"
+            size="icon"
+          >
             <ArrowUpDownIcon className="h-4 w-4" />
             <span className="sr-only">Sort direction</span>
           </Button>
         </div>
       </div>
       <div className="overflow-x-auto">
-        {JSON.stringify(session, null, 4)}
+        {/* {JSON.stringify(session, null, 4)} */}
         <div>
           {filteredOrders &&
             filteredOrders.map((order) => (
