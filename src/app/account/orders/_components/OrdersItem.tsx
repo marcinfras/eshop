@@ -1,8 +1,9 @@
 import { formatCurrency, formatDate } from "@/helpers/helpers";
-import { OrderStatus } from "../../../lib/hygraph/generated/graphql";
-import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
+
 import Link from "next/link";
+import { OrderStatus } from "../../../../../lib/hygraph/generated/graphql";
+import { Badge } from "@/app/_components/ui/badge";
+import { Button } from "@/app/_components/ui/button";
 
 export const OrdersItem = ({
   order,

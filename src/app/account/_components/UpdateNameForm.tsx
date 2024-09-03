@@ -1,7 +1,12 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { Button } from "./ui/button";
+
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useSession } from "next-auth/react";
+import { nameSchema } from "../schemas";
+import { toast } from "@/app/_components/ui/use-toast";
+import { updateNameAction } from "../../../../lib/actions/updateName";
 import {
   Form,
   FormControl,
@@ -9,14 +14,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
-import { Input } from "./ui/input";
-import { Label } from "./ui/label";
-import { nameSchema } from "../account/schemas";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { useSession } from "next-auth/react";
-import { toast } from "./ui/use-toast";
-import { updateNameAction } from "../../../lib/actions/updateName";
+} from "@/app/_components/ui/form";
+import { Input } from "@/app/_components/ui/input";
+import { Label } from "@/app/_components/ui/label";
+import { Button } from "@/app/_components/ui/button";
 
 type ChangeNameFormInput = {
   name: string;

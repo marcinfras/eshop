@@ -1,10 +1,11 @@
 import Image from "next/image";
 // import { useCart } from "../_components/contexts/CartContext/CartContext";git
-import { CartItem } from "../_components/CartItem";
+
 import { fetchCart } from "../../../lib/actions/fetchCart";
 import { formatCurrency } from "@/helpers/helpers";
 
-import { CheckoutButton } from "../_components/CheckoutButton";
+import { CheckoutButton } from "./_components/CheckoutButton";
+import { CartItem } from "./_components/CartItem";
 
 const Page = async () => {
   const cart = await fetchCart();

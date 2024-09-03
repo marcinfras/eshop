@@ -18,7 +18,7 @@ export const MainNav = () => {
     },
   });
 
-  console.log(data, cart);
+  // console.log(data, cart);
 
   if (status === "loading" || isPending) return <Loader />;
 

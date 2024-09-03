@@ -51,9 +51,7 @@ const Page = async ({ params }: { params: { productSlug: string } }) => {
               <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
             </div>
           </div>
-          <div>
-            <p>{description}</p>
-          </div>
+
           <div className="text-4xl font-bold">{formatCurrency(price)}</div>
         </div>
         <form className="grid gap-4 md:gap-10">
@@ -154,18 +152,8 @@ const Page = async ({ params }: { params: { productSlug: string } }) => {
         <Separator />
         <div className="grid gap-4 text-sm leading-loose">
           <h2 className="font-bold text-lg">Product Details</h2>
-          <p>
-            Introducing the Acme Prism T-Shirt, a perfect blend of style and
-            comfort for the modern individual. This tee is crafted with a
-            meticulous composition of 60% combed ringspun cotton and 40%
-            polyester jersey, ensuring a soft and breathable fabric that feels
-            gentle against the skin.
-          </p>
-          <p>
-            The design of the Acme Prism T-Shirt is as striking as it is
-            comfortable. The shirt features a unique prism-inspired pattern that
-            adds a modern and eye-catching touch to your ensemble.
-          </p>
+
+          <p>{description}</p>
         </div>
         <Separator />
         <div className="grid gap-4 text-sm leading-loose">

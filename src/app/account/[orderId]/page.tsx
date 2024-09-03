@@ -1,9 +1,4 @@
-import { OrderDetail } from "@/app/_components/OrderDetail";
-import { Badge } from "@/app/_components/ui/badge";
-import { Separator } from "@/app/_components/ui/separator";
-import Image from "next/image";
-import Link from "next/link";
-import { SVGProps } from "react";
+import { OrderDetail } from "./_components/OrderDetail";
 
 // https://v0.dev/r/m1fFuMxpk1b
 const Page = ({ params }: { params: { orderId: string } }) => {

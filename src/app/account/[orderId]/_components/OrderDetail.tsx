@@ -1,16 +1,18 @@
 "use client";
 
-import Image from "next/image";
-import { Separator } from "./ui/separator";
 import Link from "next/link";
-import { Badge } from "./ui/badge";
+
 import { SVGProps } from "react";
 import { dataTagSymbol, useQuery } from "@tanstack/react-query";
-import { fetchOrderById } from "../../../lib/actions/fetchOrder";
+
 import { useSession } from "next-auth/react";
-import { Loader } from "./Loader";
-import { OrderDetailItem } from "./OrderDetailItem";
+
 import { formatCurrency, formatDate } from "@/helpers/helpers";
+import { fetchOrderById } from "../../../../../lib/actions/fetchOrder";
+import { Loader } from "@/app/_components/Loader";
+import { Separator } from "@/app/_components/ui/separator";
+import { Badge } from "@/app/_components/ui/badge";
+import { OrderDetailItem } from "./OrderDetailItem";
 
 export const OrderDetail = ({ orderId }: { orderId: string }) => {
   const session = useSession();

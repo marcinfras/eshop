@@ -1,8 +1,8 @@
 "use client";
 
 import { signOut } from "next-auth/react";
-import { Button } from "./ui/button";
-import { deleteCartCookie } from "../../../lib/actions/deleteCartCookie";
+import { deleteCartCookie } from "../../../../lib/actions/deleteCartCookie";
+import { Button } from "@/app/_components/ui/button";
 
 export const AccountPageLogoutButton = () => {
   const logoutHander = () => {

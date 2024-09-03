@@ -2,7 +2,12 @@
 
 import { yupResolver } from "@hookform/resolvers/yup";
 import { SubmitHandler, useForm } from "react-hook-form";
-import { loginSchema } from "../(login-register)/login/loginSchema";
+
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { registerSchema } from "../register/registerSchema";
+import { toast } from "@/app/_components/ui/use-toast";
+import { createAccountAction } from "../../../../lib/actions/createAccount";
 import {
   Form,
   FormControl,
@@ -10,69 +15,70 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
-import { redirect, usePathname } from "next/navigation";
-import { getAccountByEmail } from "../../../lib/graphql";
-import { signIn, useSession } from "next-auth/react";
-import { useState } from "react";
-import { toast } from "./ui/use-toast";
-import { useRouter } from "next/navigation";
-import { LoadingButton } from "./LoadingButton";
+} from "@/app/_components/ui/form";
+import { Input } from "@/app/_components/ui/input";
+import { Button } from "@/app/_components/ui/button";
+import { LoadingButton } from "@/app/_components/LoadingButton";
 
-type LoginFormInputs = {
+type RegisterFormInputs = {
+  name: string;
   email: string;
   password: string;
 };
 
-export const LoginForm = () => {
-  const form = useForm<LoginFormInputs>({
-    resolver: yupResolver(loginSchema),
+export const RegisterForm = () => {
+  const form = useForm<RegisterFormInputs>({
+    resolver: yupResolver(registerSchema),
     defaultValues: {
+      name: "",
       email: "",
       password: "",
     },
   });
 
-  const [isLogging, setIsLogging] = useState(false);
+  const [isCreating, setIsCreating] = useState(false);
 
   const router = useRouter();
-
-  // const path = usePathname();
-  // console.log(path);
 
   const { handleSubmit, control } = form;
 
   const onSubmit = handleSubmit(async (data) => {
-    setIsLogging(true);
-
-    const res = await signIn("credentials", { ...data, redirect: false });
-    console.log(res);
-    if (res?.ok) {
+    setIsCreating(true);
+    const createdAccount = await createAccountAction(data);
+    if (createdAccount) {
       toast({
-        title: "Successfully logged in",
-        duration: 3000,
+        title: "Your account has been created",
+        description: "Now you can log in to it",
       });
-      router.push("/");
+      router.push("/login");
     }
-    if (!res?.ok) {
+    if (!createdAccount) {
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
-        description: "Wrong email or password",
+        description: "An account with this email address already exists",
       });
     }
 
-    setIsLogging(false);
+    setIsCreating(false);
   });
-
-  const session = useSession();
 
   return (
     <Form {...form}>
-      <pre>{JSON.stringify(session, null, 2)}</pre>
       <form className="space-y-4" onSubmit={onSubmit}>
+        <FormField
+          control={control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Name</FormLabel>
+              <FormControl>
+                <Input placeholder="Enter your name" {...field} />
+              </FormControl>
+              <FormMessage className="first-letter:uppercase" />
+            </FormItem>
+          )}
+        />
         <FormField
           control={control}
           name="email"
@@ -103,17 +109,14 @@ export const LoginForm = () => {
             </FormItem>
           )}
         />
-        {!isLogging && (
+        {!isCreating && (
           <Button type="submit" className="w-full">
-            Sign in
+            Create account
           </Button>
         )}
-        {isLogging && (
-          <LoadingButton className="w-full">Signing in</LoadingButton>
+        {isCreating && (
+          <LoadingButton className="w-full">Creating</LoadingButton>
         )}
-        {/* <Button type="submit" className="w-full">
-          Sign in
-        </Button> */}
       </form>
     </Form>
   );

@@ -1,8 +1,8 @@
 "use client";
 
 import { yupResolver } from "@hookform/resolvers/yup";
-import { SubmitHandler, useForm } from "react-hook-form";
-import { registerSchema } from "../(login-register)/register/registerSchema";
+import { useForm } from "react-hook-form";
+
 import {
   Form,
   FormControl,
@@ -10,75 +10,70 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
-import { createAccountAction } from "../../../lib/actions/createAccount";
-import { toast } from "./ui/use-toast";
+} from "@/app/_components/ui/form";
+import { Input } from "@/app/_components/ui/input";
+import { Button } from "@/app/_components/ui/button";
+
+import { signIn, useSession } from "next-auth/react";
+import { useState } from "react";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { LoadingButton } from "./LoadingButton";
+import { loginSchema } from "../login/loginSchema";
+import { toast } from "@/app/_components/ui/use-toast";
+import { LoadingButton } from "@/app/_components/LoadingButton";
 
-type RegisterFormInputs = {
-  name: string;
+type LoginFormInputs = {
   email: string;
   password: string;
 };
 
-export const RegisterForm = () => {
-  const form = useForm<RegisterFormInputs>({
-    resolver: yupResolver(registerSchema),
+export const LoginForm = () => {
+  const form = useForm<LoginFormInputs>({
+    resolver: yupResolver(loginSchema),
     defaultValues: {
-      name: "",
       email: "",
       password: "",
     },
   });
 
-  const [isCreating, setIsCreating] = useState(false);
+  const [isLogging, setIsLogging] = useState(false);
 
   const router = useRouter();
+
+  // const path = usePathname();
+  // console.log(path);
 
   const { handleSubmit, control } = form;
 
   const onSubmit = handleSubmit(async (data) => {
-    setIsCreating(true);
-    const createdAccount = await createAccountAction(data);
-    if (createdAccount) {
+    setIsLogging(true);
+
+    const res = await signIn("credentials", { ...data, redirect: false });
+    console.log(res);
+    if (res?.ok) {
       toast({
-        title: "Your account has been created",
-        description: "Now you can log in to it",
+        title: "Successfully logged in",
+        duration: 3000,
       });
-      router.push("/login");
+      router.push("/");
     }
-    if (!createdAccount) {
+    if (!res?.ok) {
       toast({
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
-        description: "An account with this email address already exists",
+        description: "Wrong email or password",
       });
     }
 
-    setIsCreating(false);
+    setIsLogging(false);
   });
+
+  const session = useSession();
 
   return (
     <Form {...form}>
+      <pre>{JSON.stringify(session, null, 2)}</pre>
       <form className="space-y-4" onSubmit={onSubmit}>
-        <FormField
-          control={control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Name</FormLabel>
-              <FormControl>
-                <Input placeholder="Enter your name" {...field} />
-              </FormControl>
-              <FormMessage className="first-letter:uppercase" />
-            </FormItem>
-          )}
-        />
         <FormField
           control={control}
           name="email"
@@ -109,13 +104,13 @@ export const RegisterForm = () => {
             </FormItem>
           )}
         />
-        {!isCreating && (
+        {!isLogging && (
           <Button type="submit" className="w-full">
-            Create account
+            Sign in
           </Button>
         )}
-        {isCreating && (
-          <LoadingButton className="w-full">Creating</LoadingButton>
+        {isLogging && (
+          <LoadingButton className="w-full">Signing in</LoadingButton>
         )}
       </form>
     </Form>

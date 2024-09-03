@@ -1,7 +1,8 @@
 "use client";
 
+import { Avatar, AvatarFallback } from "@/app/_components/ui/avatar";
 import { useSession } from "next-auth/react";
-import { Avatar, AvatarFallback } from "./ui/avatar";
+
 import { useRouter } from "next/navigation";
 
 export const AccountPageHeader = () => {

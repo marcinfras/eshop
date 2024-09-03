@@ -1,7 +1,16 @@
 "use client";
 
 import { useForm } from "react-hook-form";
-import { Button } from "./ui/button";
+
+import { yupResolver } from "@hookform/resolvers/yup";
+
+import { useSession } from "next-auth/react";
+
+import { useState } from "react";
+import { changePasswordSchema } from "../schemas";
+import { toast } from "@/app/_components/ui/use-toast";
+import { updatePasswordAction } from "../../../../lib/actions/updatePassword";
+import { Loader } from "@/app/_components/Loader";
 import {
   Form,
   FormControl,
@@ -9,15 +18,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "./ui/form";
-import { Input } from "./ui/input";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { changePasswordSchema } from "../account/schemas";
-import { toast } from "./ui/use-toast";
-import { useSession } from "next-auth/react";
-import { updatePasswordAction } from "../../../lib/actions/updatePassword";
-import { useState } from "react";
-import { Loader } from "./Loader";
+} from "@/app/_components/ui/form";
+import { Input } from "@/app/_components/ui/input";
+import { Button } from "@/app/_components/ui/button";
 
 type ChangePasswordFormInput = {
   password: string;

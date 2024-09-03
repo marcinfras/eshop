@@ -1,9 +1,8 @@
-import { UpdateNameForm } from "../_components/UpdateNameForm";
+import { UpdateNameForm } from "./_components/UpdateNameForm";
 import { Separator } from "../_components/ui/separator";
-import { UpdatePasswordForm } from "../_components/UpdatePasswordForm";
+import { UpdatePasswordForm } from "./_components/UpdatePasswordForm";
 
-import { AccountPageHeader } from "../_components/AccountPageHeader";
-import { AccountPageLogoutButton } from "../_components/AccountPageLogoutButton";
+import { AccountPageLogoutButton } from "./_components/AccountPageLogoutButton";
 
 const Page = () => {
   return (

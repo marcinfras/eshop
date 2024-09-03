@@ -1,24 +1,25 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { Badge } from "./ui/badge";
-import { Button } from "./ui/button";
-import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { fetchOrders } from "../../../lib/actions/fetchOrders";
-import { Loader } from "./Loader";
 
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+
+import { SVGProps, useCallback } from "react";
+
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { OrderStatus } from "../../../../../lib/hygraph/generated/graphql";
+import { fetchOrders } from "../../../../../lib/actions/fetchOrders";
+import { Loader } from "@/app/_components/Loader";
+import { Button } from "@/app/_components/ui/button";
+import { Label } from "@/app/_components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "./ui/select";
-import { Label } from "./ui/label";
-import { SVGProps, useCallback } from "react";
+} from "@/app/_components/ui/select";
 import { OrdersItem } from "./OrdersItem";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { OrderStatus } from "../../../lib/hygraph/generated/graphql";
 
 // type FilterOptionsType =
 //   | "All"

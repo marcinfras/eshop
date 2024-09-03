@@ -1,4 +1,4 @@
-import { AccountPageHeader } from "../_components/AccountPageHeader";
+import { AccountPageHeader } from "./_components/AccountPageHeader";
 
 export const AccountLayout = ({ children }: { children: React.ReactNode }) => {
   return (

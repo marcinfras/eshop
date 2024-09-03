@@ -1,6 +1,6 @@
 // https://v0.dev/r/1fLhZtmpPLK
 
-import { OrdersList } from "@/app/_components/OrdersList";
+import { OrdersList } from "./_components/OrdersList";
 
 const Page = () => {
   return (

@@ -1,10 +1,10 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import { createOrder } from "../../../lib/actions/createOrder";
-import { Button } from "./ui/button";
-import { redirect } from "next/navigation";
+
 import { useRouter } from "next/navigation";
+import { Button } from "@/app/_components/ui/button";
+import { createOrder } from "../../../../lib/actions/createOrder";
 
 export const CheckoutButton = () => {
   const { data } = useSession();
