@@ -1,8 +1,8 @@
 "use client";
 
+import { buttonVariants } from "@/app/_components/ui/button";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { buttonVariants } from "./ui/button";
 
 export const LoginRegisterFormTemplate = ({
   children,

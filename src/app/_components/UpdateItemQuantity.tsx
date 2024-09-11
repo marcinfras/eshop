@@ -1,6 +1,13 @@
+"use client";
+
 import { MinusIcon, PlusIcon, XIcon } from "lucide-react";
 import { Button } from "./ui/button";
-import { useCart } from "./contexts/CartContext/CartContext";
+// import { useCart } from "./contexts/CartContext/CartContext";
+import { removeFromCart } from "../../../lib/actions/removeFromCart";
+import { updateCart } from "../../../lib/actions/updateCart";
+import { useLoader } from "./contexts/LoaderContext.tsx/LoaderContext";
+import { toast } from "./ui/use-toast";
+import { useQueryClient } from "@tanstack/react-query";
 
 export const UpdateItemQuantity = ({
   size,
@@ -11,12 +18,9 @@ export const UpdateItemQuantity = ({
   id: string;
   currentQuantity: number;
 }) => {
-  const {
-    deleteFromCart,
-    increaseItemQuantity,
+  const { startTransition } = useLoader();
 
-    decreaseItemQuantity,
-  } = useCart();
+  const queryClient = useQueryClient();
 
   return (
     <div className={`flex items-center gap-2`}>
@@ -24,7 +28,21 @@ export const UpdateItemQuantity = ({
         size="icon"
         className={size === "small" ? "w-7 h-7" : ""}
         variant="outline"
-        onClick={() => decreaseItemQuantity(id)}
+        onClick={() => {
+          startTransition(async () => {
+            const res = await updateCart({
+              prodId: id,
+              quantity: currentQuantity - 1,
+            });
+
+            if ("error" in res)
+              toast({
+                variant: "destructive",
+                title: res.error,
+              });
+            await queryClient.invalidateQueries({ queryKey: ["cart"] });
+          });
+        }}
         disabled={currentQuantity === 1}
       >
         <MinusIcon className="w-4 h-4" />
@@ -34,7 +52,22 @@ export const UpdateItemQuantity = ({
         size="icon"
         className={size === "small" ? "w-7 h-7" : ""}
         variant="outline"
-        onClick={() => increaseItemQuantity(id)}
+        onClick={() => {
+          startTransition(async () => {
+            const res = await updateCart({
+              prodId: id,
+              quantity: currentQuantity + 1,
+            });
+
+            if ("error" in res)
+              toast({
+                variant: "destructive",
+                title: res.error,
+              });
+
+            await queryClient.invalidateQueries({ queryKey: ["cart"] });
+          });
+        }}
       >
         <PlusIcon className="w-4 h-4" />
       </Button>
@@ -42,7 +75,20 @@ export const UpdateItemQuantity = ({
         size="icon"
         className={size === "small" ? "w-7 h-7" : ""}
         variant="outline"
-        onClick={() => deleteFromCart(id)}
+        onClick={() => {
+          startTransition(async () => {
+            const res = await removeFromCart(id);
+
+            if ("error" in res)
+              toast({
+                variant: "destructive",
+                title: res.error,
+                duration: 3000,
+              });
+
+            await queryClient.invalidateQueries({ queryKey: ["cart"] });
+          });
+        }}
       >
         <XIcon className="w-4 h-4" />
       </Button>

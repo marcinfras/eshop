@@ -5,3 +5,24 @@ mutation CreateAccount($name: String!, $email: String!, $password: String!) {
     name
   }
 }
+
+mutation UpdateName($email: String!, $name: String!) {
+  updateAccount(data: { name: $name }, where: { email: $email }) {
+    name
+  }
+}
+
+mutation UpdatePassword($email: String!, $password: String!) {
+  updateAccount(data: { password: $password }, where: { email: $email }) {
+    id
+  }
+}
+
+mutation ConnectAccountWithCart($email: String!, $cartId: ID!) {
+  updateAccount(
+    data: { cart: { connect: { id: $cartId } } }
+    where: { email: $email }
+  ) {
+    id
+  }
+}

@@ -1,5 +1,5 @@
-import { LoginForm } from "../_components/LoginForm";
-import { LoginRegisterFormTemplate } from "../_components/LoginRegisterFormTemplate";
+
+import { LoginRegisterFormTemplate } from "./_components/LoginRegisterFormTemplate";
 
 //https://v0.dev/r/gl6VD99Wth9
 

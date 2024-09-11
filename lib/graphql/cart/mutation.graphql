@@ -3,3 +3,75 @@ mutation CreateCart($cart: CartCreateInput!) {
     id
   }
 }
+
+# mutation CreateCart($quantity: Int!, $slug: String!, $email: String!) {
+#   createCart(
+#     data: {
+#       cartProduct: {
+#         create: {
+#           quantity: $quantity
+#           product: { connect: { slug: $slug } }
+#           account: { connect: { email: $email } }
+#         }
+#       }
+#     }
+#   ) {
+#     id
+#   }
+# }
+
+# mutation CreateCart($quantity: Int!, $slug: String!, $email: String) {
+#   createCart(
+#     data: {
+#       cartProduct: {
+#         create: { quantity: $quantity, product: { connect: { slug: $slug } } }
+#       }
+#       account: { connect: { email: $email } }
+#     }
+#   ) {
+#     id
+#   }
+# }
+
+mutation UpdateCart($cartId: ID!, $prodId: ID!, $quantity: Int!) {
+  updateCart(
+    where: { id: $cartId }
+    data: {
+      cartProduct: {
+        update: { where: { id: $prodId }, data: { quantity: $quantity } }
+      }
+    }
+  ) {
+    updatedProduct: cartProduct(where: { id: $prodId }) {
+      id
+    }
+  }
+}
+
+mutation AddToCart($cartId: ID!, $slug: String!, $quantity: Int!) {
+  updateCart(
+    data: {
+      cartProduct: {
+        create: { quantity: $quantity, product: { connect: { slug: $slug } } }
+      }
+    }
+    where: { id: $cartId }
+  ) {
+    id
+  }
+}
+
+mutation RemoveFromCart($cartId: ID!, $prodId: ID!) {
+  updateCart(
+    data: { cartProduct: { delete: { id: $prodId } } }
+    where: { id: $cartId }
+  ) {
+    id
+  }
+}
+
+mutation DeleteCart($cartId: ID!) {
+  deleteCart(where: { id: $cartId }) {
+    id
+  }
+}

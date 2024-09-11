@@ -1242,6 +1242,7 @@ export type BatchPayload = {
 };
 
 export type Cart = Entity & Node & {
+  account?: Maybe<Account>;
   cartProduct: Array<CartProduct>;
   /** The time the document was created */
   createdAt: Scalars['DateTime']['output'];
@@ -1264,6 +1265,12 @@ export type Cart = Entity & Node & {
   updatedAt: Scalars['DateTime']['output'];
   /** User that last updated this document */
   updatedBy?: Maybe<User>;
+};
+
+
+export type CartAccountArgs = {
+  forceParentLocale?: InputMaybe<Scalars['Boolean']['input']>;
+  locales?: InputMaybe<Array<Locale>>;
 };
 
 
@@ -1340,8 +1347,8 @@ export type CartConnection = {
 };
 
 export type CartCreateInput = {
+  account?: InputMaybe<AccountCreateOneInlineInput>;
   cartProduct?: InputMaybe<CartProductCreateManyInlineInput>;
-  clyxdichp04pz06w564ah45my?: InputMaybe<AccountCreateManyInlineInput>;
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
 };
@@ -1378,6 +1385,7 @@ export type CartManyWhereInput = {
   OR?: InputMaybe<Array<CartWhereInput>>;
   /** Contains search across all appropriate fields. */
   _search?: InputMaybe<Scalars['String']['input']>;
+  account?: InputMaybe<AccountWhereInput>;
   cartProduct_every?: InputMaybe<CartProductWhereInput>;
   cartProduct_none?: InputMaybe<CartProductWhereInput>;
   cartProduct_some?: InputMaybe<CartProductWhereInput>;
@@ -1900,8 +1908,8 @@ export type CartProductWhereUniqueInput = {
 };
 
 export type CartUpdateInput = {
+  account?: InputMaybe<AccountUpdateOneInlineInput>;
   cartProduct?: InputMaybe<CartProductUpdateManyInlineInput>;
-  clyxdichp04pz06w564ah45my?: InputMaybe<AccountUpdateManyInlineInput>;
 };
 
 export type CartUpdateManyInlineInput = {
@@ -1985,6 +1993,7 @@ export type CartWhereInput = {
   OR?: InputMaybe<Array<CartWhereInput>>;
   /** Contains search across all appropriate fields. */
   _search?: InputMaybe<Scalars['String']['input']>;
+  account?: InputMaybe<AccountWhereInput>;
   cartProduct_every?: InputMaybe<CartProductWhereInput>;
   cartProduct_none?: InputMaybe<CartProductWhereInput>;
   cartProduct_some?: InputMaybe<CartProductWhereInput>;
@@ -6373,6 +6382,7 @@ export type Order = Entity & Node & {
   createdAt: Scalars['DateTime']['output'];
   /** User that created this document */
   createdBy?: Maybe<User>;
+  currentStatus: OrderStatus;
   /** Get the document in other stages */
   documentInStages: Array<Order>;
   email: Scalars['String']['output'];
@@ -6471,6 +6481,7 @@ export type OrderConnection = {
 
 export type OrderCreateInput = {
   createdAt?: InputMaybe<Scalars['DateTime']['input']>;
+  currentStatus: OrderStatus;
   email: Scalars['String']['input'];
   orderItems?: InputMaybe<OrderItemCreateManyInlineInput>;
   stripeCheckoutId: Scalars['String']['input'];
@@ -7003,6 +7014,13 @@ export type OrderManyWhereInput = {
   /** All values that are not contained in given list. */
   createdAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
   createdBy?: InputMaybe<UserWhereInput>;
+  currentStatus?: InputMaybe<OrderStatus>;
+  /** All values that are contained in given list. */
+  currentStatus_in?: InputMaybe<Array<InputMaybe<OrderStatus>>>;
+  /** Any other value that exists and is not equal to the given value. */
+  currentStatus_not?: InputMaybe<OrderStatus>;
+  /** All values that are not contained in given list. */
+  currentStatus_not_in?: InputMaybe<Array<InputMaybe<OrderStatus>>>;
   documentInStages_every?: InputMaybe<OrderWhereStageInput>;
   documentInStages_none?: InputMaybe<OrderWhereStageInput>;
   documentInStages_some?: InputMaybe<OrderWhereStageInput>;
@@ -7121,6 +7139,8 @@ export type OrderManyWhereInput = {
 export enum OrderOrderByInput {
   CreatedAtAsc = 'createdAt_ASC',
   CreatedAtDesc = 'createdAt_DESC',
+  CurrentStatusAsc = 'currentStatus_ASC',
+  CurrentStatusDesc = 'currentStatus_DESC',
   EmailAsc = 'email_ASC',
   EmailDesc = 'email_DESC',
   IdAsc = 'id_ASC',
@@ -7135,7 +7155,16 @@ export enum OrderOrderByInput {
   UpdatedAtDesc = 'updatedAt_DESC'
 }
 
+export enum OrderStatus {
+  InProgress = 'IN_PROGRESS',
+  New = 'NEW',
+  Paid = 'PAID',
+  Recived = 'RECIVED',
+  Send = 'SEND'
+}
+
 export type OrderUpdateInput = {
+  currentStatus?: InputMaybe<OrderStatus>;
   email?: InputMaybe<Scalars['String']['input']>;
   orderItems?: InputMaybe<OrderItemUpdateManyInlineInput>;
   stripeCheckoutId?: InputMaybe<Scalars['String']['input']>;
@@ -7160,8 +7189,8 @@ export type OrderUpdateManyInlineInput = {
 };
 
 export type OrderUpdateManyInput = {
+  currentStatus?: InputMaybe<OrderStatus>;
   email?: InputMaybe<Scalars['String']['input']>;
-  stripeCheckoutId?: InputMaybe<Scalars['String']['input']>;
   total?: InputMaybe<Scalars['Int']['input']>;
 };
 
@@ -7240,6 +7269,13 @@ export type OrderWhereInput = {
   /** All values that are not contained in given list. */
   createdAt_not_in?: InputMaybe<Array<InputMaybe<Scalars['DateTime']['input']>>>;
   createdBy?: InputMaybe<UserWhereInput>;
+  currentStatus?: InputMaybe<OrderStatus>;
+  /** All values that are contained in given list. */
+  currentStatus_in?: InputMaybe<Array<InputMaybe<OrderStatus>>>;
+  /** Any other value that exists and is not equal to the given value. */
+  currentStatus_not?: InputMaybe<OrderStatus>;
+  /** All values that are not contained in given list. */
+  currentStatus_not_in?: InputMaybe<Array<InputMaybe<OrderStatus>>>;
   documentInStages_every?: InputMaybe<OrderWhereStageInput>;
   documentInStages_none?: InputMaybe<OrderWhereStageInput>;
   documentInStages_some?: InputMaybe<OrderWhereStageInput>;
@@ -7372,6 +7408,7 @@ export type OrderWhereStageInput = {
 /** References Order record uniquely */
 export type OrderWhereUniqueInput = {
   id?: InputMaybe<Scalars['ID']['input']>;
+  stripeCheckoutId?: InputMaybe<Scalars['String']['input']>;
 };
 
 /** Information about pagination in a connection. */
@@ -12784,12 +12821,43 @@ export type CreateAccountMutationVariables = Exact<{
 
 export type CreateAccountMutation = { createAccount?: { id: string, email: string, name: string } | null };
 
+export type UpdateNameMutationVariables = Exact<{
+  email: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+}>;
+
+
+export type UpdateNameMutation = { updateAccount?: { name: string } | null };
+
+export type UpdatePasswordMutationVariables = Exact<{
+  email: Scalars['String']['input'];
+  password: Scalars['String']['input'];
+}>;
+
+
+export type UpdatePasswordMutation = { updateAccount?: { id: string } | null };
+
+export type ConnectAccountWithCartMutationVariables = Exact<{
+  email: Scalars['String']['input'];
+  cartId: Scalars['ID']['input'];
+}>;
+
+
+export type ConnectAccountWithCartMutation = { updateAccount?: { id: string } | null };
+
 export type GetAccountByEmailQueryVariables = Exact<{
   email: Scalars['String']['input'];
 }>;
 
 
-export type GetAccountByEmailQuery = { account?: { id: string, password: string, email: string } | null };
+export type GetAccountByEmailQuery = { account?: { id: string, password: string, email: string, name: string, cart?: { id: string } | null } | null };
+
+export type GetCartByEmailQueryVariables = Exact<{
+  email: Scalars['String']['input'];
+}>;
+
+
+export type GetCartByEmailQuery = { account?: { cart?: { id: string, cartProduct: Array<{ id: string, quantity: number, product?: { id: string, slug: string, name: string, price: number, images: Array<{ url: string }> } | null }> } | null } | null };
 
 export type CreateCartMutationVariables = Exact<{
   cart: CartCreateInput;
@@ -12797,6 +12865,74 @@ export type CreateCartMutationVariables = Exact<{
 
 
 export type CreateCartMutation = { createCart?: { id: string } | null };
+
+export type UpdateCartMutationVariables = Exact<{
+  cartId: Scalars['ID']['input'];
+  prodId: Scalars['ID']['input'];
+  quantity: Scalars['Int']['input'];
+}>;
+
+
+export type UpdateCartMutation = { updateCart?: { updatedProduct: Array<{ id: string }> } | null };
+
+export type AddToCartMutationVariables = Exact<{
+  cartId: Scalars['ID']['input'];
+  slug: Scalars['String']['input'];
+  quantity: Scalars['Int']['input'];
+}>;
+
+
+export type AddToCartMutation = { updateCart?: { id: string } | null };
+
+export type RemoveFromCartMutationVariables = Exact<{
+  cartId: Scalars['ID']['input'];
+  prodId: Scalars['ID']['input'];
+}>;
+
+
+export type RemoveFromCartMutation = { updateCart?: { id: string } | null };
+
+export type DeleteCartMutationVariables = Exact<{
+  cartId: Scalars['ID']['input'];
+}>;
+
+
+export type DeleteCartMutation = { deleteCart?: { id: string } | null };
+
+export type GetCartQueryVariables = Exact<{
+  id: Scalars['ID']['input'];
+}>;
+
+
+export type GetCartQuery = { cart?: { id: string, cartProduct: Array<{ id: string, quantity: number, product?: { id: string, slug: string, name: string, price: number, images: Array<{ url: string }> } | null }> } | null };
+
+export type CreateOrderMutationVariables = Exact<{
+  data: OrderCreateInput;
+}>;
+
+
+export type CreateOrderMutation = { createOrder?: { id: string } | null };
+
+export type GetOrderByStripeCheckoutIdQueryVariables = Exact<{
+  stripeCheckoutId: Scalars['String']['input'];
+}>;
+
+
+export type GetOrderByStripeCheckoutIdQuery = { order?: { total: number, orderItems: Array<{ quantity: number, total: number, product?: { name: string } | null }> } | null };
+
+export type GetOrderByIdQueryVariables = Exact<{
+  orderId: Scalars['ID']['input'];
+}>;
+
+
+export type GetOrderByIdQuery = { order?: { email: string, currentStatus: OrderStatus, createdAt: string, total: number, orderItems: Array<{ quantity: number, total: number, product?: { name: string, price: number, images: Array<{ url: string }> } | null }> } | null };
+
+export type GetOrdersByEmailQueryVariables = Exact<{
+  email: Scalars['String']['input'];
+}>;
+
+
+export type GetOrdersByEmailQuery = { orders: Array<{ id: string, total: number, createdAt: string, currentStatus: OrderStatus }> };
 
 export type GetProductBySlugQueryVariables = Exact<{
   slug: Scalars['String']['input'];
@@ -12841,15 +12977,62 @@ export const CreateAccountDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<CreateAccountMutation, CreateAccountMutationVariables>;
+export const UpdateNameDocument = new TypedDocumentString(`
+    mutation UpdateName($email: String!, $name: String!) {
+  updateAccount(data: {name: $name}, where: {email: $email}) {
+    name
+  }
+}
+    `) as unknown as TypedDocumentString<UpdateNameMutation, UpdateNameMutationVariables>;
+export const UpdatePasswordDocument = new TypedDocumentString(`
+    mutation UpdatePassword($email: String!, $password: String!) {
+  updateAccount(data: {password: $password}, where: {email: $email}) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<UpdatePasswordMutation, UpdatePasswordMutationVariables>;
+export const ConnectAccountWithCartDocument = new TypedDocumentString(`
+    mutation ConnectAccountWithCart($email: String!, $cartId: ID!) {
+  updateAccount(data: {cart: {connect: {id: $cartId}}}, where: {email: $email}) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<ConnectAccountWithCartMutation, ConnectAccountWithCartMutationVariables>;
 export const GetAccountByEmailDocument = new TypedDocumentString(`
     query GetAccountByEmail($email: String!) {
   account(where: {email: $email}, stage: DRAFT) {
     id
     password
     email
+    name
+    cart {
+      id
+    }
   }
 }
     `) as unknown as TypedDocumentString<GetAccountByEmailQuery, GetAccountByEmailQueryVariables>;
+export const GetCartByEmailDocument = new TypedDocumentString(`
+    query GetCartByEmail($email: String!) {
+  account(where: {email: $email}, stage: DRAFT) {
+    cart {
+      id
+      cartProduct {
+        id
+        product {
+          id
+          slug
+          name
+          price
+          images {
+            url
+          }
+        }
+        quantity
+      }
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<GetCartByEmailQuery, GetCartByEmailQueryVariables>;
 export const CreateCartDocument = new TypedDocumentString(`
     mutation CreateCart($cart: CartCreateInput!) {
   createCart(data: $cart) {
@@ -12857,6 +13040,114 @@ export const CreateCartDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<CreateCartMutation, CreateCartMutationVariables>;
+export const UpdateCartDocument = new TypedDocumentString(`
+    mutation UpdateCart($cartId: ID!, $prodId: ID!, $quantity: Int!) {
+  updateCart(
+    where: {id: $cartId}
+    data: {cartProduct: {update: {where: {id: $prodId}, data: {quantity: $quantity}}}}
+  ) {
+    updatedProduct: cartProduct(where: {id: $prodId}) {
+      id
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<UpdateCartMutation, UpdateCartMutationVariables>;
+export const AddToCartDocument = new TypedDocumentString(`
+    mutation AddToCart($cartId: ID!, $slug: String!, $quantity: Int!) {
+  updateCart(
+    data: {cartProduct: {create: {quantity: $quantity, product: {connect: {slug: $slug}}}}}
+    where: {id: $cartId}
+  ) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<AddToCartMutation, AddToCartMutationVariables>;
+export const RemoveFromCartDocument = new TypedDocumentString(`
+    mutation RemoveFromCart($cartId: ID!, $prodId: ID!) {
+  updateCart(data: {cartProduct: {delete: {id: $prodId}}}, where: {id: $cartId}) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<RemoveFromCartMutation, RemoveFromCartMutationVariables>;
+export const DeleteCartDocument = new TypedDocumentString(`
+    mutation DeleteCart($cartId: ID!) {
+  deleteCart(where: {id: $cartId}) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<DeleteCartMutation, DeleteCartMutationVariables>;
+export const GetCartDocument = new TypedDocumentString(`
+    query GetCart($id: ID!) {
+  cart(where: {id: $id}, stage: DRAFT) {
+    id
+    cartProduct {
+      id
+      product {
+        id
+        slug
+        name
+        price
+        images {
+          url
+        }
+      }
+      quantity
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<GetCartQuery, GetCartQueryVariables>;
+export const CreateOrderDocument = new TypedDocumentString(`
+    mutation CreateOrder($data: OrderCreateInput!) {
+  createOrder(data: $data) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<CreateOrderMutation, CreateOrderMutationVariables>;
+export const GetOrderByStripeCheckoutIdDocument = new TypedDocumentString(`
+    query GetOrderByStripeCheckoutId($stripeCheckoutId: String!) {
+  order(where: {stripeCheckoutId: $stripeCheckoutId}, stage: DRAFT) {
+    total
+    orderItems {
+      quantity
+      total
+      product {
+        name
+      }
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<GetOrderByStripeCheckoutIdQuery, GetOrderByStripeCheckoutIdQueryVariables>;
+export const GetOrderByIdDocument = new TypedDocumentString(`
+    query GetOrderById($orderId: ID!) {
+  order(where: {id: $orderId}, stage: DRAFT) {
+    email
+    currentStatus
+    createdAt
+    total
+    orderItems {
+      quantity
+      total
+      product {
+        images {
+          url
+        }
+        name
+        price
+      }
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<GetOrderByIdQuery, GetOrderByIdQueryVariables>;
+export const GetOrdersByEmailDocument = new TypedDocumentString(`
+    query GetOrdersByEmail($email: String!) {
+  orders(where: {email: $email}, stage: DRAFT) {
+    id
+    total
+    createdAt
+    currentStatus
+  }
+}
+    `) as unknown as TypedDocumentString<GetOrdersByEmailQuery, GetOrdersByEmailQueryVariables>;
 export const GetProductBySlugDocument = new TypedDocumentString(`
     query GetProductBySlug($slug: String!) {
   product(where: {slug: $slug}) {

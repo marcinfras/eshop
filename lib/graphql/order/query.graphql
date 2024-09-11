@@ -1,0 +1,41 @@
+query GetOrderByStripeCheckoutId($stripeCheckoutId: String!) {
+  order(where: { stripeCheckoutId: $stripeCheckoutId }, stage: DRAFT) {
+    total
+    orderItems {
+      quantity
+      total
+      product {
+        name
+      }
+    }
+  }
+}
+
+query GetOrderById($orderId: ID!) {
+  order(where: { id: $orderId }, stage: DRAFT) {
+    email
+    currentStatus
+    createdAt
+    total
+    orderItems {
+      quantity
+      total
+      product {
+        images {
+          url
+        }
+        name
+        price
+      }
+    }
+  }
+}
+
+query GetOrdersByEmail($email: String!) {
+  orders(where: { email: $email }, stage: DRAFT) {
+    id
+    total
+    createdAt
+    currentStatus
+  }
+}
