@@ -40,13 +40,7 @@ export const MainNav = () => {
             </span>
           )}
         </Link>
-        {/* <AccountNavIcon />
-        <Link
-          href="/login"
-          className="inline-flex items-center justify-center h-9 px-4 text-sm font-medium rounded-md bg-primary text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-        >
-          Login
-        </Link> */}
+
         {status === "authenticated" && <AccountNavIcon />}
         {status === "unauthenticated" && (
           <Link

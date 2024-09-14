@@ -19,19 +19,15 @@ const Page = async ({ params }: { params: { productSlug: string } }) => {
   console.log(params.productSlug);
   const product = await getProductBySlug(params.productSlug);
 
-  const {
-    name,
-    price,
-    description,
-    images: [{ url: imageUrl }],
-  } = product;
+  const { name, price, description, images, variants } = product;
 
   return (
     <div className="grid md:grid-cols-2 gap-6 lg:gap-12 items-start max-w-6xl px-4 mx-auto py-6">
+      {/* {JSON.stringify(product, null, 2)} */}
       <div className="grid gap-4 md:gap-8 justify-center">
         <div className="grid gap-4 w-[70vw] md:w-full">
           <Image
-            src={imageUrl}
+            src={images}
             alt="Product Image"
             width={600}
             height={900}
@@ -54,8 +50,8 @@ const Page = async ({ params }: { params: { productSlug: string } }) => {
 
           <div className="text-4xl font-bold">{formatCurrency(price)}</div>
         </div>
-        <form className="grid gap-4 md:gap-10">
-          <div className="grid gap-2">
+        <div className="grid gap-4 md:gap-10">
+          {/* <div className="grid gap-2">
             <Label htmlFor="color" className="text-base">
               Color
             </Label>
@@ -86,50 +82,64 @@ const Page = async ({ params }: { params: { productSlug: string } }) => {
                 Blue
               </Label>
             </RadioGroup>
-          </div>
-          <div className="grid gap-2">
-            <Label htmlFor="size" className="text-base">
-              Size
-            </Label>
-            <RadioGroup
-              id="size"
-              defaultValue="m"
-              className="flex items-center gap-2"
-            >
-              <Label
-                htmlFor="size-xs"
-                className="border cursor-pointer rounded-md p-2 flex items-center gap-2 [&:has(:checked)]:bg-muted"
-              >
-                <RadioGroupItem id="size-xs" value="xs" />
-                XS
+          </div> */}
+          {variants && (
+            <div className="grid gap-2">
+              <Label htmlFor="size" className="text-base">
+                Size
               </Label>
-              <Label
-                htmlFor="size-s"
-                className="border cursor-pointer rounded-md p-2 flex items-center gap-2 [&:has(:checked)]:bg-muted"
+
+              <RadioGroup
+                id="size"
+                // defaultValue="m"
+                className="flex items-center gap-2"
               >
-                <RadioGroupItem id="size-s" value="s" />S
-              </Label>
-              <Label
-                htmlFor="size-m"
-                className="border cursor-pointer rounded-md p-2 flex items-center gap-2 [&:has(:checked)]:bg-muted"
-              >
-                <RadioGroupItem id="size-m" value="m" />M
-              </Label>
-              <Label
-                htmlFor="size-l"
-                className="border cursor-pointer rounded-md p-2 flex items-center gap-2 [&:has(:checked)]:bg-muted"
-              >
-                <RadioGroupItem id="size-l" value="l" />L
-              </Label>
-              <Label
-                htmlFor="size-xl"
-                className="border cursor-pointer rounded-md p-2 flex items-center gap-2 [&:has(:checked)]:bg-muted"
-              >
-                <RadioGroupItem id="size-xl" value="xl" />
-                XL
-              </Label>
-            </RadioGroup>
-          </div>
+                {variants.map((variant) => (
+                  <Label
+                    key={variant.size}
+                    defaultValue={variant.size}
+                    htmlFor={variant.size}
+                    className="border cursor-pointer rounded-md p-2 flex items-center gap-2 [&:has(:checked)]:bg-muted"
+                  >
+                    <RadioGroupItem id={variant.size} value={variant.size} />
+                    {variant.size}
+                  </Label>
+                ))}
+                {/* <Label
+                  htmlFor="size-xs"
+                  className="border cursor-pointer rounded-md p-2 flex items-center gap-2 [&:has(:checked)]:bg-muted"
+                >
+                  <RadioGroupItem id="size-xs" value="xs" />
+                  XS
+                </Label>
+                <Label
+                  htmlFor="size-s"
+                  className="border cursor-pointer rounded-md p-2 flex items-center gap-2 [&:has(:checked)]:bg-muted"
+                >
+                  <RadioGroupItem id="size-s" value="s" />S
+                </Label>
+                <Label
+                  htmlFor="size-m"
+                  className="border cursor-pointer rounded-md p-2 flex items-center gap-2 [&:has(:checked)]:bg-muted"
+                >
+                  <RadioGroupItem id="size-m" value="m" />M
+                </Label>
+                <Label
+                  htmlFor="size-l"
+                  className="border cursor-pointer rounded-md p-2 flex items-center gap-2 [&:has(:checked)]:bg-muted"
+                >
+                  <RadioGroupItem id="size-l" value="l" />L
+                </Label>
+                <Label
+                  htmlFor="size-xl"
+                  className="border cursor-pointer rounded-md p-2 flex items-center gap-2 [&:has(:checked)]:bg-muted"
+                >
+                  <RadioGroupItem id="size-xl" value="xl" />
+                  XL
+                </Label> */}
+              </RadioGroup>
+            </div>
+          )}
           <div className="grid gap-2">
             <Label htmlFor="quantity" className="text-base">
               Quantity
@@ -148,7 +158,7 @@ const Page = async ({ params }: { params: { productSlug: string } }) => {
             </Select>
           </div>
           <Button size="lg">Add to cart</Button>
-        </form>
+        </div>
         <Separator />
         <div className="grid gap-4 text-sm leading-loose">
           <h2 className="font-bold text-lg">Product Details</h2>

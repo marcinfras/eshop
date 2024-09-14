@@ -1,3 +1,5 @@
+import { ProductSize } from "../hygraph/generated/graphql";
+
 type MapperCart =
   | {
       id: string;
@@ -43,3 +45,72 @@ export const mapperCart = (cart: MapperCart) => {
     })
     .filter((v): v is ProductCart => Boolean(v));
 };
+
+/////////////////////////////////////////////////////////
+
+// product?: {
+//   name: string;
+//   price: number;
+//   id: string;
+//   description: string;
+//   images: {
+//       url: string;
+//   }[];
+//   variants: ({} | {
+//       size: ProductSize;
+//       id: string;
+//   })[];
+// }
+
+type VariantType = {
+  size: ProductSize;
+  id: string;
+};
+
+type MapperProduct = {
+  name: string;
+  price: number;
+  id: string;
+  description: string;
+  images: {
+    url: string;
+  }[];
+  variants: (
+    | {}
+    | {
+        size: ProductSize;
+        id: string;
+      }
+  )[];
+};
+
+export const mapperProduct = (product: MapperProduct) => {
+  const filteredVariants = product.variants
+    .map((variant) => {
+      if ("size" in variant) return variant;
+      return;
+    })
+    .filter((v): v is VariantType => Boolean(v?.size));
+
+  return {
+    name: product.name,
+    price: product.price,
+    id: product.id,
+    description: product.description,
+    images: product.images[0].url,
+    variants: filteredVariants.length > 0 ? filteredVariants : undefined,
+  };
+};
+// type MapperProduct = (product: {
+//   name: string;
+//   price: number;
+//   id: string;
+//   description: string;
+//   images: {
+//       url: string;
+//   }[];
+//   variants: ({} | {
+//       size: ProductSize;
+//       id: string;
+//   })[];
+// })
