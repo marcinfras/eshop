@@ -22,6 +22,7 @@ import {
   UpdateNameDocument,
   UpdatePasswordDocument,
 } from "../hygraph/generated/graphql";
+import { mapperProduct } from "./mappers";
 
 type GraphQlError = {
   message: string;
@@ -92,7 +93,7 @@ export const getProductBySlug = async (slug: string) => {
     throw Error(`Failed to get ${slug}`);
   }
 
-  return data.product;
+  return mapperProduct(data.product);
 };
 
 export const createAccount = async ({
