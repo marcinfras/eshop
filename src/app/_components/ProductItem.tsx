@@ -13,7 +13,6 @@ import { useTransition } from "react";
 import { Loader } from "./Loader";
 import { useLoader } from "./contexts/LoaderContext.tsx/LoaderContext";
 import { toast } from "./ui/use-toast";
-import { useQueryClient } from "@tanstack/react-query";
 
 export const ProductItem = ({
   product,
@@ -32,8 +31,6 @@ export const ProductItem = ({
 }) => {
   const session = useSession();
   const { startTransition } = useLoader();
-
-  const queryClient = useQueryClient();
 
   // const {
   //   state: { cart },
@@ -75,7 +72,7 @@ export const ProductItem = ({
                       title: res.error,
                     });
 
-                  queryClient.invalidateQueries({ queryKey: ["cart"] });
+                  // queryClient.invalidateQueries({ queryKey: ["cart"] });
                 });
               }}
               size="sm"

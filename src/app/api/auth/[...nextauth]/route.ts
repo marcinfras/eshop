@@ -7,7 +7,7 @@ import {
   getAccountByEmail,
 } from "../../../../../lib/graphql";
 import { cookies } from "next/headers";
-import { revalidateTag } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import { getEnv } from "@/app/utils/utils";
 
 const route = NextAuth({
@@ -50,6 +50,7 @@ const route = NextAuth({
           }
 
           revalidateTag("cart");
+          revalidatePath("/", "layout");
 
           return account;
         } catch (error) {

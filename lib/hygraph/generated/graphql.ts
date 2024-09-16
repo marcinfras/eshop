@@ -12928,7 +12928,8 @@ export type GetOrderByIdQueryVariables = Exact<{
 export type GetOrderByIdQuery = { order?: { email: string, currentStatus: OrderStatus, createdAt: string, total: number, orderItems: Array<{ quantity: number, total: number, product?: { name: string, price: number, images: Array<{ url: string }> } | null }> } | null };
 
 export type GetOrdersByEmailQueryVariables = Exact<{
-  email: Scalars['String']['input'];
+  orderBy: OrderOrderByInput;
+  where: OrderWhereInput;
 }>;
 
 
@@ -13139,8 +13140,8 @@ export const GetOrderByIdDocument = new TypedDocumentString(`
 }
     `) as unknown as TypedDocumentString<GetOrderByIdQuery, GetOrderByIdQueryVariables>;
 export const GetOrdersByEmailDocument = new TypedDocumentString(`
-    query GetOrdersByEmail($email: String!) {
-  orders(where: {email: $email}, stage: DRAFT) {
+    query GetOrdersByEmail($orderBy: OrderOrderByInput!, $where: OrderWhereInput!) {
+  orders(where: $where, orderBy: $orderBy, stage: DRAFT) {
     id
     total
     createdAt
