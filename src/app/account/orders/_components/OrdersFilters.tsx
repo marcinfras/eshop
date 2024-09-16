@@ -71,9 +71,11 @@ const filterOptions: FilterOptionsType = [
 ];
 
 export const OrdersFilters = () => {
-  const [filter, setFilter] = useQueryState("filter");
-  const [sortBy, setSortBy] = useQueryState("sortBy");
-  const [sortDirection, setSortDirection] = useQueryState("sortDirection");
+  const [filter, setFilter] = useQueryState("filter", { shallow: false });
+  const [sortBy, setSortBy] = useQueryState("sortBy", { shallow: false });
+  const [sortDirection, setSortDirection] = useQueryState("sortDirection", {
+    shallow: false,
+  });
 
   const { startTransition } = useLoader();
 
@@ -98,7 +100,6 @@ export const OrdersFilters = () => {
             onClick={() => {
               startTransition(async () => {
                 await setFilter(option.hygraphStatus);
-                router.refresh();
               });
             }}
           >
@@ -113,7 +114,7 @@ export const OrdersFilters = () => {
           onValueChange={(e) => {
             startTransition(async () => {
               await setSortBy(e);
-              router.refresh();
+              // router.refresh();
             });
           }}
         >
@@ -136,7 +137,7 @@ export const OrdersFilters = () => {
                   ? "DESC"
                   : "ASC"
               );
-              router.refresh();
+              // router.refresh();
             });
           }}
           variant="outline"
