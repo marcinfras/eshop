@@ -31,8 +31,8 @@ query GetOrderById($orderId: ID!) {
   }
 }
 
-query GetOrdersByEmail($email: String!) {
-  orders(where: { email: $email }, stage: DRAFT) {
+query GetOrdersByEmail($orderBy: OrderOrderByInput!, $where: OrderWhereInput!) {
+  orders(where: $where, orderBy: $orderBy, stage: DRAFT) {
     id
     total
     createdAt

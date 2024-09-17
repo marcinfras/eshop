@@ -15,6 +15,7 @@ import {
   GetOrdersByEmailDocument,
   GetProductBySlugDocument,
   GetProductsDocument,
+  OrderOrderByInput,
   OrderStatus,
   RemoveFromCartDocument,
   TypedDocumentString,
@@ -203,6 +204,9 @@ export const getCartByIdHygraph = async (id: string) => {
     },
     variables: {
       id,
+    },
+    next: {
+      tags: ["cart"],
     },
   });
 
@@ -528,6 +532,9 @@ export const getOrderByIdHygraph = async (orderId: string) => {
       variables: {
         orderId,
       },
+      next: {
+        tags: [orderId],
+      },
     });
 
     console.log(data);
@@ -543,7 +550,17 @@ export const getOrderByIdHygraph = async (orderId: string) => {
   }
 };
 
-export const getOrdersByEmailHygraph = async (email: string) => {
+export const getOrdersByEmailHygraph = async ({
+  where,
+  orderBy,
+}: {
+  where:
+    | {
+        email: string;
+      }
+    | { email: string; currentStatus: OrderStatus };
+  orderBy: OrderOrderByInput;
+}) => {
   try {
     const data = await fetcher({
       query: GetOrdersByEmailDocument,
@@ -552,7 +569,11 @@ export const getOrdersByEmailHygraph = async (email: string) => {
         Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
       },
       variables: {
-        email,
+        where,
+        orderBy,
+      },
+      next: {
+        tags: ["orders"],
       },
     });
 
