@@ -34,7 +34,7 @@ export const fetchOrders = async ({
 
   revalidateTag("orders");
 
-  console.log(orders);
+  // console.log(orders);
 
   return orders;
 };

@@ -195,7 +195,11 @@ export const connectAccountWithCartHygraph = async ({
   return data.updateAccount;
 };
 
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export const getCartByIdHygraph = async (id: string) => {
+  // await delay(3000);
+
   const data = await fetcher({
     query: GetCartDocument,
     cache: "no-store",
@@ -209,6 +213,8 @@ export const getCartByIdHygraph = async (id: string) => {
       tags: ["cart"],
     },
   });
+
+  if (!data.cart) return { error: "Failed to get cart" };
 
   return data.cart;
 };

@@ -41,6 +41,8 @@ export const createCart = async (
 
   const cart = await getCartByIdHygraph(cartCookie);
 
+  if ("error" in cart) return cart;
+
   revalidateTag("cart");
 
   return mapperCart(cart);

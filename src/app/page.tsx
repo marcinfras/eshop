@@ -17,8 +17,11 @@ export default async function Home() {
 
   // console.log(products);
 
+  if (cart && "error" in cart) throw new Error(cart.error);
+
   return (
     <main className="container mx-auto px-4 md:px-6 py-12">
+      {JSON.stringify(cart, null, 2)}
       {/* {JSON.stringify(mailerLite, null, 2)} */}
       {!newsletter?.value && <NewsletterPopup />}
       <h1 className="text-3xl font-bold mb-8">Our Products</h1>

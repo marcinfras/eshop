@@ -13,6 +13,7 @@ import { useTransition } from "react";
 import { Loader } from "./Loader";
 import { useLoader } from "./contexts/LoaderContext.tsx/LoaderContext";
 import { toast } from "./ui/use-toast";
+import { useRouter } from "next/navigation";
 
 export const ProductItem = ({
   product,
@@ -31,6 +32,7 @@ export const ProductItem = ({
 }) => {
   const session = useSession();
   const { startTransition } = useLoader();
+  const router = useRouter();
 
   // const {
   //   state: { cart },
@@ -66,12 +68,15 @@ export const ProductItem = ({
                     session.data?.user?.email
                   );
 
+                  console.log(res);
+
                   if (res && "error" in res)
                     toast({
                       variant: "destructive",
                       title: res.error,
                     });
 
+                  router.refresh();
                   // queryClient.invalidateQueries({ queryKey: ["cart"] });
                 });
               }}

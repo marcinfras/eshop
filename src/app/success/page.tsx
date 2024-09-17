@@ -13,6 +13,8 @@ const Page = async ({
 }) => {
   const sessionId = searchParams["session_id"];
 
+  console.log("sessionIddddddd: " + sessionId);
+
   if (!sessionId || Array.isArray(sessionId))
     throw new Error("Failed to get order");
 

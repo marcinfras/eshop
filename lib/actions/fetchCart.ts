@@ -12,6 +12,8 @@ export const fetchCart = async () => {
 
   const cart = await getCartByIdHygraph(cartCookie.value);
 
+  if ("error" in cart) return cart;
+
   revalidateTag("cart");
 
   return mapperCart(cart);
