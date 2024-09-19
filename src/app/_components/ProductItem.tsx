@@ -41,7 +41,7 @@ export const ProductItem = ({
   // } = useCart();
 
   return (
-    <div className="bg-background rounded-lg overflow-hidden shadow-lg">
+    <div className="bg-background rounded-lg overflow-hidden shadow-lg relative">
       <Image
         src={product.images[0].url}
         alt={product.name}
@@ -50,17 +50,21 @@ export const ProductItem = ({
         className="w-full h-60 object-contain"
       />
       <div className="p-4">
-        <Link href={`/${product.slug}`}>
-          <h3 className="text-lg font-semibold mb-2 inline-block">
+        <h3 className="text-lg font-semibold mb-2 inline-block">
+          <Link
+            href={`/${product.slug}`}
+            className="after:absolute after:top-0 after:bottom-0 after:left-0 after:right-0"
+          >
             {product.name}
-          </h3>
-        </Link>
+          </Link>
+        </h3>
         <div className="flex justify-between items-center">
           <span className="text-primary font-semibold">
             {formatCurrency(product.price)}
           </span>
           {product.currentQuantity === 0 ? (
             <Button
+              className="relative"
               onClick={() => {
                 startTransition(async () => {
                   const res = await createCart(
@@ -86,6 +90,7 @@ export const ProductItem = ({
             </Button>
           ) : (
             <UpdateItemQuantity
+              className="relative"
               size="small"
               id={product.idInCart as string}
               currentQuantity={product.currentQuantity}

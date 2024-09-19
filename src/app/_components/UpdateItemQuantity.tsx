@@ -12,17 +12,19 @@ export const UpdateItemQuantity = ({
   size,
   id,
   currentQuantity,
+  className,
 }: {
   size?: string;
   id: string;
   currentQuantity: number;
+  className?: string;
 }) => {
   const { startTransition } = useLoader();
 
   // const queryClient = useQueryClient();
 
   return (
-    <div className={`flex items-center gap-2`}>
+    <div className={`${className} flex items-center gap-2 `}>
       <Button
         size="icon"
         className={size === "small" ? "w-7 h-7" : ""}
