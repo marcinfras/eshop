@@ -49,7 +49,7 @@ export const LoginForm = () => {
     setIsLogging(true);
 
     const res = await signIn("credentials", { ...data, redirect: false });
-    console.log(res);
+
     if (res?.ok) {
       toast({
         title: "Successfully logged in",

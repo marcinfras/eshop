@@ -13,7 +13,6 @@ import {
 } from "@/app/_components/ui/select";
 import { ArrowUpDown } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { useLoader } from "@/app/_components/contexts/LoaderContext.tsx/LoaderContext";
 
 type FilterOptionsType = [
@@ -77,7 +76,6 @@ export const OrdersFilters = () => {
 
   const { startTransition } = useLoader();
 
-  console.log(filter);
   //   const searchParams = useSearchParams();
 
   const router = useRouter();

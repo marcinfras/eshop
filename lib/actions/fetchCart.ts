@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { getCartByEmail, getCartByIdHygraph } from "../graphql";
+import { getCartByIdHygraph } from "../graphql";
 import { mapperCart } from "../graphql/mappers";
 import { revalidateTag } from "next/cache";
 

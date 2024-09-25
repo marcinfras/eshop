@@ -27,6 +27,6 @@ export const signNewsletter = async (email?: string) => {
   }
 };
 
-export const cancelNewsletter = async () => {
-  cookies().set("newsletter", "cancelled");
+export const cancelNewsletter = () => {
+ cookies().set("newsletter", "cancelled");
 };

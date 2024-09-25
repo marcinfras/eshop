@@ -1,7 +1,7 @@
 import { formatCurrency, formatDate } from "@/helpers/helpers";
 
 import Link from "next/link";
-import { OrderStatus } from "../../../../../lib/hygraph/generated/graphql";
+import type { OrderStatus } from "../../../../../lib/hygraph/generated/graphql";
 import { Badge } from "@/app/_components/ui/badge";
 import { Button } from "@/app/_components/ui/button";
 

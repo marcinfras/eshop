@@ -1,4 +1,9 @@
 import { getEnv } from "@/app/utils/utils";
+import type {
+  OrderOrderByInput,
+  OrderStatus,
+  TypedDocumentString,
+} from "../hygraph/generated/graphql";
 import {
   AddToCartDocument,
   ConnectAccountWithCartDocument,
@@ -15,10 +20,7 @@ import {
   GetOrdersByEmailDocument,
   GetProductBySlugDocument,
   GetProductsDocument,
-  OrderOrderByInput,
-  OrderStatus,
   RemoveFromCartDocument,
-  TypedDocumentString,
   UpdateCartDocument,
   UpdateNameDocument,
   UpdatePasswordDocument,
@@ -195,7 +197,7 @@ export const connectAccountWithCartHygraph = async ({
   return data.updateAccount;
 };
 
-const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+// const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const getCartByIdHygraph = async (id: string) => {
   // await delay(3000);

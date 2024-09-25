@@ -12,7 +12,7 @@ export const UserStatusNav = () => {
 
   return (
     <>
-      {status === "authenticated" && <AccountNavIcon />}{" "}
+      {status === "authenticated" && <AccountNavIcon />}
       {status === "unauthenticated" && (
         <Link
           href="/login"

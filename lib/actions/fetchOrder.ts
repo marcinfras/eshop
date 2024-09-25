@@ -1,6 +1,6 @@
 "use server";
 
-import { redirect } from "next/navigation";
+
 import {
   getOrderByIdHygraph,
   getOrderByStripeCheckoutIdHygraph,
@@ -10,7 +10,7 @@ import { revalidateTag } from "next/cache";
 export const fetchOrderByStripeCheckoutId = async (
   stripeCheckoutId: string
 ) => {
-  const order = getOrderByStripeCheckoutIdHygraph(stripeCheckoutId);
+  const order = await getOrderByStripeCheckoutIdHygraph(stripeCheckoutId);
   if ("error" in order) {
     return { error: "Failed to get order" };
   }

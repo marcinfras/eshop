@@ -5,12 +5,11 @@ import Image from "next/image";
 import { Button } from "./ui/button";
 import Link from "next/link";
 import { UpdateItemQuantity } from "./UpdateItemQuantity";
-// import { useCart } from "./contexts/CartContext/CartContext";
+
 import { formatCurrency } from "../../helpers/helpers";
 import { useSession } from "next-auth/react";
 import { createCart } from "../../../lib/actions/createCart";
-import { useTransition } from "react";
-import { Loader } from "./Loader";
+
 import { useLoader } from "./contexts/LoaderContext.tsx/LoaderContext";
 import { toast } from "./ui/use-toast";
 import { useRouter } from "next/navigation";
@@ -71,8 +70,6 @@ export const ProductItem = ({
                     { quantity: 1, slug: product.slug },
                     session.data?.user?.email
                   );
-
-                  console.log(res);
 
                   if (res && "error" in res)
                     toast({

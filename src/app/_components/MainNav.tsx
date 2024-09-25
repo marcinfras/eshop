@@ -3,8 +3,6 @@
 
 import Link from "next/link";
 
-import { AccountNavIcon } from "./AccountIcon";
-import { Loader } from "./Loader";
 import { fetchCart } from "../../../lib/actions/fetchCart";
 import { UserStatusNav } from "./UserStatusNav";
 
@@ -13,6 +11,7 @@ import { UserStatusNav } from "./UserStatusNav";
 export const MainNav = async () => {
   const cart = await fetchCart();
 
+  if (cart && "error" in cart) throw new Error(cart.error);
   // console.log("MainNavCartttttttttt: " + cart);
 
   return (

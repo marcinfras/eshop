@@ -20,7 +20,7 @@ export const createCart = async (
 ) => {
   const cartCookie = getCartFromCookie();
 
-  console.log("cartCookie: " + cartCookie);
+
 
   if (!cartCookie) {
     const cart = await createCartHygraph(product, email);

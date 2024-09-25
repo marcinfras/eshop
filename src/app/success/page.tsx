@@ -1,9 +1,8 @@
 import Link from "next/link";
 import { Separator } from "../_components/ui/separator";
-import { SVGProps } from "react";
+import type { SVGProps } from "react";
 import { fetchOrderByStripeCheckoutId } from "../../../lib/actions/fetchOrder";
-import { toast } from "../_components/ui/use-toast";
-import { redirect } from "next/navigation";
+
 import { formatCurrency } from "@/helpers/helpers";
 
 const Page = async ({

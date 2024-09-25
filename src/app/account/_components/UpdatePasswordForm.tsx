@@ -74,7 +74,6 @@ export const UpdatePasswordForm = () => {
     });
 
     reset();
-    console.log(res);
   });
 
   return (

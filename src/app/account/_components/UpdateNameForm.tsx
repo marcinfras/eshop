@@ -36,7 +36,6 @@ export const UpdateNameForm = () => {
   const { handleSubmit, control } = form;
 
   const onSubmit = handleSubmit(async ({ name }) => {
-    console.log(name);
     if (!data?.user?.email) {
       toast({
         variant: "destructive",
@@ -56,7 +55,6 @@ export const UpdateNameForm = () => {
         title: res.error,
       });
     }
-    console.log(res);
   });
 
   return (

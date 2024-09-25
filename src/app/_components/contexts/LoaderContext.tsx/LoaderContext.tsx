@@ -1,7 +1,8 @@
 "use client";
 
+import type {
+  TransitionStartFunction} from "react";
 import {
-  TransitionStartFunction,
   createContext,
   useContext,
   useTransition,

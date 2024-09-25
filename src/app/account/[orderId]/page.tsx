@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 // import { OrderDetail } from "./_components/OrderDetail";
 import { fetchOrderById } from "../../../../lib/actions/fetchOrder";
 import Link from "next/link";
-import { formatCurrency, formatDate } from "@/helpers/helpers";
+import { formatDate } from "@/helpers/helpers";
 import { Separator } from "@/app/_components/ui/separator";
 import { Badge } from "@/app/_components/ui/badge";
 import { OrderDetailItem } from "./_components/OrderDetailItem";

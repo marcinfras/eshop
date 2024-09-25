@@ -1,10 +1,11 @@
 import { Stripe } from "stripe";
-import { NextRequest, NextResponse } from "next/server";
+import { NextResponse } from "next/server";
+import type { NextRequest} from "next/server";
 import { getEnv } from "@/app/utils/utils";
-import { cookies } from "next/headers";
+
 import { createOrderHygraph } from "../../../../lib/graphql";
 import { OrderStatus } from "../../../../lib/hygraph/generated/graphql";
-import { deleteCartCookie } from "../../../../lib/actions/deleteCartCookie";
+
 
 const stripeKey = getEnv(process.env.STRIPE_KEY);
 

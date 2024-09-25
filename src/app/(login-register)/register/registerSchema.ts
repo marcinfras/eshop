@@ -6,4 +6,4 @@ export const registerSchema = yup.object({
   password: yup.string().min(8).required(),
 });
 
-type RegisterSchema = yup.InferType<typeof registerSchema>;
+// type RegisterSchema = yup.InferType<typeof registerSchema>;

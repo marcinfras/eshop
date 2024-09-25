@@ -14,6 +14,8 @@ import { deleteCartCookie } from "../../../lib/actions/deleteCartCookie";
 export const AccountNavIcon = () => {
   const { data } = useSession();
 
+  console.log(data);
+
   const logoutHander = () => {
     deleteCartCookie();
 

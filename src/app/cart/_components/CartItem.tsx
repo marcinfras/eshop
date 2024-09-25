@@ -1,11 +1,11 @@
-import { MinusIcon, PlusIcon, XIcon } from "lucide-react";
+
 
 import Image from "next/image";
 
 // import { useCart } from "./contexts/CartContext/CartContext";
 
 import { UpdateItemQuantity } from "@/app/_components/UpdateItemQuantity";
-import { ProductCart } from "../../../../lib/graphql/mappers";
+import type { ProductCart } from "../../../../lib/graphql/mappers";
 import { formatCurrency } from "@/helpers/helpers";
 
 export const CartItem = ({ item }: { item: ProductCart }) => {

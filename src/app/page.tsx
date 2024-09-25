@@ -1,7 +1,5 @@
-import Image from "next/image";
-import { Button } from "./_components/ui/button";
 import { getProducts } from "../../lib/graphql";
-import Link from "next/navigation";
+
 import { ProductItem } from "./_components/ProductItem";
 import { fetchCart } from "../../lib/actions/fetchCart";
 import { cookies } from "next/headers";

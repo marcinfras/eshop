@@ -2,7 +2,7 @@
 
 import { revalidateTag } from "next/cache";
 import { getOrdersByEmailHygraph } from "../graphql";
-import { redirect } from "next/navigation";
+
 import { OrderOrderByInput } from "../hygraph/generated/graphql";
 
 export const fetchOrders = async ({
@@ -33,8 +33,6 @@ export const fetchOrders = async ({
   }
 
   revalidateTag("orders");
-
-  // console.log(orders);
 
   return orders;
 };

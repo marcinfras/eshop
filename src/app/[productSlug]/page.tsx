@@ -12,11 +12,10 @@ import {
 import { Button } from "../_components/ui/button";
 import { Separator } from "../_components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "../_components/ui/avatar";
-import { SVGProps } from "react";
+import type { SVGProps } from "react";
 import { formatCurrency } from "../../helpers/helpers";
 
 const Page = async ({ params }: { params: { productSlug: string } }) => {
-  console.log(params.productSlug);
   const product = await getProductBySlug(params.productSlug);
 
   const { name, price, description, images, variants } = product;
