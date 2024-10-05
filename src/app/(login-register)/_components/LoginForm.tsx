@@ -14,7 +14,7 @@ import {
 import { Input } from "@/app/_components/ui/input";
 import { Button } from "@/app/_components/ui/button";
 
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { useState } from "react";
 
 import { useRouter } from "next/navigation";
@@ -39,9 +39,6 @@ export const LoginForm = () => {
   const [isLogging, setIsLogging] = useState(false);
 
   const router = useRouter();
-
-  // const path = usePathname();
-  // console.log(path);
 
   const { handleSubmit, control } = form;
 
@@ -68,11 +65,8 @@ export const LoginForm = () => {
     setIsLogging(false);
   });
 
-  const session = useSession();
-
   return (
     <Form {...form}>
-      <pre>{JSON.stringify(session, null, 2)}</pre>
       <form className="space-y-4" onSubmit={onSubmit}>
         <FormField
           control={control}

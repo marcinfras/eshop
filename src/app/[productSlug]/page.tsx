@@ -14,9 +14,16 @@ import { Separator } from "../_components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "../_components/ui/avatar";
 import type { SVGProps } from "react";
 import { formatCurrency } from "../../helpers/helpers";
+import { AddToCartForm } from "./_components/AddToCartForm";
+import { getServerSession } from "next-auth";
+import { fetchCart } from "../../../lib/actions/fetchCart";
 
 const Page = async ({ params }: { params: { productSlug: string } }) => {
   const product = await getProductBySlug(params.productSlug);
+  const session = await getServerSession();
+
+  //Czy pojedynczego produktu z koszyka
+  const cart = await fetchCart();
 
   const { name, price, description, images, variants } = product;
 
@@ -49,115 +56,9 @@ const Page = async ({ params }: { params: { productSlug: string } }) => {
 
           <div className="text-4xl font-bold">{formatCurrency(price)}</div>
         </div>
-        <div className="grid gap-4 md:gap-10">
-          {/* <div className="grid gap-2">
-            <Label htmlFor="color" className="text-base">
-              Color
-            </Label>
-            <RadioGroup
-              id="color"
-              defaultValue="black"
-              className="flex items-center gap-2"
-            >
-              <Label
-                htmlFor="color-black"
-                className="border cursor-pointer rounded-md p-2 flex items-center gap-2 [&:has(:checked)]:bg-muted"
-              >
-                <RadioGroupItem id="color-black" value="black" />
-                Black
-              </Label>
-              <Label
-                htmlFor="color-white"
-                className="border cursor-pointer rounded-md p-2 flex items-center gap-2 [&:has(:checked)]:bg-muted"
-              >
-                <RadioGroupItem id="color-white" value="white" />
-                White
-              </Label>
-              <Label
-                htmlFor="color-blue"
-                className="border cursor-pointer rounded-md p-2 flex items-center gap-2 [&:has(:checked)]:bg-muted"
-              >
-                <RadioGroupItem id="color-blue" value="blue" />
-                Blue
-              </Label>
-            </RadioGroup>
-          </div> */}
-          {variants && (
-            <div className="grid gap-2">
-              <Label htmlFor="size" className="text-base">
-                Size
-              </Label>
-
-              <RadioGroup
-                id="size"
-                // defaultValue="m"
-                className="flex items-center gap-2"
-              >
-                {variants.map((variant) => (
-                  <Label
-                    key={variant.size}
-                    defaultValue={variant.size}
-                    htmlFor={variant.size}
-                    className="border cursor-pointer rounded-md p-2 flex items-center gap-2 [&:has(:checked)]:bg-muted"
-                  >
-                    <RadioGroupItem id={variant.size} value={variant.size} />
-                    {variant.size}
-                  </Label>
-                ))}
-                {/* <Label
-                  htmlFor="size-xs"
-                  className="border cursor-pointer rounded-md p-2 flex items-center gap-2 [&:has(:checked)]:bg-muted"
-                >
-                  <RadioGroupItem id="size-xs" value="xs" />
-                  XS
-                </Label>
-                <Label
-                  htmlFor="size-s"
-                  className="border cursor-pointer rounded-md p-2 flex items-center gap-2 [&:has(:checked)]:bg-muted"
-                >
-                  <RadioGroupItem id="size-s" value="s" />S
-                </Label>
-                <Label
-                  htmlFor="size-m"
-                  className="border cursor-pointer rounded-md p-2 flex items-center gap-2 [&:has(:checked)]:bg-muted"
-                >
-                  <RadioGroupItem id="size-m" value="m" />M
-                </Label>
-                <Label
-                  htmlFor="size-l"
-                  className="border cursor-pointer rounded-md p-2 flex items-center gap-2 [&:has(:checked)]:bg-muted"
-                >
-                  <RadioGroupItem id="size-l" value="l" />L
-                </Label>
-                <Label
-                  htmlFor="size-xl"
-                  className="border cursor-pointer rounded-md p-2 flex items-center gap-2 [&:has(:checked)]:bg-muted"
-                >
-                  <RadioGroupItem id="size-xl" value="xl" />
-                  XL
-                </Label> */}
-              </RadioGroup>
-            </div>
-          )}
-          <div className="grid gap-2">
-            <Label htmlFor="quantity" className="text-base">
-              Quantity
-            </Label>
-            <Select defaultValue="1">
-              <SelectTrigger className="w-24">
-                <SelectValue placeholder="Select" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1">1</SelectItem>
-                <SelectItem value="2">2</SelectItem>
-                <SelectItem value="3">3</SelectItem>
-                <SelectItem value="4">4</SelectItem>
-                <SelectItem value="5">5</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          <Button size="lg">Add to cart</Button>
-        </div>
+        {/* <div className="grid gap-4 md:gap-10"> */}
+        <AddToCartForm slug={params.productSlug} email={session?.user?.email} />
+        {/* </div> */}
         <Separator />
         <div className="grid gap-4 text-sm leading-loose">
           <h2 className="font-bold text-lg">Product Details</h2>
