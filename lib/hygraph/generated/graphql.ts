@@ -12906,6 +12906,14 @@ export type GetCartQueryVariables = Exact<{
 
 export type GetCartQuery = { cart?: { id: string, cartProduct: Array<{ id: string, quantity: number, product?: { id: string, slug: string, name: string, price: number, images: Array<{ url: string }> } | null }> } | null };
 
+export type IsProductInCartQueryVariables = Exact<{
+  cartId?: InputMaybe<Scalars['ID']['input']>;
+  slug: Scalars['String']['input'];
+}>;
+
+
+export type IsProductInCartQuery = { cart?: { cartProduct: Array<{ id: string, quantity: number }> } | null };
+
 export type CreateOrderMutationVariables = Exact<{
   data: OrderCreateInput;
 }>;
@@ -13097,6 +13105,16 @@ export const GetCartDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<GetCartQuery, GetCartQueryVariables>;
+export const IsProductInCartDocument = new TypedDocumentString(`
+    query IsProductInCart($cartId: ID, $slug: String!) {
+  cart(where: {id: $cartId}, stage: DRAFT) {
+    cartProduct(where: {product: {slug: $slug}}) {
+      id
+      quantity
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<IsProductInCartQuery, IsProductInCartQueryVariables>;
 export const CreateOrderDocument = new TypedDocumentString(`
     mutation CreateOrder($data: OrderCreateInput!) {
   createOrder(data: $data) {

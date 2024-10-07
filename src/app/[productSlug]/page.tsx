@@ -1,15 +1,5 @@
 import Image from "next/image";
-import { getProductBySlug } from "../../../lib/graphql";
-import { Label } from "../_components/ui/label";
-import { RadioGroup, RadioGroupItem } from "../_components/ui/radio-group";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../_components/ui/select";
-import { Button } from "../_components/ui/button";
+import { getProductBySlug, isProductInCartHygraph } from "../../../lib/graphql";
 import { Separator } from "../_components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "../_components/ui/avatar";
 import type { SVGProps } from "react";
@@ -17,15 +7,26 @@ import { formatCurrency } from "../../helpers/helpers";
 import { AddToCartForm } from "./_components/AddToCartForm";
 import { getServerSession } from "next-auth";
 import { fetchCart } from "../../../lib/actions/fetchCart";
+import { cookies } from "next/headers";
+import { UpdateItemQuantity } from "../_components/UpdateItemQuantity";
 
 const Page = async ({ params }: { params: { productSlug: string } }) => {
   const product = await getProductBySlug(params.productSlug);
   const session = await getServerSession();
 
   //Czy pojedynczego produktu z koszyka
-  const cart = await fetchCart();
+  // const cart = await fetchCart();
 
-  const { name, price, description, images, variants } = product;
+  const isProductInCart = await isProductInCartHygraph({
+    cartId: cookies().get("cart")?.value,
+    slug: params.productSlug,
+  });
+
+  if (isProductInCart !== null && "error" in isProductInCart) {
+    throw new Error("Something went wrong");
+  }
+
+  const { name, price, description, images } = product;
 
   return (
     <div className="grid md:grid-cols-2 gap-6 lg:gap-12 items-start max-w-6xl px-4 mx-auto py-6">
@@ -57,7 +58,18 @@ const Page = async ({ params }: { params: { productSlug: string } }) => {
           <div className="text-4xl font-bold">{formatCurrency(price)}</div>
         </div>
         {/* <div className="grid gap-4 md:gap-10"> */}
-        <AddToCartForm slug={params.productSlug} email={session?.user?.email} />
+        {isProductInCart ? (
+          <UpdateItemQuantity
+            id={isProductInCart.id}
+            currentQuantity={isProductInCart.quantity}
+          />
+        ) : (
+          <AddToCartForm
+            slug={params.productSlug}
+            email={session?.user?.email}
+          />
+        )}
+
         {/* </div> */}
         <Separator />
         <div className="grid gap-4 text-sm leading-loose">

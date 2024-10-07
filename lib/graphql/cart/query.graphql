@@ -16,3 +16,12 @@ query GetCart($id: ID!) {
     }
   }
 }
+
+query IsProductInCart($cartId: ID, $slug: String!) {
+  cart(where: { id: $cartId }, stage: DRAFT) {
+    cartProduct(where: { product: { slug: $slug } }) {
+      id
+      quantity
+    }
+  }
+}

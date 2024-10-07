@@ -20,6 +20,7 @@ import {
   GetOrdersByEmailDocument,
   GetProductBySlugDocument,
   GetProductsDocument,
+  IsProductInCartDocument,
   RemoveFromCartDocument,
   UpdateCartDocument,
   UpdateNameDocument,
@@ -386,6 +387,39 @@ export const deleteCartHygraph = async (cartId: string) => {
   } catch (error) {
     console.error((error as Error).message);
     return { error: "Failed to delete cart" };
+  }
+};
+
+export const isProductInCartHygraph = async ({
+  cartId,
+  slug,
+}: {
+  cartId: string | undefined;
+  slug: string;
+}) => {
+  if (!cartId) return null;
+
+  try {
+    const data = await fetcher({
+      query: IsProductInCartDocument,
+      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+      },
+      variables: {
+        cartId,
+        slug,
+      },
+    });
+
+    if (!data.cart?.cartProduct[0]) {
+      return null;
+    }
+
+    return data.cart?.cartProduct[0];
+  } catch (error) {
+    console.error((error as Error).message);
+    return { error: (error as Error).message };
   }
 };
 
