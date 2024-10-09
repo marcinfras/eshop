@@ -1,29 +1,22 @@
-"use client";
+// "use client";
+"use server";
 
 import Link from "next/link";
-import { useQuery } from "@tanstack/react-query";
-import { useSession } from "next-auth/react";
-import { AccountNavIcon } from "./AccountIcon";
-import { Loader } from "./Loader";
+
 import { fetchCart } from "../../../lib/actions/fetchCart";
+import { UserStatusNav } from "./UserStatusNav";
 
-export const MainNav = () => {
-  const { status, data } = useSession();
+// export const dynamic = "force-dynamic";
 
-  const { data: cart, isPending } = useQuery({
-    queryKey: ["cart"],
-    queryFn: async () => {
-      const data = await fetchCart();
-      return data;
-    },
-  });
+export const MainNav = async () => {
+  const cart = await fetchCart();
 
-  // console.log(data, cart);
-
-  if (status === "loading" || isPending) return <Loader />;
+  if (cart && "error" in cart) throw new Error(cart.error);
+  // console.log("MainNavCartttttttttt: " + cart);
 
   return (
     <nav className="flex items-center justify-between h-16 px-4 bg-background border-b md:px-6">
+      {/* {JSON.stringify(cart, null, 4)} */}
       <Link href="/" className="flex items-center gap-2">
         <span>Eshop</span>
       </Link>
@@ -40,16 +33,7 @@ export const MainNav = () => {
             </span>
           )}
         </Link>
-
-        {status === "authenticated" && <AccountNavIcon />}
-        {status === "unauthenticated" && (
-          <Link
-            href="/login"
-            className="inline-flex items-center justify-center h-9 px-4 text-sm font-medium rounded-md bg-primary text-primary-foreground shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:pointer-events-none disabled:opacity-50"
-          >
-            Login
-          </Link>
-        )}
+        <UserStatusNav />
       </div>
     </nav>
   );

@@ -1,4 +1,9 @@
 import { getEnv } from "@/app/utils/utils";
+import type {
+  OrderOrderByInput,
+  OrderStatus,
+  TypedDocumentString,
+} from "../hygraph/generated/graphql";
 import {
   AddToCartDocument,
   ConnectAccountWithCartDocument,
@@ -15,9 +20,8 @@ import {
   GetOrdersByEmailDocument,
   GetProductBySlugDocument,
   GetProductsDocument,
-  OrderStatus,
+  IsProductInCartDocument,
   RemoveFromCartDocument,
-  TypedDocumentString,
   UpdateCartDocument,
   UpdateNameDocument,
   UpdatePasswordDocument,
@@ -194,7 +198,11 @@ export const connectAccountWithCartHygraph = async ({
   return data.updateAccount;
 };
 
+// const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export const getCartByIdHygraph = async (id: string) => {
+  // await delay(3000);
+
   const data = await fetcher({
     query: GetCartDocument,
     cache: "no-store",
@@ -204,7 +212,12 @@ export const getCartByIdHygraph = async (id: string) => {
     variables: {
       id,
     },
+    next: {
+      tags: ["cart"],
+    },
   });
+
+  if (!data.cart) return { error: "Failed to get cart" };
 
   return data.cart;
 };
@@ -377,6 +390,39 @@ export const deleteCartHygraph = async (cartId: string) => {
   }
 };
 
+export const isProductInCartHygraph = async ({
+  cartId,
+  slug,
+}: {
+  cartId: string | undefined;
+  slug: string;
+}) => {
+  if (!cartId) return null;
+
+  try {
+    const data = await fetcher({
+      query: IsProductInCartDocument,
+      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+      },
+      variables: {
+        cartId,
+        slug,
+      },
+    });
+
+    if (!data.cart?.cartProduct[0]) {
+      return null;
+    }
+
+    return data.cart?.cartProduct[0];
+  } catch (error) {
+    console.error((error as Error).message);
+    return { error: (error as Error).message };
+  }
+};
+
 export const updateNameHygraph = async ({
   name,
   email,
@@ -528,6 +574,9 @@ export const getOrderByIdHygraph = async (orderId: string) => {
       variables: {
         orderId,
       },
+      next: {
+        tags: [orderId],
+      },
     });
 
     console.log(data);
@@ -543,7 +592,17 @@ export const getOrderByIdHygraph = async (orderId: string) => {
   }
 };
 
-export const getOrdersByEmailHygraph = async (email: string) => {
+export const getOrdersByEmailHygraph = async ({
+  where,
+  orderBy,
+}: {
+  where:
+    | {
+        email: string;
+      }
+    | { email: string; currentStatus: OrderStatus };
+  orderBy: OrderOrderByInput;
+}) => {
   try {
     const data = await fetcher({
       query: GetOrdersByEmailDocument,
@@ -552,7 +611,11 @@ export const getOrdersByEmailHygraph = async (email: string) => {
         Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
       },
       variables: {
-        email,
+        where,
+        orderBy,
+      },
+      next: {
+        tags: ["orders"],
       },
     });
 

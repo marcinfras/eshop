@@ -1,4 +1,4 @@
-import { ProductSize } from "../hygraph/generated/graphql";
+import type { ProductSize } from "../hygraph/generated/graphql";
 
 type MapperCart =
   | {
@@ -48,19 +48,7 @@ export const mapperCart = (cart: MapperCart) => {
 
 /////////////////////////////////////////////////////////
 
-// product?: {
-//   name: string;
-//   price: number;
-//   id: string;
-//   description: string;
-//   images: {
-//       url: string;
-//   }[];
-//   variants: ({} | {
-//       size: ProductSize;
-//       id: string;
-//   })[];
-// }
+
 
 type VariantType = {
   size: ProductSize;
@@ -76,7 +64,7 @@ type MapperProduct = {
     url: string;
   }[];
   variants: (
-    | {}
+    | Record<string, unknown>
     | {
         size: ProductSize;
         id: string;

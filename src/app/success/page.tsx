@@ -1,9 +1,8 @@
 import Link from "next/link";
 import { Separator } from "../_components/ui/separator";
-import { SVGProps } from "react";
+import type { SVGProps } from "react";
 import { fetchOrderByStripeCheckoutId } from "../../../lib/actions/fetchOrder";
-import { toast } from "../_components/ui/use-toast";
-import { redirect } from "next/navigation";
+
 import { formatCurrency } from "@/helpers/helpers";
 
 const Page = async ({
@@ -12,6 +11,8 @@ const Page = async ({
   searchParams: { [key: string]: string | string[] | undefined };
 }) => {
   const sessionId = searchParams["session_id"];
+
+  console.log("sessionIddddddd: " + sessionId);
 
   if (!sessionId || Array.isArray(sessionId))
     throw new Error("Failed to get order");

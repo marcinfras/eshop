@@ -1,4 +1,3 @@
-import Image from "next/image";
 // import { useCart } from "../_components/contexts/CartContext/CartContext";git
 
 import { fetchCart } from "../../../lib/actions/fetchCart";
@@ -9,6 +8,8 @@ import { CartItem } from "./_components/CartItem";
 
 const Page = async () => {
   const cart = await fetchCart();
+
+  if (cart && "error" in cart) throw new Error(cart.error);
 
   const totalItems = cart?.reduce((acc, cur) => cur?.quantity + acc, 0);
 

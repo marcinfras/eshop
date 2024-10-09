@@ -1,4 +1,4 @@
-import { NextAuthOptions } from "next-auth";
+import type { NextAuthOptions } from "next-auth";
 import bcrypt from "bcrypt";
 import NextAuth from "next-auth/next";
 import CredentialsProvider from "next-auth/providers/credentials";
@@ -7,7 +7,7 @@ import {
   getAccountByEmail,
 } from "../../../../../lib/graphql";
 import { cookies } from "next/headers";
-import { revalidateTag } from "next/cache";
+import {revalidateTag } from "next/cache";
 import { getEnv } from "@/app/utils/utils";
 
 const route = NextAuth({
@@ -51,7 +51,12 @@ const route = NextAuth({
 
           revalidateTag("cart");
 
-          return account;
+          return {
+            id: account.id,
+            email: account.email,
+            name: account.name,
+            cart: account.cart,
+          };
         } catch (error) {
           return null;
         }
@@ -60,33 +65,6 @@ const route = NextAuth({
   ],
   pages: {
     signIn: "/login",
-  },
-  callbacks: {
-    async session({ session, token, trigger, newSession }) {
-      // Ensure session.user exists
-      if (!session.user) {
-        session.user = {};
-      }
-
-      session.user.name = token.name as string;
-
-      if (trigger === "update" && newSession?.name) {
-        session.user.name = newSession.name;
-      }
-
-      return session;
-    },
-    async jwt({ token, user, trigger, session }) {
-      if (user) {
-        token.name = user.name;
-      }
-
-      if (trigger === "update" && session?.name) {
-        token.name = session.name;
-      }
-
-      return token;
-    },
   },
 }) satisfies NextAuthOptions;
 

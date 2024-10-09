@@ -66,7 +66,7 @@ export const NewsletterPopup = () => {
 
   return (
     <div
-      className="fixed inset-0 flex items-center justify-center bg-black/50"
+      className="fixed inset-0 flex items-center justify-center bg-black/50 z-10"
       onClick={closePopup}
     >
       <div

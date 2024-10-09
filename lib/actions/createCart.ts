@@ -20,7 +20,7 @@ export const createCart = async (
 ) => {
   const cartCookie = getCartFromCookie();
 
-  console.log("cartCookie: " + cartCookie);
+
 
   if (!cartCookie) {
     const cart = await createCartHygraph(product, email);
@@ -40,6 +40,8 @@ export const createCart = async (
   if ("error" in res) return res;
 
   const cart = await getCartByIdHygraph(cartCookie);
+
+  if ("error" in cart) return cart;
 
   revalidateTag("cart");
 
