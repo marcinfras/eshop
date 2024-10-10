@@ -2,7 +2,8 @@ import { describe } from "node:test";
 import "@testing-library/jest-dom";
 import { RegisterForm } from "../_components/RegisterForm";
 import LoginLayout from "../layout";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 
 jest.mock("next/navigation", () => ({
   useRouter() {
@@ -38,7 +39,7 @@ describe("Register Form", () => {
     expect(password).toBeVisible();
   });
 
-  it("Check entering email and password", () => {
+  it("Check entering email and password", async () => {
     render(
       <LoginLayout>
         <RegisterForm />
@@ -49,23 +50,13 @@ describe("Register Form", () => {
     const email = screen.getByLabelText("Email address");
     const password = screen.getByLabelText("Password");
 
-    fireEvent.change(name, {
-      target: {
-        value: "testName",
-      },
-    });
+    await userEvent.type(name, "testName");
 
-    fireEvent.change(email, {
-      target: {
-        value: "rtl@test.pl",
-      },
-    });
+    await userEvent.type(email, "rtl@test.pl");
 
-    fireEvent.change(password, {
-      target: {
-        value: "12345678",
-      },
-    });
+    await userEvent.type(password, "12345678");
+
+    // screen.debug();
 
     expect(name).toHaveValue("testName");
     expect(email).toHaveValue("rtl@test.pl");
@@ -82,7 +73,7 @@ describe("Register Form", () => {
       name: "Create account",
     });
 
-    fireEvent.click(registerButton);
+    userEvent.click(registerButton);
 
     const nameError = await screen.findByText("name is a required field");
     const emailError = await screen.findByText("email is a required field");

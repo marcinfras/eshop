@@ -1,8 +1,9 @@
 import { describe } from "node:test";
-import { fireEvent, render, screen } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 import { LoginForm } from "../_components/LoginForm";
 import LoginLayout from "../layout";
+import userEvent from "@testing-library/user-event";
 
 jest.mock("next/navigation", () => ({
   useRouter() {
@@ -36,11 +37,6 @@ describe("LoginForm", () => {
     const loginButton = screen.getByRole("button", {
       name: "Sign in",
     });
-    // fireEvent.change(email, {
-    //   target: {
-    //     value: "test email",
-    //   },
-    // });
 
     expect(heading).toBeVisible();
     expect(loginButton).toBeVisible();
@@ -48,7 +44,7 @@ describe("LoginForm", () => {
     expect(password).toBeVisible();
   });
 
-  it("Check entering email and password", () => {
+  it("Check entering email and password", async () => {
     render(
       <LoginLayout>
         <LoginForm />
@@ -58,17 +54,21 @@ describe("LoginForm", () => {
     const email = screen.getByLabelText("Email address");
     const password = screen.getByLabelText("Password");
 
-    fireEvent.change(email, {
-      target: {
-        value: "rtl@test.pl",
-      },
-    });
+    // fireEvent.change(email, {
+    //   target: {
+    //     value: "rtl@test.pl",
+    //   },
+    // });
 
-    fireEvent.change(password, {
-      target: {
-        value: "12345678",
-      },
-    });
+    // fireEvent.change(password, {
+    //   target: {
+    //     value: "12345678",
+    //   },
+    // });
+
+    await userEvent.type(email, "rtl@test.pl");
+
+    await userEvent.type(password, "12345678");
 
     expect(email).toHaveValue("rtl@test.pl");
     expect(password).toHaveValue("12345678");
@@ -82,7 +82,7 @@ describe("LoginForm", () => {
     );
     const loginButton = screen.getByRole("button", { name: "Sign in" });
 
-    fireEvent.click(loginButton);
+    userEvent.click(loginButton);
 
     const emailError = await screen.findByText("email is a required field");
     const passwordError = await screen.findByText(

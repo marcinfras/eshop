@@ -6,11 +6,10 @@ import { yupResolver } from "@hookform/resolvers/yup";
 
 import { useSession } from "next-auth/react";
 
-import { useState } from "react";
 import { changePasswordSchema } from "../schemas";
 import { toast } from "@/app/_components/ui/use-toast";
 import { updatePasswordAction } from "../../../../lib/actions/updatePassword";
-import { Loader } from "@/app/_components/Loader";
+
 import {
   Form,
   FormControl,
@@ -28,8 +27,6 @@ type ChangePasswordFormInput = {
 };
 
 export const UpdatePasswordForm = () => {
-  const [isUpdating, setIsUpdating] = useState(false);
-
   const { data } = useSession();
 
   const passwordForm = useForm<ChangePasswordFormInput>({
@@ -40,16 +37,19 @@ export const UpdatePasswordForm = () => {
     },
   });
 
-  const { handleSubmit, control, reset } = passwordForm;
+  const {
+    handleSubmit,
+    control,
+    reset,
+    formState: { isSubmitting },
+  } = passwordForm;
 
   const onSubmit = handleSubmit(async ({ password }) => {
-    setIsUpdating(true);
     if (!data?.user?.email) {
       toast({
         variant: "destructive",
         title: "Failed to update your name",
       });
-      setIsUpdating(false);
       return;
     }
 
@@ -63,10 +63,8 @@ export const UpdatePasswordForm = () => {
         variant: "destructive",
         title: res.error,
       });
-      setIsUpdating(false);
+      return;
     }
-
-    setIsUpdating(false);
 
     toast({
       title: "Password changed successfully!",
@@ -78,7 +76,6 @@ export const UpdatePasswordForm = () => {
 
   return (
     <section>
-      {isUpdating && <Loader />}
       <h2 className="text-2xl font-bold">Security</h2>
       <Form {...passwordForm}>
         <form className="mt-6 space-y-4" onSubmit={onSubmit}>
@@ -108,7 +105,9 @@ export const UpdatePasswordForm = () => {
               </FormItem>
             )}
           />
-          <Button className="w-full">Change Password</Button>
+          <Button disabled={isSubmitting} className="w-full">
+            Change Password
+          </Button>
         </form>
       </Form>
     </section>

@@ -33,7 +33,11 @@ export const UpdateNameForm = () => {
     },
   });
 
-  const { handleSubmit, control } = form;
+  const {
+    handleSubmit,
+    control,
+    formState: { isSubmitting },
+  } = form;
 
   const onSubmit = handleSubmit(async ({ name }) => {
     if (!data?.user?.email) {
@@ -79,7 +83,9 @@ export const UpdateNameForm = () => {
             <Label htmlFor="email">Email</Label>
             <Input value={data?.user?.email || ""} disabled />
           </div>
-          <Button className="w-full">Update Profile</Button>
+          <Button disabled={isSubmitting} className="w-full">
+            Update Profile
+          </Button>
         </form>
       </Form>
     </section>

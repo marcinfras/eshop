@@ -28,7 +28,9 @@ export const createOrder = async (email: string) => {
         product_data: { name, images: [product.images.url] },
       },
     })),
-    success_url: `http://localhost:3000/success?session_id={CHECKOUT_SESSION_ID}`,
+    success_url: `${getEnv(
+      process.env.BASE_URL
+    )}/success?session_id={CHECKOUT_SESSION_ID}`,
     currency: "eur",
     metadata: {
       items: JSON.stringify(

@@ -7,7 +7,7 @@ import {
   getAccountByEmail,
 } from "../../../../../lib/graphql";
 import { cookies } from "next/headers";
-import {revalidateTag } from "next/cache";
+import { revalidateTag } from "next/cache";
 import { getEnv } from "@/app/utils/utils";
 
 const route = NextAuth({
@@ -65,6 +65,19 @@ const route = NextAuth({
   ],
   pages: {
     signIn: "/login",
+  },
+  callbacks: {
+    jwt({ token, user, trigger, session }) {
+      if (user) {
+        token.name = user.name;
+      }
+
+      if (trigger === "update" && session?.name) {
+        token.name = session.name;
+      }
+
+      return token;
+    },
   },
 }) satisfies NextAuthOptions;
 

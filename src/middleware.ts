@@ -4,6 +4,7 @@ import { NextResponse, type NextRequest } from "next/server";
 export function middleware(request: NextRequest) {
   //   const currentUser = request.cookies.get('currentUser')?.value
 
+  //TODO Zmienic na getServerSession i isauthenticated zamiast po cookies
   const isAuth = request.cookies.get("next-auth.session-token")?.value;
 
   //   if (currentUser && !request.nextUrl.pathname.startsWith('/dashboard')) {
