@@ -1,6 +1,6 @@
 import { getServerSession } from "next-auth";
 // import { OrderDetail } from "./_components/OrderDetail";
-import { fetchOrderById } from "../../../../lib/actions/fetchOrder";
+
 import Link from "next/link";
 import { formatDate } from "@/helpers/helpers";
 import { Separator } from "@/app/_components/ui/separator";
@@ -8,6 +8,7 @@ import { Badge } from "@/app/_components/ui/badge";
 import { OrderDetailItem } from "./_components/OrderDetailItem";
 import { ArrowLeft } from "lucide-react";
 import { OrderSummary } from "./_components/OrderSummary";
+import { getOrderByIdHygraph } from "../../../../lib/graphql";
 
 // https://v0.dev/r/m1fFuMxpk1b
 const Page = async ({ params }: { params: { orderId: string } }) => {
@@ -15,7 +16,7 @@ const Page = async ({ params }: { params: { orderId: string } }) => {
 
   if (!session?.user?.email) throw new Error("Failed to get order");
 
-  const order = await fetchOrderById({
+  const order = await getOrderByIdHygraph({
     orderId: params.orderId,
     email: session?.user?.email,
   });

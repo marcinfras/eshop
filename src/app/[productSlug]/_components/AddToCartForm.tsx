@@ -48,7 +48,6 @@ export const AddToCartForm = ({
   const { handleSubmit, control } = form;
 
   const onSubmit = handleSubmit((data) => {
-    console.log(data, email);
     startTransition(async () => {
       const res = await createCart(
         { quantity: Number(data.quantity), slug: slug },

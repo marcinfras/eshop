@@ -6,16 +6,12 @@ import type { SVGProps } from "react";
 import { formatCurrency } from "../../helpers/helpers";
 import { AddToCartForm } from "./_components/AddToCartForm";
 import { getServerSession } from "next-auth";
-import { fetchCart } from "../../../lib/actions/fetchCart";
 import { cookies } from "next/headers";
 import { UpdateItemQuantity } from "../_components/UpdateItemQuantity";
 
 const Page = async ({ params }: { params: { productSlug: string } }) => {
   const product = await getProductBySlug(params.productSlug);
   const session = await getServerSession();
-
-  //Czy pojedynczego produktu z koszyka
-  // const cart = await fetchCart();
 
   const isProductInCart = await isProductInCartHygraph({
     cartId: cookies().get("cart")?.value,

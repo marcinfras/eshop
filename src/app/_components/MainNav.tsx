@@ -3,13 +3,13 @@
 
 import Link from "next/link";
 
-import { fetchCart } from "../../../lib/actions/fetchCart";
 import { UserStatusNav } from "./UserStatusNav";
+import { getCartByIdHygraph } from "../../../lib/graphql";
 
 // export const dynamic = "force-dynamic";
 
 export const MainNav = async () => {
-  const cart = await fetchCart();
+  const cart = await getCartByIdHygraph();
 
   if (cart && "error" in cart) throw new Error(cart.error);
   // console.log("MainNavCartttttttttt: " + cart);

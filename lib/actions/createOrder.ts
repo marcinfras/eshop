@@ -2,16 +2,17 @@
 
 import { getEnv } from "@/app/utils/utils";
 import { Stripe } from "stripe";
-import { fetchCart } from "./fetchCart";
+
 import { redirect } from "next/navigation";
 import { deleteCart } from "./deleteCart";
+import { getCartByIdHygraph } from "../graphql";
 
 const stripeClient = new Stripe(getEnv(process.env.STRIPE_KEY), {
   apiVersion: "2024-06-20",
 });
 
 export const createOrder = async (email: string) => {
-  const cart = await fetchCart();
+  const cart = await getCartByIdHygraph();
 
   if (!cart) throw new Error("Problem to create checkout, cart no exist.");
 

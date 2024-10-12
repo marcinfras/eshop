@@ -1,9 +1,9 @@
 import Link from "next/link";
 import { Separator } from "../_components/ui/separator";
 import type { SVGProps } from "react";
-import { fetchOrderByStripeCheckoutId } from "../../../lib/actions/fetchOrder";
 
 import { formatCurrency } from "@/helpers/helpers";
+import { getOrderByStripeCheckoutIdHygraph } from "../../../lib/graphql";
 
 const Page = async ({
   searchParams,
@@ -17,7 +17,7 @@ const Page = async ({
   if (!sessionId || Array.isArray(sessionId))
     throw new Error("Failed to get order");
 
-  const order = await fetchOrderByStripeCheckoutId(sessionId);
+  const order = await getOrderByStripeCheckoutIdHygraph(sessionId);
 
   if ("error" in order) {
     throw new Error("Failed to get order");

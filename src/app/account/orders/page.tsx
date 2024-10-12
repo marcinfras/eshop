@@ -2,9 +2,10 @@
 
 import { getServerSession } from "next-auth";
 // import { OrdersList } from "./_components/OrdersList";
-import { fetchOrders } from "../../../../lib/actions/fetchOrders";
+
 import { OrdersItem } from "./_components/OrdersItem";
 import { OrdersFilters } from "./_components/OrdersFilters";
+import { getOrdersByEmailHygraph } from "../../../../lib/graphql";
 
 const Page = async ({
   searchParams,
@@ -13,9 +14,9 @@ const Page = async ({
 }) => {
   const session = await getServerSession();
 
-  if (!session?.user?.email) throw new Error("Something went wrong");
+  if (!session?.user?.email) throw new Error("Failed to get orders");
 
-  const orders = await fetchOrders({
+  const orders = await getOrdersByEmailHygraph({
     email: session.user.email,
     sortBy:
       typeof searchParams["sortBy"] === "string"

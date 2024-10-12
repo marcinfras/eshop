@@ -26,7 +26,10 @@ import {
   UpdateNameDocument,
   UpdatePasswordDocument,
 } from "../hygraph/generated/graphql";
-import { mapperProduct } from "./mappers";
+import { mapperCart, mapperProduct } from "./mappers";
+import { cookies } from "next/headers";
+import { revalidateTag } from "next/cache";
+import { getOrderByString } from "@/helpers/helpers";
 
 type GraphQlError = {
   message: string;
@@ -198,10 +201,10 @@ export const connectAccountWithCartHygraph = async ({
   return data.updateAccount;
 };
 
-// const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+export const getCartByIdHygraph = async () => {
+  const id = cookies().get("cart")?.value;
 
-export const getCartByIdHygraph = async (id: string) => {
-  // await delay(3000);
+  if (!id) return [];
 
   const data = await fetcher({
     query: GetCartDocument,
@@ -219,7 +222,11 @@ export const getCartByIdHygraph = async (id: string) => {
 
   if (!data.cart) return { error: "Failed to get cart" };
 
-  return data.cart;
+  revalidateTag("cart");
+
+  // console.log(data.cart);
+
+  return mapperCart(data.cart);
 };
 
 export const createCartHygraph = async (
@@ -563,7 +570,15 @@ export const getOrderByStripeCheckoutIdHygraph = async (
   }
 };
 
-export const getOrderByIdHygraph = async (orderId: string) => {
+export const getOrderByIdHygraph = async ({
+  email,
+  orderId,
+}: {
+  email: string;
+  orderId: string;
+}) => {
+  if (!email) throw new Error("Failed to get order");
+
   try {
     const data = await fetcher({
       query: GetOrderByIdDocument,
@@ -580,8 +595,9 @@ export const getOrderByIdHygraph = async (orderId: string) => {
     });
 
     console.log(data);
+    revalidateTag(orderId);
 
-    if (!data.order) {
+    if (!data.order || data.order.email !== email) {
       return { error: "Failed to get order" };
     }
 
@@ -592,17 +608,43 @@ export const getOrderByIdHygraph = async (orderId: string) => {
   }
 };
 
+// {
+//   where,
+//   orderBy,
+// }: {
+//   where:
+//     | {
+//         email: string;
+//       }
+//     | { email: string; currentStatus: OrderStatus };
+//   orderBy: OrderOrderByInput;
+// }
+
 export const getOrdersByEmailHygraph = async ({
-  where,
-  orderBy,
+  email,
+  sortBy,
+  sortDirection,
+  filter,
 }: {
-  where:
+  email: string;
+  sortBy: string | null;
+  sortDirection: string | null;
+  filter: string | null;
+}) => {
+  if (!email) throw new Error("Failed to get orders");
+
+  const orderBy = getOrderByString({ sortBy, sortDirection });
+
+  const where:
     | {
         email: string;
       }
-    | { email: string; currentStatus: OrderStatus };
-  orderBy: OrderOrderByInput;
-}) => {
+    | { email: string; currentStatus: OrderStatus } = {
+    ...(!filter || filter === "ALL"
+      ? { email: email }
+      : { email: email, currentStatus: filter }),
+  };
+
   try {
     const data = await fetcher({
       query: GetOrdersByEmailDocument,
@@ -624,6 +666,8 @@ export const getOrdersByEmailHygraph = async ({
     if (!data.orders) {
       return [];
     }
+
+    revalidateTag("orders");
 
     return data.orders;
   } catch (error) {

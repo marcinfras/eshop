@@ -1,13 +1,11 @@
-// import { useCart } from "../_components/contexts/CartContext/CartContext";git
-
-import { fetchCart } from "../../../lib/actions/fetchCart";
 import { formatCurrency } from "@/helpers/helpers";
 
 import { CheckoutButton } from "./_components/CheckoutButton";
 import { CartItem } from "./_components/CartItem";
+import { getCartByIdHygraph } from "../../../lib/graphql";
 
 const Page = async () => {
-  const cart = await fetchCart();
+  const cart = await getCartByIdHygraph();
 
   if (cart && "error" in cart) throw new Error(cart.error);
 
@@ -20,7 +18,6 @@ const Page = async () => {
     })
     .reduce((acc, cur) => acc + cur, 0);
 
-  //acc cur
   return (
     <div className="container mx-auto px-4 py-8 max-w-2xl">
       <h1 className="text-3xl font-bold mb-6">Shopping Cart</h1>

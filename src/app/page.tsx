@@ -1,13 +1,12 @@
-import { getProducts } from "../../lib/graphql";
+import { getCartByIdHygraph, getProducts } from "../../lib/graphql";
 
 import { ProductItem } from "./_components/ProductItem";
-import { fetchCart } from "../../lib/actions/fetchCart";
 import { cookies } from "next/headers";
 import { NewsletterPopup } from "./_components/NewsletterPopup";
 
 export default async function Home() {
   const products = await getProducts();
-  const cart = await fetchCart();
+  const cart = await getCartByIdHygraph();
 
   const newsletter = cookies().get("newsletter");
 

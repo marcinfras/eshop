@@ -3,11 +3,10 @@
 import { cookies } from "next/headers";
 import {
   addToCartHygraph,
-  // connectAccountWithCart,
   createCartHygraph,
   getCartByIdHygraph,
 } from "../graphql";
-import { mapperCart } from "../graphql/mappers";
+
 import { revalidateTag } from "next/cache";
 // import { addToCartAction } from "./addToCart";
 
@@ -19,8 +18,6 @@ export const createCart = async (
   email: string | undefined | null
 ) => {
   const cartCookie = getCartFromCookie();
-
-
 
   if (!cartCookie) {
     const cart = await createCartHygraph(product, email);
@@ -39,13 +36,13 @@ export const createCart = async (
 
   if ("error" in res) return res;
 
-  const cart = await getCartByIdHygraph(cartCookie);
+  const cart = await getCartByIdHygraph();
 
-  if ("error" in cart) return cart;
+  if (cart && "error" in cart) return cart;
 
   revalidateTag("cart");
 
-  return mapperCart(cart);
+  return cart;
 };
 
 const getCartFromCookie = () => {

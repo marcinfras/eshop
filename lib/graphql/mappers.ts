@@ -31,6 +31,8 @@ export type ProductCart = {
   };
 };
 export const mapperCart = (cart: MapperCart) => {
+  console.log(cart?.cartProduct);
+
   return cart?.cartProduct
     .map((v) => {
       if (!v.product) return;
@@ -47,8 +49,6 @@ export const mapperCart = (cart: MapperCart) => {
 };
 
 /////////////////////////////////////////////////////////
-
-
 
 type VariantType = {
   size: ProductSize;
