@@ -29,7 +29,10 @@ export const UpdateNameForm = () => {
   const form = useForm<ChangeNameFormInput>({
     resolver: yupResolver(nameSchema),
     defaultValues: {
-      name: data?.user?.name as string,
+      name: data?.user?.name || "",
+    },
+    values: {
+      name: data?.user?.name || "",
     },
   });
 
@@ -81,7 +84,7 @@ export const UpdateNameForm = () => {
           />
           <div className="space-y-1">
             <Label htmlFor="email">Email</Label>
-            <Input value={data?.user?.email || ""} disabled />
+            <Input id="email" value={data?.user?.email || ""} disabled />
           </div>
           <Button disabled={isSubmitting} className="w-full">
             Update Profile
