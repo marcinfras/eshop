@@ -3,6 +3,11 @@ import { formatCurrency } from "@/helpers/helpers";
 import { CheckoutButton } from "./_components/CheckoutButton";
 import { CartItem } from "./_components/CartItem";
 import { getCartByIdHygraph } from "../../../lib/graphql";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Your cart",
+};
 
 const Page = async () => {
   const cart = await getCartByIdHygraph();

@@ -13,6 +13,7 @@ query GetOrderByStripeCheckoutId($stripeCheckoutId: String!) {
 
 query GetOrderById($orderId: ID!) {
   order(where: { id: $orderId }, stage: DRAFT) {
+    id
     email
     currentStatus
     createdAt

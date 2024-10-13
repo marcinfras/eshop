@@ -6,6 +6,11 @@ import { getServerSession } from "next-auth";
 import { OrdersItem } from "./_components/OrdersItem";
 import { OrdersFilters } from "./_components/OrdersFilters";
 import { getOrdersByEmailHygraph } from "../../../../lib/graphql";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Your orders",
+};
 
 const Page = async ({
   searchParams,

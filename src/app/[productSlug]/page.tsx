@@ -8,6 +8,25 @@ import { AddToCartForm } from "./_components/AddToCartForm";
 import { getServerSession } from "next-auth";
 import { cookies } from "next/headers";
 import { UpdateItemQuantity } from "../_components/UpdateItemQuantity";
+import type { Metadata } from "next";
+
+export async function generateMetadata({
+  params,
+}: {
+  params: { productSlug: string };
+}) {
+  const product = await getProductBySlug(params.productSlug);
+
+  return {
+    title: product.name,
+    description: product.description,
+    openGraph: {
+      title: product.name,
+      description: product.description,
+      images: [product.images],
+    },
+  } satisfies Metadata;
+}
 
 const Page = async ({ params }: { params: { productSlug: string } }) => {
   const product = await getProductBySlug(params.productSlug);
@@ -78,7 +97,6 @@ const Page = async ({ params }: { params: { productSlug: string } }) => {
           <h2 className="font-bold text-lg">Customer Reviews</h2>
           <div className="flex gap-4">
             <Avatar className="w-10 h-10 border">
-              {/* <AvatarImage src="/placeholder-user.jpg" /> */}
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div className="grid gap-4">

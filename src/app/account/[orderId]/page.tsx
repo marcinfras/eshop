@@ -9,8 +9,35 @@ import { OrderDetailItem } from "./_components/OrderDetailItem";
 import { ArrowLeft } from "lucide-react";
 import { OrderSummary } from "./_components/OrderSummary";
 import { getOrderByIdHygraph } from "../../../../lib/graphql";
+import type { Metadata } from "next";
+import { title } from "process";
 
-// https://v0.dev/r/m1fFuMxpk1b
+export async function generateMetadata({
+  params,
+}: {
+  params: { orderId: string };
+}) {
+  const session = await getServerSession();
+
+  if (!session?.user?.email)
+    return {
+      title: "",
+    };
+  const order = await getOrderByIdHygraph({
+    orderId: params.orderId,
+    email: session?.user?.email,
+  });
+
+  if (!order || "error" in order)
+    return {
+      title: "",
+    };
+
+  return {
+    title: `Order #${order.id}`,
+  } satisfies Metadata;
+}
+
 const Page = async ({ params }: { params: { orderId: string } }) => {
   const session = await getServerSession();
 

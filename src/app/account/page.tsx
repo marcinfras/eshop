@@ -3,6 +3,11 @@ import { Separator } from "../_components/ui/separator";
 import { UpdatePasswordForm } from "./_components/UpdatePasswordForm";
 
 import { AccountPageLogoutButton } from "./_components/AccountPageLogoutButton";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Your account",
+};
 
 const Page = () => {
   return (

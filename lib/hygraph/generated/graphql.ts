@@ -12933,7 +12933,7 @@ export type GetOrderByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetOrderByIdQuery = { order?: { email: string, currentStatus: OrderStatus, createdAt: string, total: number, orderItems: Array<{ quantity: number, total: number, product?: { name: string, price: number, images: Array<{ url: string }> } | null }> } | null };
+export type GetOrderByIdQuery = { order?: { id: string, email: string, currentStatus: OrderStatus, createdAt: string, total: number, orderItems: Array<{ quantity: number, total: number, product?: { name: string, price: number, images: Array<{ url: string }> } | null }> } | null };
 
 export type GetOrdersByEmailQueryVariables = Exact<{
   orderBy: OrderOrderByInput;
@@ -13139,6 +13139,7 @@ export const GetOrderByStripeCheckoutIdDocument = new TypedDocumentString(`
 export const GetOrderByIdDocument = new TypedDocumentString(`
     query GetOrderById($orderId: ID!) {
   order(where: {id: $orderId}, stage: DRAFT) {
+    id
     email
     currentStatus
     createdAt
