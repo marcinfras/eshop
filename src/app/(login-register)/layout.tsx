@@ -1,6 +1,6 @@
 import { LoginRegisterFormTemplate } from "./_components/LoginRegisterFormTemplate";
 
-//https://v0.dev/r/gl6VD99Wth9
+
 
 const LoginLayout = ({ children }: { children: React.ReactNode }) => {
   return (
