@@ -12960,7 +12960,7 @@ export type GetProductsBySlugsQueryVariables = Exact<{
 }>;
 
 
-export type GetProductsBySlugsQuery = { products: Array<{ price: number }> };
+export type GetProductsBySlugsQuery = { products: Array<{ price: number, id: string, name: string, slug: string, images: Array<{ url: string }> }> };
 
 export class TypedDocumentString<TResult, TVariables>
   extends String
@@ -13204,6 +13204,12 @@ export const GetProductsBySlugsDocument = new TypedDocumentString(`
     query GetProductsBySlugs($slug: [String!]!) {
   products(where: {slug_in: $slug}) {
     price
+    id
+    name
+    images {
+      url
+    }
+    slug
   }
 }
     `) as unknown as TypedDocumentString<GetProductsBySlugsQuery, GetProductsBySlugsQueryVariables>;

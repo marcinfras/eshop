@@ -19,6 +19,7 @@ import {
   GetOrderByStripeCheckoutIdDocument,
   GetOrdersByEmailDocument,
   GetProductBySlugDocument,
+  GetProductsBySlugsDocument,
   GetProductsDocument,
   IsProductInCartDocument,
   RemoveFromCartDocument,
@@ -83,6 +84,24 @@ export const getProducts = async () => {
   });
 
   if (!data.products) throw Error("Failed to get products");
+
+  return data.products;
+};
+
+export const getProductsBySlugs = async (slugs: string[]) => {
+  if (slugs.length === 0) return;
+
+  const data = await fetcher({
+    query: GetProductsBySlugsDocument,
+    cache: "no-store",
+    variables: {
+      slug: slugs,
+    },
+  });
+
+  if (data.products.length === 0) {
+    return;
+  }
 
   return data.products;
 };
