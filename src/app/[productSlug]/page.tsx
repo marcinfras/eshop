@@ -74,11 +74,16 @@ const Page = async ({ params }: { params: { productSlug: string } }) => {
             <h1 className="font-bold text-3xl lg:text-4xl">{name}</h1>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-0.5">
-                <StarIcon className="w-5 h-5 fill-primary" />
-                <StarIcon className="w-5 h-5 fill-primary" />
-                <StarIcon className="w-5 h-5 fill-primary" />
-                <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
-                <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
+                {[...Array(5)].map((_, i) => (
+                  <StarIcon
+                    key={i}
+                    className={`w-5 h-5  ${
+                      i > 2
+                        ? "fill-muted stroke-muted-foreground"
+                        : "fill-primary"
+                    }`}
+                  />
+                ))}
               </div>
             </div>
 

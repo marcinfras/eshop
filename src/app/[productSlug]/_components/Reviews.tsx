@@ -21,11 +21,21 @@ export const Reviews = () => {
               <time className="text-sm text-muted-foreground">2 days ago</time>
             </div>
             <div className="flex items-center gap-0.5 ml-auto">
-              <StarIcon className="w-5 h-5 fill-primary" />
+              {[...Array(5)].map((_, i) => (
+                <StarIcon
+                  key={i}
+                  className={`w-5 h-5  ${
+                    i > 2
+                      ? "fill-muted stroke-muted-foreground"
+                      : "fill-primary"
+                  }`}
+                />
+              ))}
+              {/* <StarIcon className="w-5 h-5 fill-primary" />
               <StarIcon className="w-5 h-5 fill-primary" />
               <StarIcon className="w-5 h-5 fill-primary" />
               <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
-              <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
+              <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" /> */}
             </div>
           </div>
           <div className="text-sm leading-loose text-muted-foreground">
@@ -50,11 +60,16 @@ export const Reviews = () => {
               <time className="text-sm text-muted-foreground">3 weeks ago</time>
             </div>
             <div className="flex items-center gap-0.5 ml-auto">
-              <StarIcon className="w-5 h-5 fill-primary" />
-              <StarIcon className="w-5 h-5 fill-primary" />
-              <StarIcon className="w-5 h-5 fill-primary" />
-              <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
-              <StarIcon className="w-5 h-5 fill-muted stroke-muted-foreground" />
+              {[...Array(5)].map((_, i) => (
+                <StarIcon
+                  key={i}
+                  className={`w-5 h-5  ${
+                    i > 2
+                      ? "fill-muted stroke-muted-foreground"
+                      : "fill-primary"
+                  }`}
+                />
+              ))}
             </div>
           </div>
           <div className="text-sm leading-loose text-muted-foreground">
