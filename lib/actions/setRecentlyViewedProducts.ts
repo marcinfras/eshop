@@ -1,21 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { getProductsBySlugs } from "../graphql";
-
-export const getRecentlyViewedProductsAction = async () => {
-  const value = cookies().get("recentlyViewedProducts")?.value;
-
-  if (!value) return;
-
-  const slugs: string[] = JSON.parse(value);
-
-  const data = await getProductsBySlugs(slugs);
-
-  if (!data) return null;
-
-  return data;
-};
+import { isStringArray, safeJsonParse } from "@/helpers/helpers";
 
 export const setRecentlyViewedProducts = (slug: string) => {
   if (!slug) return;
@@ -30,7 +16,9 @@ export const setRecentlyViewedProducts = (slug: string) => {
     return null;
   }
 
-  const products: string[] = JSON.parse(value);
+  const products = safeJsonParse<string[]>(value, isStringArray);
+
+  if (!products) return;
 
   const viewedProducts = products.filter((item) => item !== slug);
   const newViewedProducts = [slug, ...viewedProducts].slice(0, 6);

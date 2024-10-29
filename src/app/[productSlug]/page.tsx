@@ -1,5 +1,9 @@
 import Image from "next/image";
-import { getCartByIdHygraph, getProductBySlug } from "../../../lib/graphql";
+import {
+  getCartByIdHygraph,
+  getProductBySlug,
+  getRecentlyViewedProducts,
+} from "../../../lib/graphql";
 import { Separator } from "../_components/ui/separator";
 
 import { formatCurrency } from "../../helpers/helpers";
@@ -13,7 +17,7 @@ import { RecentlyViewedProducts } from "./_components/RecentlyViewedProducts";
 import { ProductDetails } from "./_components/ProductDetails";
 import { Reviews } from "./_components/Reviews";
 import { StarIcon } from "../_components/StarIcon";
-import { getRecentlyViewedProductsAction } from "../../../lib/actions/recentlyViewedProductsAction";
+// import { getRecentlyViewedProductsAction } from "../../../lib/actions/recentlyViewedProductsAction";
 
 export async function generateMetadata({
   params,
@@ -41,7 +45,7 @@ const Page = async ({ params }: { params: { productSlug: string } }) => {
 
   const cart = await getCartByIdHygraph();
 
-  const recentlyViewedProducts = await getRecentlyViewedProductsAction();
+  const recentlyViewedProducts = await getRecentlyViewedProducts();
 
   const products = recentlyViewedProducts?.filter(
     (item) => item.slug !== params.productSlug
