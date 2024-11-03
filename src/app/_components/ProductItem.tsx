@@ -13,6 +13,8 @@ import { createCart } from "../../../lib/actions/createCart";
 import { useLoader } from "./contexts/LoaderContext.tsx/LoaderContext";
 import { toast } from "./ui/use-toast";
 import { useRouter } from "next/navigation";
+import placeholder from "../../../public/placeholder.jpg";
+import { useIntersectionObserverImage } from "../_hooks/useIntersectionObserverImage";
 
 export const ProductItem = ({
   product,
@@ -33,16 +35,13 @@ export const ProductItem = ({
   const { startTransition } = useLoader();
   const router = useRouter();
 
-  // const {
-  //   state: { cart },
-  //   addToCart,
-  //   getCurrentQuantityById,
-  // } = useCart();
+  const imgRef = useIntersectionObserverImage(product.images[0].url);
 
   return (
     <div className="bg-background rounded-lg overflow-hidden shadow-lg relative">
       <Image
-        src={product.images[0].url}
+        ref={imgRef}
+        src={placeholder}
         alt={product.name}
         width={800}
         height={800}
@@ -78,7 +77,6 @@ export const ProductItem = ({
                     });
 
                   router.refresh();
-                  // queryClient.invalidateQueries({ queryKey: ["cart"] });
                 });
               }}
               size="sm"
