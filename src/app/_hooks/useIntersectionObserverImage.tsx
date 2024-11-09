@@ -1,7 +1,8 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export const useIntersectionObserverImage = (imgUrl: string) => {
-  const imgRef = useRef<HTMLImageElement>(null);
+  const imgRef = useRef(null);
+  const [isVisible, setIsVisible] = useState<boolean>(false);
 
   useEffect(() => {
     if (!imgRef.current) return;
@@ -10,7 +11,8 @@ export const useIntersectionObserverImage = (imgUrl: string) => {
       const entry = entries[0];
 
       if (entry.isIntersecting) {
-        entry.target.setAttribute("srcset", imgUrl);
+        setIsVisible(true);
+        // entry.target.setAttribute("srcset", imgUrl);
         observer.unobserve(entry.target);
       }
     });
@@ -18,5 +20,5 @@ export const useIntersectionObserverImage = (imgUrl: string) => {
     observer.observe(imgRef.current);
   }, [imgUrl]);
 
-  return imgRef;
+  return { imgRef, isVisible };
 };

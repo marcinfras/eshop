@@ -13,8 +13,10 @@ import { createCart } from "../../../lib/actions/createCart";
 import { useLoader } from "./contexts/LoaderContext.tsx/LoaderContext";
 import { toast } from "./ui/use-toast";
 import { useRouter } from "next/navigation";
-import placeholder from "../../../public/placeholder.jpg";
+
 import { useIntersectionObserverImage } from "../_hooks/useIntersectionObserverImage";
+import { useState } from "react";
+import { Skeleton } from "./ui/skeleton";
 
 export const ProductItem = ({
   product,
@@ -31,22 +33,35 @@ export const ProductItem = ({
     idInCart?: string;
   };
 }) => {
+  const [isLoaded, setIsLoaded] = useState(false);
   const session = useSession();
   const { startTransition } = useLoader();
   const router = useRouter();
 
-  const imgRef = useIntersectionObserverImage(product.images[0].url);
+  const { imgRef, isVisible } = useIntersectionObserverImage(
+    product.images[0].url
+  );
 
   return (
     <div className="bg-background rounded-lg overflow-hidden shadow-lg relative">
-      <Image
-        ref={imgRef}
-        src={placeholder}
-        alt={product.name}
-        width={800}
-        height={800}
-        className="w-full h-60 object-contain"
-      />
+      <div ref={imgRef} className="relative w-full h-60">
+        {!isLoaded && (
+          <Skeleton className="absolute top-0 left-0 w-full h-60" />
+        )}
+
+        {isVisible && (
+          <Image
+            // ref={imgRef}
+            src={product.images[0].url}
+            alt={product.name}
+            width={800}
+            height={800}
+            className="w-full h-60 object-contain relative"
+            onLoad={() => setIsLoaded(true)}
+          />
+        )}
+      </div>
+
       <div className="p-4">
         <h3 className="text-lg font-semibold mb-2 inline-block">
           <Link
