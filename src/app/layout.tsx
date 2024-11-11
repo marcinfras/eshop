@@ -36,6 +36,7 @@ export default function RootLayout({
             <MainNav />
             {children}
             <Toaster />
+            <div id="searchModal" />
           </LoaderProvider>
         </body>
       </html>
