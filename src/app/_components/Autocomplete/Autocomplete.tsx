@@ -26,7 +26,7 @@ export const Autocomplete = () => {
       )}
       <Button
         variant={"outline"}
-        className="sm:w-full max-w-[350px] sm:justify-start overflo"
+        className="sm:w-full max-w-[350px] sm:justify-start "
         onClick={handleOpenModal}
       >
         <Search className="text-stone-800 h-4 w-4 sm:mr-2" />

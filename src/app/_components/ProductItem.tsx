@@ -65,7 +65,7 @@ export const ProductItem = ({
       <div className="p-4">
         <h3 className="text-lg font-semibold mb-2 inline-block">
           <Link
-            href={`/${product.slug}`}
+            href={`/products/${product.slug}`}
             className="after:absolute after:top-0 after:bottom-0 after:left-0 after:right-0"
           >
             {product.name}

@@ -16,7 +16,7 @@ type HitProps = {
 };
 export const Hit = ({ hit }: HitProps) => {
   return (
-    <Link href={`/${hit.slug}`} className="cursor-pointer">
+    <Link href={`/products/${hit.slug}`} className="cursor-pointer">
       <article className="w-full h-full p-4 flex items-center gap-3">
         <Image
           alt={hit.name}
