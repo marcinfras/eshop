@@ -51,7 +51,6 @@ export const ProductItem = ({
 
         {isVisible && (
           <Image
-            // ref={imgRef}
             src={product.images[0].url}
             alt={product.name}
             width={800}

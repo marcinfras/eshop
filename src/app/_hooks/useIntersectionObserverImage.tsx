@@ -12,7 +12,6 @@ export const useIntersectionObserverImage = (imgUrl: string) => {
 
       if (entry.isIntersecting) {
         setIsVisible(true);
-        // entry.target.setAttribute("srcset", imgUrl);
         observer.unobserve(entry.target);
       }
     });
