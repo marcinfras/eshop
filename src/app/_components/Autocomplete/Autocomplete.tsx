@@ -2,22 +2,13 @@
 
 import "instantsearch.css/themes/satellite.css";
 
-import { useState } from "react";
 import { Button } from "../ui/button";
 import { Search } from "lucide-react";
 import { SearchModal } from "./components/SearchModal";
+import { useModal } from "@/app/_hooks/useModal";
 
 export const Autocomplete = () => {
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const handleOpenModal = () => {
-    setIsModalOpen(true);
-    document.body.style.overflow = "hidden";
-  };
-
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    document.body.style.overflow = "auto";
-  };
+  const { isModalOpen, handleCloseModal, handleOpenModal } = useModal();
 
   return (
     <>
