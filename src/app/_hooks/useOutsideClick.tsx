@@ -6,6 +6,10 @@ export const useOutsideClick = (
   fn: () => void
 ) => {
   useEffect(() => {
+    const handleEscapeClick = (event: KeyboardEvent) => {
+      if (event.key === "Escape") fn();
+    };
+
     const handleClickOutside = (event: MouseEvent) => {
       if (ref.current && !ref.current.contains(event.target as Node)) {
         fn();
@@ -13,9 +17,11 @@ export const useOutsideClick = (
     };
 
     document.addEventListener("click", handleClickOutside);
+    document.addEventListener("keydown", handleEscapeClick);
 
     return () => {
       document.removeEventListener("click", handleClickOutside);
+      document.removeEventListener("keydown", handleEscapeClick);
     };
   }, [ref, fn]);
 };
