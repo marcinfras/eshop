@@ -6,6 +6,7 @@ import { X } from "lucide-react";
 import { SearchBox } from "./SearchBox";
 import { createPortal } from "react-dom";
 import { CustomHits } from "./CustomHits";
+import type { MutableRefObject } from "react";
 
 const searchClient = algoliasearch(
   getEnv(process.env.NEXT_PUBLIC_ALGOLIA_ID),
@@ -15,9 +16,11 @@ const searchClient = algoliasearch(
 export const SearchModal = ({
   isOpen,
   handleCloseModal,
+  modalRef,
 }: {
   isOpen: boolean;
   handleCloseModal: () => void;
+  modalRef: MutableRefObject<HTMLDialogElement | null>;
 }) => {
   const refModal = document.getElementById("searchModal");
 
@@ -28,6 +31,7 @@ export const SearchModal = ({
       open={isOpen}
       className="transition-all fixed top-0 left-0 w-full h-full z-50 bg-gray-900 bg-opacity-50 backdrop-blur-sm"
       onClick={handleCloseModal}
+      ref={modalRef}
     >
       <InstantSearch searchClient={searchClient} indexName="products">
         <Configure hitsPerPage={5} />

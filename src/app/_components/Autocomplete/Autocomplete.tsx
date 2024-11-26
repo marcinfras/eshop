@@ -6,14 +6,21 @@ import { Button } from "../ui/button";
 import { Search } from "lucide-react";
 import { SearchModal } from "./components/SearchModal";
 import { useModal } from "@/app/_hooks/useModal";
+import { useFocusTrap } from "@/app/_hooks/useFocusTrap";
 
 export const Autocomplete = () => {
   const { isModalOpen, handleCloseModal, handleOpenModal } = useModal();
 
+  const modalRef = useFocusTrap(isModalOpen);
+
   return (
     <>
       {isModalOpen && (
-        <SearchModal isOpen={isModalOpen} handleCloseModal={handleCloseModal} />
+        <SearchModal
+          modalRef={modalRef}
+          isOpen={isModalOpen}
+          handleCloseModal={handleCloseModal}
+        />
       )}
       <Button
         variant={"outline"}
