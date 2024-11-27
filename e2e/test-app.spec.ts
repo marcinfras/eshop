@@ -2,15 +2,17 @@ import { test } from "@playwright/test";
 import { faker } from "@faker-js/faker";
 
 test("test app", async ({ page }) => {
-  const name = faker.person.firstName();
   const email = faker.internet.email();
 
   await page.goto("http://localhost:3000/");
   await page.getByRole("button", { name: "X" }).click();
+  await page.getByRole("button", { name: "Shop Now" }).click();
+  await page.waitForURL("**/products");
   await page.getByRole("link", { name: "Login" }).click();
   await page.getByRole("link", { name: "Register" }).click();
+  await page.waitForURL("**/register");
   await page.getByPlaceholder("Enter your name").click();
-  await page.getByPlaceholder("Enter your name").fill(name);
+  await page.getByPlaceholder("Enter your name").fill("Name");
   await page.getByPlaceholder("Enter your email").click();
   await page.getByPlaceholder("Enter your email").fill(email);
   await page.getByPlaceholder("Enter your password").click();
@@ -21,9 +23,10 @@ test("test app", async ({ page }) => {
   await page.getByPlaceholder("Enter your email").fill(email);
   await page.getByPlaceholder("Enter your password").click();
   await page.getByPlaceholder("Enter your password").fill("12345678");
-  ///////////////////////////////////////////////////////////////////////////////////
   await page.getByRole("button", { name: "Sign in" }).click();
   await page.waitForURL("**/");
+  await page.getByRole("button", { name: "Shop Now" }).click();
+  await page.waitForURL("**/products");
 
   await page
     .locator("div")
@@ -40,8 +43,6 @@ test("test app", async ({ page }) => {
     .filter({ hasText: /^\$49\.99Add to Cart$/ })
     .getByRole("button")
     .click();
-
-  //////////////////////////////////////////////////////////////////////////////
 
   await page
     .locator("div")
@@ -95,7 +96,7 @@ test("test app", async ({ page }) => {
     .nth(2)
     .click();
 
-  await page.getByRole("button", { name: name[0] }).click();
+  await page.getByRole("button", { name: "N" }).click();
   await page.getByRole("link", { name: "Account ⇧⌘P" }).click();
   await page.getByLabel("Name").click();
   await page.getByLabel("Name").fill("fakertest");
@@ -106,6 +107,4 @@ test("test app", async ({ page }) => {
   await page.getByLabel("Confirm Password").fill("123456789");
   await page.getByRole("button", { name: "Change Password" }).click();
   await page.getByRole("link", { name: "Eshop" }).click();
-  //   await page.getByRole("button", { name: "F" }).click();
-  //   await page.getByText("Log out").click();
 });
