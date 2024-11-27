@@ -4,8 +4,11 @@ import type { ProductAlgolia } from "./Hit";
 
 import { useHits } from "react-instantsearch";
 
+import { useArrowNavigation } from "@/app/_hooks/useArrowNavigation";
+
 export const CustomHits = (props: UseHitsProps<ProductAlgolia>) => {
   const { items, results } = useHits(props);
+  const hitsRef = useArrowNavigation();
 
   if (!results?.__isArtificial && results?.nbHits === 0) {
     return (
@@ -16,11 +19,11 @@ export const CustomHits = (props: UseHitsProps<ProductAlgolia>) => {
   }
 
   return (
-    <ol className="max-h-[calc(100vh-100px)] overflow-y-auto">
+    <ol ref={hitsRef} className="max-h-[calc(100vh-100px)] overflow-y-auto">
       {items.map((hit) => (
         <li
           key={hit.objectID}
-          className="bg-white hover:bg-stone-50 transition  border-b-2 border-stone-50 h-[150px]"
+          className="  border-b-2 border-stone-50 h-[150px]"
         >
           <Hit hit={hit} />
         </li>

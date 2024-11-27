@@ -16,7 +16,10 @@ type HitProps = {
 };
 export const Hit = ({ hit }: HitProps) => {
   return (
-    <Link href={`/products/${hit.slug}`} className="cursor-pointer">
+    <Link
+      href={`/products/${hit.slug}`}
+      className=" block h-full w-full cursor-pointer bg-white hover:bg-stone-50 transition focus:bg-stone-50"
+    >
       <article className="w-full h-full p-4 flex items-center gap-3">
         <div className="w-[70px]  sm:w-[100px]">
           <Image
