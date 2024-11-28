@@ -19,6 +19,7 @@ import {
   GetOrderByStripeCheckoutIdDocument,
   GetOrdersByEmailDocument,
   GetProductBySlugDocument,
+  GetProductsBySlugsDocument,
   GetProductsDocument,
   IsProductInCartDocument,
   RemoveFromCartDocument,
@@ -29,7 +30,11 @@ import {
 import { mapperCart, mapperProduct } from "./mappers";
 import { cookies } from "next/headers";
 import { revalidateTag } from "next/cache";
-import { getOrderByString } from "@/helpers/helpers";
+import {
+  getOrderByString,
+  isStringArray,
+  safeJsonParse,
+} from "@/helpers/helpers";
 
 type GraphQlError = {
   message: string;
@@ -86,6 +91,48 @@ export const getProducts = async () => {
 
   return data.products;
 };
+
+export const getRecentlyViewedProducts = async () => {
+  const value = cookies().get("recentlyViewedProducts")?.value;
+
+  if (!value) return;
+
+  const slugs = safeJsonParse<string[]>(value, isStringArray);
+
+  if (!slugs) return null;
+
+  const data = await fetcher({
+    query: GetProductsBySlugsDocument,
+    cache: "no-store",
+    variables: {
+      slug: slugs,
+    },
+  });
+
+  if (data.products.length === 0) {
+    return;
+  }
+
+  return data.products;
+};
+
+// export const getProductsBySlugs = async (slugs: string[]) => {
+//   if (slugs.length === 0) return;
+
+//   const data = await fetcher({
+//     query: GetProductsBySlugsDocument,
+//     cache: "no-store",
+//     variables: {
+//       slug: slugs,
+//     },
+//   });
+
+//   if (data.products.length === 0) {
+//     return;
+//   }
+
+//   return data.products;
+// };
 
 export const getProductBySlug = async (slug: string) => {
   const data = await fetcher({

@@ -35,3 +35,24 @@ export const getOrderByString = ({
         : OrderOrderByInput.CreatedAtAsc;
   }
 };
+
+export const isStringArray = (obj: unknown): obj is string[] => {
+  return Array.isArray(obj) && obj.every((item) => typeof item === "string");
+};
+
+export const safeJsonParse = <T>(
+  jsonString: string,
+  validator: (obj: unknown) => obj is T
+): T | null => {
+  try {
+    const parsed = JSON.parse(jsonString);
+
+    if (validator(parsed)) {
+      return parsed;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    return null;
+  }
+};
