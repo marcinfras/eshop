@@ -5,14 +5,15 @@ on:
     branches: ["main"]
   pull_request:
     branches: ["main"]
-
-  env:
-    NEXT_PUBLIC_API: ${{ secrets.NEXT_PUBLIC_API }}
-    AUTH_TOKEN: ${{ secrets.AUTH_TOKENI }}
-    NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-    MAILERLITE_TOKEN: ${{ secrets.MAILERLITE_TOKEN }}
-    NEXT_PUBLIC_ALGOLIA_ID: ${{ secrets.NEXT_PUBLIC_ALGOLIA_ID }}
-    NEXT_PUBLIC_ALGOLIA_API_KEY: ${{ secrets.NEXT_PUBLIC_ALGOLIA_API_KEY }}
+    
+env:
+  NEXT_PUBLIC_API: ${{ secrets.NEXT_PUBLIC_API }}
+  AUTH_TOKEN: ${{ secrets.AUTH_TOKENI }}
+  NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+  MAILERLITE_TOKEN: ${{ secrets.MAILERLITE_TOKEN }}
+  NEXT_PUBLIC_ALGOLIA_ID: ${{ secrets.NEXT_PUBLIC_ALGOLIA_ID }}
+  NEXT_PUBLIC_ALGOLIA_API_KEY: ${{ secrets.NEXT_PUBLIC_ALGOLIA_API_KEY }}
+  
 
 jobs:
   build:
