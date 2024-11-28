@@ -21,8 +21,6 @@ export const UpdateItemQuantity = ({
 }) => {
   const { startTransition } = useLoader();
 
-  // const queryClient = useQueryClient();
-
   return (
     <div className={`${className} flex items-center gap-2 `}>
       <Button
