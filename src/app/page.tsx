@@ -1,47 +1,36 @@
-import { getCartByIdHygraph, getProducts } from "../../lib/graphql";
-
-import { ProductItem } from "./_components/ProductItem";
-import { cookies } from "next/headers";
-import { NewsletterPopup } from "./_components/NewsletterPopup";
+import Link from "next/link";
+import { Button } from "./_components/ui/button";
+import { getCartByIdHygraph, getProductsByCollection } from "../../lib/graphql";
+import { ProductsSwiper } from "./_components/ProductsSwiper";
 
 export default async function Home() {
-  const products = await getProducts();
+  const newInProducts = await getProductsByCollection("New In");
   const cart = await getCartByIdHygraph();
-
-  const newsletter = cookies().get("newsletter");
-
-  // console.log(cart);
-
-  // console.log(products);
 
   if (cart && "error" in cart) throw new Error(cart.error);
 
   return (
-    <main className="container mx-auto px-4 md:px-6 py-12">
-      {JSON.stringify(cart, null, 2)}
-      {/* {JSON.stringify(mailerLite, null, 2)} */}
-      {!newsletter?.value && <NewsletterPopup />}
-      <h1 className="text-3xl font-bold mb-8">Our Products</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-        {products.map((product) => {
-          const itemInCart = cart?.find((item) => item?.slug === product.slug);
-          // console.log("currentQuantityyyyyyyyyyy: " + currentQuantity);
+    <main>
+      <section className="bg-gradient-to-r from-blue-500 to-purple-600 text-white py-20">
+        <div className="container mx-auto px-4 text-center">
+          <h1 className="text-4xl md:text-6xl font-bold mb-4">
+            Welcome to Eshop
+          </h1>
+          <p className="text-xl mb-8">Discover Our high quality products</p>
+          <Button size="lg">
+            <Link href="/products">Shop Now</Link>
+          </Button>
+        </div>
+      </section>
 
-          return (
-            <ProductItem
-              key={product.id}
-              product={{
-                ...product,
-                currentQuantity: itemInCart?.quantity || 0,
-                idInCart:
-                  itemInCart && itemInCart?.quantity > 0
-                    ? itemInCart?.id
-                    : undefined,
-              }}
-            />
-          );
-        })}
-      </div>
+      <section className="container mx-auto px-4 md:px-6 py-12">
+        <ProductsSwiper
+          cart={cart}
+          products={newInProducts}
+          title="New Collection"
+          titleClass="text-center text-3xl"
+        />
+      </section>
     </main>
   );
 }

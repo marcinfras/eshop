@@ -21,7 +21,7 @@ const documents = {
     "mutation CreateOrder($data: OrderCreateInput!) {\n  createOrder(data: $data) {\n    id\n  }\n}": types.CreateOrderDocument,
     "query GetOrderByStripeCheckoutId($stripeCheckoutId: String!) {\n  order(where: {stripeCheckoutId: $stripeCheckoutId}, stage: DRAFT) {\n    total\n    orderItems {\n      quantity\n      total\n      product {\n        name\n      }\n    }\n  }\n}\n\nquery GetOrderById($orderId: ID!) {\n  order(where: {id: $orderId}, stage: DRAFT) {\n    id\n    email\n    currentStatus\n    createdAt\n    total\n    orderItems {\n      quantity\n      total\n      product {\n        images {\n          url\n        }\n        name\n        price\n      }\n    }\n  }\n}\n\nquery GetOrdersByEmail($orderBy: OrderOrderByInput!, $where: OrderWhereInput!) {\n  orders(where: $where, orderBy: $orderBy, stage: DRAFT) {\n    id\n    total\n    createdAt\n    currentStatus\n  }\n}": types.GetOrderByStripeCheckoutIdDocument,
     "query GetProductBySlug($slug: String!) {\n  product(where: {slug: $slug}) {\n    name\n    price\n    id\n    images {\n      url\n    }\n    description\n    variants {\n      ... on ProductSizeColorVariant {\n        size\n        id\n      }\n    }\n  }\n}": types.GetProductBySlugDocument,
-    "query GetProducts {\n  products {\n    images {\n      url\n    }\n    name\n    price\n    id\n    slug\n  }\n}\n\nquery GetProductsBySlugs($slug: [String!]!) {\n  products(where: {slug_in: $slug}) {\n    price\n    id\n    name\n    images {\n      url\n    }\n    slug\n  }\n}": types.GetProductsDocument,
+    "query GetProducts {\n  products {\n    images {\n      url\n    }\n    name\n    price\n    id\n    slug\n  }\n}\n\nquery GetProductsBySlugs($slug: [String!]!) {\n  products(where: {slug_in: $slug}) {\n    price\n    id\n    name\n    images {\n      url\n    }\n    slug\n  }\n}\n\nquery GetProductsByCollection($collection: String!) {\n  products(where: {collections_every: {name: $collection}}) {\n    images {\n      url\n    }\n    name\n    price\n    id\n    slug\n  }\n}": types.GetProductsDocument,
 };
 
 /**
@@ -55,7 +55,7 @@ export function graphql(source: "query GetProductBySlug($slug: String!) {\n  pro
 /**
  * The graphql function is used to parse GraphQL queries into a document that can be used by GraphQL clients.
  */
-export function graphql(source: "query GetProducts {\n  products {\n    images {\n      url\n    }\n    name\n    price\n    id\n    slug\n  }\n}\n\nquery GetProductsBySlugs($slug: [String!]!) {\n  products(where: {slug_in: $slug}) {\n    price\n    id\n    name\n    images {\n      url\n    }\n    slug\n  }\n}"): typeof import('./graphql').GetProductsDocument;
+export function graphql(source: "query GetProducts {\n  products {\n    images {\n      url\n    }\n    name\n    price\n    id\n    slug\n  }\n}\n\nquery GetProductsBySlugs($slug: [String!]!) {\n  products(where: {slug_in: $slug}) {\n    price\n    id\n    name\n    images {\n      url\n    }\n    slug\n  }\n}\n\nquery GetProductsByCollection($collection: String!) {\n  products(where: {collections_every: {name: $collection}}) {\n    images {\n      url\n    }\n    name\n    price\n    id\n    slug\n  }\n}"): typeof import('./graphql').GetProductsDocument;
 
 
 export function graphql(source: string) {
