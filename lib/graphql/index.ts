@@ -19,6 +19,7 @@ import {
   GetOrderByStripeCheckoutIdDocument,
   GetOrdersByEmailDocument,
   GetProductBySlugDocument,
+  GetProductsByCollectionDocument,
   GetProductsBySlugsDocument,
   GetProductsDocument,
   IsProductInCartDocument,
@@ -116,23 +117,23 @@ export const getRecentlyViewedProducts = async () => {
   return data.products;
 };
 
-// export const getProductsBySlugs = async (slugs: string[]) => {
-//   if (slugs.length === 0) return;
+export const getProductsByCollection = async (collection: string) => {
+  if (!collection) return;
 
-//   const data = await fetcher({
-//     query: GetProductsBySlugsDocument,
-//     cache: "no-store",
-//     variables: {
-//       slug: slugs,
-//     },
-//   });
+  const data = await fetcher({
+    query: GetProductsByCollectionDocument,
+    cache: "no-store",
+    variables: {
+      collection: "New In",
+    },
+  });
 
-//   if (data.products.length === 0) {
-//     return;
-//   }
+  if (data.products.length === 0) {
+    return;
+  }
 
-//   return data.products;
-// };
+  return data.products;
+};
 
 export const getProductBySlug = async (slug: string) => {
   const data = await fetcher({
