@@ -2,20 +2,26 @@
 
 import { ProductItem } from "@/app/_components/ProductItem";
 import { Swiper, SwiperSlide } from "swiper/react";
-import type { ProductCart } from "../../../../lib/graphql/mappers";
+
 import { useEffect } from "react";
-import { setRecentlyViewedProducts } from "../../../../lib/actions/setRecentlyViewedProducts";
+
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation } from "swiper/modules";
+import type { ProductCart } from "../../../lib/graphql/mappers";
+import { setRecentlyViewedProducts } from "../../../lib/actions/setRecentlyViewedProducts";
 
-export const RecentlyViewedProducts = ({
+export const ProductsSwiper = ({
   cart,
+  title,
+  titleClass,
   slug,
   products,
 }: {
   cart: ProductCart[] | undefined;
-  slug: string;
+  title: string;
+  titleClass?: string;
+  slug?: string;
   products?:
     | {
         price: number;
@@ -30,14 +36,16 @@ export const RecentlyViewedProducts = ({
     | undefined;
 }) => {
   useEffect(() => {
-    setRecentlyViewedProducts(slug);
+    if (slug) {
+      setRecentlyViewedProducts(slug);
+    }
   }, [slug]);
 
   if (!products) return null;
 
   return (
     <div className="mt-2 text-sm leading-loose font-bold mx-auto my-10">
-      <h2 className="text-2xl pb-5">Recently viewed products</h2>
+      <h2 className={`text-2xl pb-5 ${titleClass}`}>{title}</h2>
       <Swiper
         breakpoints={{
           640: {

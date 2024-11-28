@@ -3,21 +3,20 @@ import {
   getCartByIdHygraph,
   getProductBySlug,
   getRecentlyViewedProducts,
-} from "../../../lib/graphql";
-import { Separator } from "../_components/ui/separator";
+} from "../../../../lib/graphql";
+import { Separator } from "../../_components/ui/separator";
 
-import { formatCurrency } from "../../helpers/helpers";
+import { formatCurrency } from "../../../helpers/helpers";
 import { AddToCartForm } from "./_components/AddToCartForm";
 import { getServerSession } from "next-auth";
 
-import { UpdateItemQuantity } from "../_components/UpdateItemQuantity";
+import { UpdateItemQuantity } from "../../_components/UpdateItemQuantity";
 import type { Metadata } from "next";
 
-import { RecentlyViewedProducts } from "./_components/RecentlyViewedProducts";
 import { ProductDetails } from "./_components/ProductDetails";
 import { Reviews } from "./_components/Reviews";
-import { StarIcon } from "../_components/StarIcon";
-// import { getRecentlyViewedProductsAction } from "../../../lib/actions/recentlyViewedProductsAction";
+import { StarIcon } from "../../_components/StarIcon";
+import { ProductsSwiper } from "@/app/_components/ProductsSwiper";
 
 export async function generateMetadata({
   params,
@@ -113,10 +112,10 @@ const Page = async ({ params }: { params: { productSlug: string } }) => {
           <Reviews />
         </div>
       </div>
-
-      <RecentlyViewedProducts
+      <ProductsSwiper
         cart={cart}
         slug={params.productSlug}
+        title="Recently viewed products"
         products={products && products?.length > 0 ? products : null}
       />
     </div>

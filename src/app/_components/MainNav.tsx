@@ -1,25 +1,22 @@
-// "use client";
 "use server";
 
 import Link from "next/link";
 
 import { UserStatusNav } from "./UserStatusNav";
 import { getCartByIdHygraph } from "../../../lib/graphql";
-
-// export const dynamic = "force-dynamic";
+import { Autocomplete } from "./Autocomplete/Autocomplete";
 
 export const MainNav = async () => {
   const cart = await getCartByIdHygraph();
 
   if (cart && "error" in cart) throw new Error(cart.error);
-  // console.log("MainNavCartttttttttt: " + cart);
 
   return (
     <nav className="flex items-center justify-between h-16 px-4 bg-background border-b md:px-6">
-      {/* {JSON.stringify(cart, null, 4)} */}
       <Link href="/" className="flex items-center gap-2">
         <span>Eshop</span>
       </Link>
+      <Autocomplete />
       <div className="flex items-center gap-4">
         <Link
           href="/cart"

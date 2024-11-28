@@ -2,9 +2,19 @@ name: Run Tests Integrations
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
+    
+env:
+  NEXT_PUBLIC_API: ${{ secrets.NEXT_PUBLIC_API }}
+  AUTH_TOKEN: ${{ secrets.AUTH_TOKENI }}
+  NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
+  MAILERLITE_TOKEN: ${{ secrets.MAILERLITE_TOKEN }}
+  NEXT_PUBLIC_ALGOLIA_ID: ${{ secrets.NEXT_PUBLIC_ALGOLIA_ID }}
+  NEXT_PUBLIC_ALGOLIA_API_KEY: ${{ secrets.NEXT_PUBLIC_ALGOLIA_API_KEY }}
+  
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -13,10 +23,12 @@ jobs:
       matrix:
         node-version: [22.x]
     steps:
-    - uses: actions/checkout@v4
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v4
-      with:
-        node-version: ${{ matrix.node-version }}
-        cache: 'npm'
-    - run: npm test
+      - uses: actions/checkout@v4
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - run: npm i -g npm@latest
+      - run: npm install
+      - run: npm run test
