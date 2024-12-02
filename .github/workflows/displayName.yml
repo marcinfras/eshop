@@ -4,7 +4,7 @@ on:
     types: [opened]
 
 env:
-  MY_NAME: ${{secrets.MY_NAME}}
+  MY_NAME: Marcin
 
 jobs:
   build:
@@ -15,5 +15,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Display my name
-        run: echo "Moje imie to $MY_NAME"
+      - run: echo "Moje imie to $MY_NAME"
