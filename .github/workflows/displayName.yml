@@ -2,6 +2,10 @@ name: Display my name
 on:
   pull_request:
     types: [opened]
+
+env:
+  MY_NAME: ${{secrets.MY_NAME}}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -12,4 +16,4 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Display my name
-        run: echo "Moje imie to ${{secrets.MY_NAME}}"
+        run: echo "Moje imie to $MY_NAME"
