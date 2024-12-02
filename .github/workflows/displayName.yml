@@ -15,4 +15,4 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-        run: echo "Moje imie to $MY_NAME"
+      - run: echo "Moje imie to $MY_NAME"
