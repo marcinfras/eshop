@@ -9,7 +9,7 @@ jobs:
       matrix:
         node-version: [2.x]
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Display my name
-      run: echo ${{secrets.MY_NAME}}
+      - uses: actions/checkout@v4
+
+      - name: Display my name
+        run: echo "Moje imie to ${{secrets.MY_NAME}}"
