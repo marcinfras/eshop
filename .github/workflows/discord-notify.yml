@@ -17,5 +17,8 @@ jobs:
 
       - run: |
           curl -X POST -H "Content-Type: application/json" \
-          -d '{"content": "Nowy pull request został otwarty!\nTytuł: '${{ github.event.pull_request.title }}'\nAutor: '${{ github.actor }}'\nLink: '${{ github.event.pull_request.html_url }}'"}' \
-          $WEBHOOK_URL
+          -d @- $WEBHOOK_URL <<EOF
+          {
+            "content": "Nowy pull request został otwarty!\nTytuł: ${{ github.event.pull_request.title }}\nAutor: ${{ github.actor }}\nLink: ${{ github.event.pull_request.html_url }}"
+          }
+          EOF
