@@ -1,4 +1,5 @@
 name: Discord notify DM
+
 on:
   pull_request:
     types: [opened]
@@ -35,13 +36,14 @@ jobs:
             https://discord.com/api/v9/users/@me/channels | jq -r '.id')
 
           # Step 2: Send message to the DM channel
-          curl -X POST \
+          curl -X POST -H "Content-Type: application/json" \
             -H "Authorization: Bot $DISCORD_BOT_TOKEN" \
-            -H "Content-Type: application/json" \
-            -d "{
-                  \"content\": \"🔔 **Nowy pull request został otwarty!** 🔔\n
-                  Tytuł: ${{ github.event.pull_request.title }}\n
-                  Autor: ${{ github.actor }}\n
-                  Link: ${{ github.event.pull_request.html_url }}\"
-                }" \
-            https://discord.com/api/v9/channels/$CHANNEL_ID/messages
+            -d @- <<EOF
+            {
+              "content": "🔔 **Nowy pull request został otwarty!** 🔔\n
+              Tytuł: ${{ github.event.pull_request.title }}\n
+              Autor: ${{ github.actor }}\n
+              Link: ${{ github.event.pull_request.html_url }}
+            }
+            EOF
+
