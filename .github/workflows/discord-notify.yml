@@ -1,7 +1,6 @@
 name: Discord notify DM
+
 on:
-  push:
-    branches: [dev]
   pull_request:
     types: [opened, reopened]
 
@@ -18,7 +17,8 @@ jobs:
         node-version: [22.x]
     steps:
       - uses: actions/checkout@v4
-      - name: Discord notify
+
+      - name: Notify via Discord DM
         run: |
           curl -X POST \
             -H "Content-Type: application/json" \
