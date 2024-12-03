@@ -7,7 +7,7 @@ on:
     types: [opened, reopened]
 
 env:
-  DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
+  DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
   DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
   DISCORD_USER_ID: ${{ secrets.DISCORD_USER_ID }}
 
@@ -44,4 +44,4 @@ jobs:
                   PR Link: ${{ github.event.pull_request.html_url }}\n
                   Author: ${{ github.event.pull_request.user.login }}"
                 }' \
-            "$DISCORD_WEBHOOK"
+            "$DISCORD_WEBHOOK_URL"
