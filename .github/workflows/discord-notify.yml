@@ -17,14 +17,14 @@ jobs:
         node-version: [22.x]
     steps:
       - uses: actions/checkout@v4
-
-      - run: |
-          curl -X POST -H "Content-Type: application/json" \
-          -d @- $WEBHOOK_URL <<EOF
-          {
-            "content": "Nowy pull request został otwarty!\nTytuł: ${{ github.event.pull_request.title }}\nAutor: ${{ github.actor }}\nLink: ${{ github.event.pull_request.html_url }}"
-          }
-          EOF
+      - name: Notify via Discord webhook
+        run: |
+           curl -X POST -H "Content-Type: application/json" \
+           -d @- $WEBHOOK_URL <<EOF
+           {
+             "content": "Nowy pull request został otwarty!\nTytuł: ${{ github.event.pull_request.title }}\nAutor: ${{ github.actor }}\nLink: ${{ github.event.pull_request.html_url }}"
+           }
+           EOF
 
       - name: Send DM to user on new PR
         run: |
