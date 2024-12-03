@@ -17,7 +17,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Discord notify
-      - run: |
+        run: |
           curl -X POST \
             -H "Content-Type: application/json" \
             -H "Authorization: Bot $DISCORD_BOT_TOKEN" \
@@ -30,7 +30,8 @@ jobs:
                 }' \
             https://discord.com/api/v9/channels/$DISCORD_USER_ID/messages
 
-      - run: |
+      - name: Notify via Discord Webhook
+        run: |
           curl -X POST -H "Content-Type: application/json" \
             -d '{
                   "content": "🔔 **Pull Request Opened** 🔔\n
