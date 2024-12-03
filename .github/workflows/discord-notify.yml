@@ -21,28 +21,32 @@ jobs:
           CHANNEL_ID=$(curl -s -X POST \
             -H "Authorization: Bot $DISCORD_BOT_TOKEN" \
             -H "Content-Type: application/json" \
-            -d '{"recipient_id": "'$DISCORD_USER_ID'"}' \
+            -d "{\"recipient_id\": \"$DISCORD_USER_ID\"}" \
             https://discord.com/api/v9/users/@me/channels | jq -r '.id')
           
           # Step 2: Send message to the DM channel
           curl -X POST \
             -H "Authorization: Bot $DISCORD_BOT_TOKEN" \
             -H "Content-Type: application/json" \
-            -d '{
-                  "content": "🔔 **Pull Request Opened** 🔔\n
-                  Repository: '${{ github.repository }}'\n
-                  PR Title: '${{ github.event.pull_request.title }}'\n
-                  PR Link: '${{ github.event.pull_request.html_url }}'\n
-                  Author: '${{ github.event.pull_request.user.login }}'"
-                }' \
+            -d "{
+                  \"content\": \"🔔 **Pull Request Opened** 🔔\n
+                  Repository: ${{ github.repository }}\n
+                  PR Title: ${{ github.event.pull_request.title }}\n
+                  PR Link: ${{ github.event.pull_request.html_url }}\n
+                  Author: ${{ github.event.pull_request.user.login }}\"
+                }" \
             https://discord.com/api/v9/channels/$CHANNEL_ID/messages
 
       - name: Notify via Discord Webhook
         run: |
           curl -X POST -H "Content-Type: application/json" \
-          -d @- $DISCORD_WEBHOOK_URL <<EOF
-          {
-            "content": "Nowy pull request został otwarty!\nTytuł: ${{ github.event.pull_request.title }}\nAutor: ${{ github.actor }}\nLink: ${{ github.event.pull_request.html_url }}"
-          }
-          EOF
+          -d "{
+            \"content\": \"🔔 **Pull Request Opened** 🔔\n
+            Repository: ${{ github.repository }}\n
+            PR Title: ${{ github.event.pull_request.title }}\n
+            PR Link: ${{ github.event.pull_request.html_url }}\n
+            Author: ${{ github.event.pull_request.user.login }}\"
+          }" \
+          "$DISCORD_WEBHOOK_URL"
+
 
