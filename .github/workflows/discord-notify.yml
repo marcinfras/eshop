@@ -1,28 +1,24 @@
-name: Discord Notify
-
+name: Discord notify DM
 on:
-  push:
-    branches: [dev]
   pull_request:
-    types: [opened, reopened]
+    types: [opened]
 
 env:
-  DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+  WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
 
 jobs:
-  notify:
+  build:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22.x]
     steps:
-      - name: Notify via Discord Webhook
-        run: |
+      - uses: actions/checkout@v4
+
+      - run: |
           curl -X POST -H "Content-Type: application/json" \
-          -d "{
-            \"content\": \"Nowy pull request został otwarty!\n
-            Tytuł: ${GITHUB_EVENT_PULL_REQUEST_TITLE}\n
-            Autor: ${GITHUB_ACTOR}\n
-            Link: ${GITHUB_EVENT_PULL_REQUEST_HTML_URL}\"
-          }" "$DISCORD_WEBHOOK_URL"
-        env:
-          GITHUB_EVENT_PULL_REQUEST_TITLE: ${{ github.event.pull_request.title }}
-          GITHUB_EVENT_PULL_REQUEST_HTML_URL: ${{ github.event.pull_request.html_url }}
-          GITHUB_ACTOR: ${{ github.actor }}
+          -d @- $WEBHOOK_URL <<EOF
+          {
+            "content": "Nowy pull request został otwarty!\nTytuł: ${{ github.event.pull_request.title }}\nAutor: ${{ github.actor }}\nLink: ${{ github.event.pull_request.html_url }}"
+          }
+          EOF
