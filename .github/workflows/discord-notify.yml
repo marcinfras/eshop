@@ -1,4 +1,4 @@
-name: Discord notify DM
+name: Discord Notify DM
 
 on:
   push:
@@ -7,41 +7,46 @@ on:
     types: [opened, reopened]
 
 env:
-  DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
   DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
   DISCORD_USER_ID: ${{ secrets.DISCORD_USER_ID }}
+  DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
 
 jobs:
-  build:
+  notify:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        node-version: [22.x]
     steps:
-      - uses: actions/checkout@v4
-
       - name: Notify via Discord DM
         run: |
-          curl -X POST \
-            -H "Content-Type: application/json" \
+          # Step 1: Create DM channel with user
+          CHANNEL_ID=$(curl -s -X POST \
             -H "Authorization: Bot $DISCORD_BOT_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{"recipient_id": "'$DISCORD_USER_ID'"}' \
+            https://discord.com/api/v9/users/@me/channels | jq -r '.id')
+          
+          # Step 2: Send message to the DM channel
+          curl -X POST \
+            -H "Authorization: Bot $DISCORD_BOT_TOKEN" \
+            -H "Content-Type: application/json" \
             -d '{
                   "content": "🔔 **Pull Request Opened** 🔔\n
-                  Repository: ${{ github.repository }}\n
-                  PR Title: ${{ github.event.pull_request.title }}\n
-                  PR Link: ${{ github.event.pull_request.html_url }}\n
-                  Author: ${{ github.event.pull_request.user.login }}"
+                  Repository: '${{ github.repository }}'\n
+                  PR Title: '${{ github.event.pull_request.title }}'\n
+                  PR Link: '${{ github.event.pull_request.html_url }}'\n
+                  Author: '${{ github.event.pull_request.user.login }}'"
                 }' \
-            https://discord.com/api/v9/channels/$DISCORD_USER_ID/messages
+            https://discord.com/api/v9/channels/$CHANNEL_ID/messages
 
       - name: Notify via Discord Webhook
         run: |
-          curl -X POST -H "Content-Type: application/json" \
+          curl -X POST \
+            -H "Content-Type: application/json" \
             -d '{
                   "content": "🔔 **Pull Request Opened** 🔔\n
-                  Repository: ${{ github.repository }}\n
-                  PR Title: ${{ github.event.pull_request.title }}\n
-                  PR Link: ${{ github.event.pull_request.html_url }}\n
-                  Author: ${{ github.event.pull_request.user.login }}"
+                  Repository: '${{ github.repository }}'\n
+                  PR Title: '${{ github.event.pull_request.title }}'\n
+                  PR Link: '${{ github.event.pull_request.html_url }}'\n
+                  Author: '${{ github.event.pull_request.user.login }}'"
                 }' \
-            "$DISCORD_WEBHOOK_URL"
+            "$DISCORD_WEBHOOK"
+
