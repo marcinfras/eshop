@@ -5,6 +5,8 @@ on:
 
 env:
   WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+  DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+  DISCORD_USER_ID: ${{ secrets.DISCORD_USER_ID }}
 
 jobs:
   build:
@@ -22,3 +24,24 @@ jobs:
             "content": "Nowy pull request został otwarty!\nTytuł: ${{ github.event.pull_request.title }}\nAutor: ${{ github.actor }}\nLink: ${{ github.event.pull_request.html_url }}"
           }
           EOF
+
+      - name: Send DM to user on new PR
+        run: |
+          # Step 1: Create DM channel with user
+          CHANNEL_ID=$(curl -s -X POST \
+            -H "Authorization: Bot $DISCORD_BOT_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{\"recipient_id\": \"$DISCORD_USER_ID\"}" \
+            https://discord.com/api/v9/users/@me/channels | jq -r '.id')
+
+          # Step 2: Send message to the DM channel
+          curl -X POST \
+            -H "Authorization: Bot $DISCORD_BOT_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d "{
+                  \"content\": \"🔔 **Nowy pull request został otwarty!** 🔔\n
+                  Tytuł: ${{ github.event.pull_request.title }}\n
+                  Autor: ${{ github.actor }}\n
+                  Link: ${{ github.event.pull_request.html_url }}\"
+                }" \
+            https://discord.com/api/v9/channels/$CHANNEL_ID/messages
