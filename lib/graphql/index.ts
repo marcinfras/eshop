@@ -82,15 +82,35 @@ export async function fetcher<Result, Variables>({
   return body.data;
 }
 
-export const getProducts = async () => {
+export const getProducts = async ({
+  first,
+  skip,
+}: {
+  first: number;
+  skip: number;
+}) => {
+  if (first == null || skip == null) throw Error("Failed to get products");
+
   const data = await fetcher({
     query: GetProductsDocument,
     cache: "no-store",
+    variables: {
+      first,
+      skip,
+    },
   });
 
-  if (!data.products) throw Error("Failed to get products");
+  if (
+    !data.products ||
+    !data.productsConnection.aggregate.count ||
+    data.products.length === 0
+  )
+    throw Error("Failed to get products");
 
-  return data.products;
+  return {
+    products: data.products,
+    allProducts: data.productsConnection.aggregate.count,
+  };
 };
 
 export const getRecentlyViewedProducts = async () => {
