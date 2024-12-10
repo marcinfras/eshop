@@ -1,0 +1,44 @@
+name: Discord notify DM
+
+on:
+  pull_request:
+    types: [opened]
+
+env:
+  WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+  DISCORD_BOT_TOKEN: ${{ secrets.DISCORD_BOT_TOKEN }}
+  DISCORD_USER_ID: ${{ secrets.DISCORD_USER_ID }}
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [22.x]
+    steps:
+      - uses: actions/checkout@v4
+
+      - run: |
+          curl -X POST -H "Content-Type: application/json" \
+          -d @- $WEBHOOK_URL <<EOF
+          {
+            "content": "Nowy pull request został otwarty!\nTytuł: ${{ github.event.pull_request.title }}\nAutor: ${{ github.actor }}\nLink: ${{ github.event.pull_request.html_url }}"
+          }
+          EOF
+
+      - name: Send DM to user on new PR
+        run: |
+
+          CHANNEL_ID=$(curl -s -X POST \
+            -H "Authorization: Bot $DISCORD_BOT_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{"recipient_id": "'$DISCORD_USER_ID'"}' \
+            https://discord.com/api/v9/users/@me/channels | jq -r '.id')
+
+
+          curl -X POST -H "Authorization: Bot $DISCORD_BOT_TOKEN" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "content": "🔔 **Nowy pull request został otwarty!** 🔔\nTytuł: '${{ github.event.pull_request.title }}'\nAutor: '${{ github.actor }}'\nLink: '${{ github.event.pull_request.html_url }}'"
+            }' \
+            https://discord.com/api/v9/channels/$CHANNEL_ID/messages

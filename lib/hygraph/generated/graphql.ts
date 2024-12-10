@@ -12950,10 +12950,13 @@ export type GetProductBySlugQueryVariables = Exact<{
 
 export type GetProductBySlugQuery = { product?: { name: string, price: number, id: string, description: string, images: Array<{ url: string }>, variants: Array<{ size: ProductSize, id: string } | {}> } | null };
 
-export type GetProductsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetProductsQueryVariables = Exact<{
+  first: Scalars['Int']['input'];
+  skip: Scalars['Int']['input'];
+}>;
 
 
-export type GetProductsQuery = { products: Array<{ name: string, price: number, id: string, slug: string, images: Array<{ url: string }> }> };
+export type GetProductsQuery = { products: Array<{ name: string, price: number, id: string, slug: string, images: Array<{ url: string }> }>, productsConnection: { aggregate: { count: number } } };
 
 export type GetProductsBySlugsQueryVariables = Exact<{
   slug: Array<Scalars['String']['input']> | Scalars['String']['input'];
@@ -13195,8 +13198,8 @@ export const GetProductBySlugDocument = new TypedDocumentString(`
 }
     `) as unknown as TypedDocumentString<GetProductBySlugQuery, GetProductBySlugQueryVariables>;
 export const GetProductsDocument = new TypedDocumentString(`
-    query GetProducts {
-  products {
+    query GetProducts($first: Int!, $skip: Int!) {
+  products(first: $first, skip: $skip) {
     images {
       url
     }
@@ -13204,6 +13207,11 @@ export const GetProductsDocument = new TypedDocumentString(`
     price
     id
     slug
+  }
+  productsConnection {
+    aggregate {
+      count
+    }
   }
 }
     `) as unknown as TypedDocumentString<GetProductsQuery, GetProductsQueryVariables>;

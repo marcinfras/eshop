@@ -1,6 +1,8 @@
+import { productsPerPage } from "@/helpers/helpers";
 import { getCartByIdHygraph, getProducts } from "../../../lib/graphql";
 
 import { ProductItem } from "../_components/ProductItem";
+import { ProductsPagination } from "./_components/ProductsPagination";
 
 export const metadata = {
   title: "Products",
@@ -9,8 +11,22 @@ export const metadata = {
   },
 };
 
-export default async function Products() {
-  const products = await getProducts();
+export default async function Products({
+  searchParams,
+}: {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
+  const pageParams = (await searchParams).page || null;
+
+  if (Number.isNaN(Number(pageParams))) throw Error("Invalid page param");
+
+  const { products, allProducts } = await getProducts({
+    first: productsPerPage,
+    skip:
+      pageParams === null || pageParams === "1"
+        ? 0
+        : (Number(pageParams) - 1) * productsPerPage,
+  });
   const cart = await getCartByIdHygraph();
 
   if (cart && "error" in cart) throw new Error(cart.error);
@@ -37,6 +53,7 @@ export default async function Products() {
           );
         })}
       </div>
+      <ProductsPagination allProducts={allProducts} />
     </main>
   );
 }

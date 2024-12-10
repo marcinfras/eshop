@@ -1,5 +1,7 @@
 import { OrderOrderByInput } from "../../lib/hygraph/generated/graphql";
 
+export const productsPerPage = 8;
+
 export const formatCurrency = (value: number) => {
   return new Intl.NumberFormat("en", {
     style: "currency",
