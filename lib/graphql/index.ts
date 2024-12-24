@@ -22,6 +22,8 @@ import {
   GetProductsByCollectionDocument,
   GetProductsBySlugsDocument,
   GetProductsDocument,
+  GetRatingBySlugDocument,
+  GetReviewsBySlugDocument,
   IsProductInCartDocument,
   RemoveFromCartDocument,
   UpdateCartDocument,
@@ -131,7 +133,7 @@ export const getRecentlyViewedProducts = async () => {
   });
 
   if (data.products.length === 0) {
-    return;
+    return null;
   }
 
   return data.products;
@@ -159,6 +161,9 @@ export const getProductBySlug = async (slug: string) => {
   const data = await fetcher({
     query: GetProductBySlugDocument,
     cache: "no-store",
+    headers: {
+      Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+    },
     variables: {
       slug,
     },
@@ -169,6 +174,48 @@ export const getProductBySlug = async (slug: string) => {
   }
 
   return mapperProduct(data.product);
+};
+
+export const getReviewsBySlug = async (slug: string) => {
+  if (!slug) return;
+
+  const data = await fetcher({
+    query: GetReviewsBySlugDocument,
+    cache: "no-store",
+    variables: {
+      slug,
+    },
+  });
+
+  if (!data.reviews || data.reviews.length === 0) {
+    return [];
+  }
+
+  return data.reviews;
+};
+
+export const getAverageRatingBySlug = async (slug: string) => {
+  if (!slug) return;
+
+  const data = await fetcher({
+    query: GetRatingBySlugDocument,
+    cache: "no-store",
+    variables: {
+      slug,
+    },
+  });
+
+  if (!data.reviews || data.reviews.length === 0) {
+    return 0;
+  }
+
+  const totalRatings = data.reviews.reduce(
+    (sum, review) => sum + review.rating,
+    0
+  );
+  const averageRating = totalRatings / data.reviews.length;
+
+  return averageRating;
 };
 
 export const createAccount = async ({

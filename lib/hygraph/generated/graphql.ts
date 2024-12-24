@@ -10697,7 +10697,7 @@ export type Review = Entity & Node & {
   publishedAt?: Maybe<Scalars['DateTime']['output']>;
   /** User that last published this document */
   publishedBy?: Maybe<User>;
-  rating?: Maybe<Scalars['Int']['output']>;
+  rating: Scalars['Int']['output'];
   scheduledIn: Array<ScheduledOperation>;
   /** System stage field */
   stage: Stage;
@@ -10780,7 +10780,7 @@ export type ReviewCreateInput = {
   headline: Scalars['String']['input'];
   name: Scalars['String']['input'];
   product?: InputMaybe<ProductCreateOneInlineInput>;
-  rating?: InputMaybe<Scalars['Int']['input']>;
+  rating: Scalars['Int']['input'];
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
@@ -12972,6 +12972,20 @@ export type GetProductsByCollectionQueryVariables = Exact<{
 
 export type GetProductsByCollectionQuery = { products: Array<{ name: string, price: number, id: string, slug: string, images: Array<{ url: string }> }> };
 
+export type GetReviewsBySlugQueryVariables = Exact<{
+  slug: Scalars['String']['input'];
+}>;
+
+
+export type GetReviewsBySlugQuery = { reviews: Array<{ content: string, name: string, rating: number, headline: string, createdAt: string, id: string }> };
+
+export type GetRatingBySlugQueryVariables = Exact<{
+  slug: Scalars['String']['input'];
+}>;
+
+
+export type GetRatingBySlugQuery = { reviews: Array<{ rating: number }> };
+
 export class TypedDocumentString<TResult, TVariables>
   extends String
   implements DocumentTypeDecoration<TResult, TVariables>
@@ -13241,3 +13255,22 @@ export const GetProductsByCollectionDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<GetProductsByCollectionQuery, GetProductsByCollectionQueryVariables>;
+export const GetReviewsBySlugDocument = new TypedDocumentString(`
+    query GetReviewsBySlug($slug: String!) {
+  reviews(where: {product: {slug: $slug}}, orderBy: createdAt_DESC) {
+    content
+    name
+    rating
+    headline
+    createdAt
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<GetReviewsBySlugQuery, GetReviewsBySlugQueryVariables>;
+export const GetRatingBySlugDocument = new TypedDocumentString(`
+    query GetRatingBySlug($slug: String!) {
+  reviews(where: {product: {slug: $slug}}) {
+    rating
+  }
+}
+    `) as unknown as TypedDocumentString<GetRatingBySlugQuery, GetRatingBySlugQueryVariables>;
