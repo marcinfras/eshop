@@ -1,5 +1,5 @@
-query GetProducts {
-  products {
+query GetProducts($first: Int!, $skip: Int!) {
+  products(first: $first, skip: $skip) {
     images {
       url
     }
@@ -7,6 +7,11 @@ query GetProducts {
     price
     id
     slug
+  }
+  productsConnection {
+    aggregate {
+      count
+    }
   }
 }
 

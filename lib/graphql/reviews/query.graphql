@@ -1,0 +1,16 @@
+query GetReviewsBySlug($slug: String!) {
+  reviews(where: { product: { slug: $slug } }, orderBy: createdAt_DESC) {
+    content
+    name
+    rating
+    headline
+    createdAt
+    id
+  }
+}
+
+query GetRatingBySlug($slug: String!) {
+  reviews(where: { product: { slug: $slug } }) {
+    rating
+  }
+}
