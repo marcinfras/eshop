@@ -16,9 +16,9 @@ import type { Metadata } from "next";
 
 import { ProductDetails } from "./_components/ProductDetails";
 import { Reviews } from "./_components/Reviews";
-import { StarIcon } from "../../_components/StarIcon";
+
 import { ProductsSwiper } from "@/app/_components/ProductsSwiper";
-import StarRating from "./_components/StarRating";
+import { StarRating } from "./_components/StarRating";
 
 export async function generateMetadata({
   params,

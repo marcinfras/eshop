@@ -12972,6 +12972,18 @@ export type GetProductsByCollectionQueryVariables = Exact<{
 
 export type GetProductsByCollectionQuery = { products: Array<{ name: string, price: number, id: string, slug: string, images: Array<{ url: string }> }> };
 
+export type CreateReviewMutationVariables = Exact<{
+  headline: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  email: Scalars['String']['input'];
+  content: Scalars['String']['input'];
+  rating: Scalars['Int']['input'];
+  slug: Scalars['String']['input'];
+}>;
+
+
+export type CreateReviewMutation = { createReview?: { id: string } | null };
+
 export type GetReviewsBySlugQueryVariables = Exact<{
   slug: Scalars['String']['input'];
 }>;
@@ -13255,9 +13267,18 @@ export const GetProductsByCollectionDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<GetProductsByCollectionQuery, GetProductsByCollectionQueryVariables>;
+export const CreateReviewDocument = new TypedDocumentString(`
+    mutation CreateReview($headline: String!, $name: String!, $email: String!, $content: String!, $rating: Int!, $slug: String!) {
+  createReview(
+    data: {headline: $headline, name: $name, email: $email, content: $content, product: {connect: {slug: $slug}}, rating: $rating}
+  ) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<CreateReviewMutation, CreateReviewMutationVariables>;
 export const GetReviewsBySlugDocument = new TypedDocumentString(`
     query GetReviewsBySlug($slug: String!) {
-  reviews(where: {product: {slug: $slug}}, orderBy: createdAt_DESC) {
+  reviews(where: {product: {slug: $slug}}, stage: DRAFT, orderBy: createdAt_DESC) {
     content
     name
     rating
@@ -13269,7 +13290,7 @@ export const GetReviewsBySlugDocument = new TypedDocumentString(`
     `) as unknown as TypedDocumentString<GetReviewsBySlugQuery, GetReviewsBySlugQueryVariables>;
 export const GetRatingBySlugDocument = new TypedDocumentString(`
     query GetRatingBySlug($slug: String!) {
-  reviews(where: {product: {slug: $slug}}) {
+  reviews(where: {product: {slug: $slug}}, stage: DRAFT) {
     rating
   }
 }

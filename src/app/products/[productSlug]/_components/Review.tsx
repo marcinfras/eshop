@@ -1,7 +1,6 @@
-import { StarIcon } from "@/app/_components/StarIcon";
 import { Separator } from "@/app/_components/ui/separator";
 import { formatDate } from "@/helpers/helpers";
-import StarRating from "./StarRating";
+import { StarRating } from "./StarRating";
 
 export const Review = ({
   review,

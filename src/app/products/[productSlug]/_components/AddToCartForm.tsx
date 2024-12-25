@@ -8,7 +8,7 @@ import {
   FormItem,
   FormLabel,
 } from "@/app/_components/ui/form";
-import { Label } from "@/app/_components/ui/label";
+
 import {
   Select,
   SelectContent,
@@ -18,7 +18,7 @@ import {
 } from "@/app/_components/ui/select";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useForm } from "react-hook-form";
-import { addToCartSchema } from "../addToCartSchema";
+import { addToCartSchema } from "../schemas";
 import { createCart } from "../../../../../lib/actions/createCart";
 import { toast } from "@/app/_components/ui/use-toast";
 import { useRouter } from "next/navigation";
@@ -90,48 +90,7 @@ export const AddToCartForm = ({
             </FormItem>
           )}
         />
-        {/* {variants && (
-            <div className="grid gap-2">
-            <Label htmlFor="size" className="text-base">
-            Size
-            </Label>
-            
-            <RadioGroup
-            id="size"
-            // defaultValue="m"
-            className="flex items-center gap-2"
-            >
-            {variants.map((variant) => (
-                <Label
-                key={variant.size}
-                defaultValue={variant.size}
-                htmlFor={variant.size}
-                className="border cursor-pointer rounded-md p-2 flex items-center gap-2 [&:has(:checked)]:bg-muted"
-                  >
-                  <RadioGroupItem id={variant.size} value={variant.size} />
-                  {variant.size}
-                  </Label>
-                  ))}
-                  </RadioGroup>
-                  </div>
-                  )} */}
-        {/* <div className="grid gap-2">
-          <Label htmlFor="quantity" className="text-base">
-            Quantity
-          </Label>
-          <Select defaultValue="1">
-            <SelectTrigger className="w-24">
-              <SelectValue placeholder="Select" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="1">1</SelectItem>
-              <SelectItem value="2">2</SelectItem>
-              <SelectItem value="3">3</SelectItem>
-              <SelectItem value="4">4</SelectItem>
-              <SelectItem value="5">5</SelectItem>
-            </SelectContent>
-          </Select>
-        </div> */}
+
         <Button size="lg">Add to cart</Button>
       </form>
     </Form>

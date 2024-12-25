@@ -11,6 +11,7 @@ import {
   CreateAccountDocument,
   CreateCartDocument,
   CreateOrderDocument,
+  CreateReviewDocument,
   DeleteCartDocument,
   GetAccountByEmailDocument,
   GetCartByEmailDocument,
@@ -182,6 +183,9 @@ export const getReviewsBySlug = async (slug: string) => {
   const data = await fetcher({
     query: GetReviewsBySlugDocument,
     cache: "no-store",
+    headers: {
+      Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+    },
     variables: {
       slug,
     },
@@ -200,6 +204,9 @@ export const getAverageRatingBySlug = async (slug: string) => {
   const data = await fetcher({
     query: GetRatingBySlugDocument,
     cache: "no-store",
+    headers: {
+      Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+    },
     variables: {
       slug,
     },
@@ -216,6 +223,36 @@ export const getAverageRatingBySlug = async (slug: string) => {
   const averageRating = totalRatings / data.reviews.length;
 
   return averageRating;
+};
+
+export const createReview = async (review: {
+  headline: string;
+  name: string;
+  email: string;
+  content: string;
+  rating: number;
+  slug: string;
+}) => {
+  if (!review) return;
+
+  console.log(review);
+
+  const data = await fetcher({
+    query: CreateReviewDocument,
+    cache: "no-store",
+    headers: {
+      Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+    },
+    variables: {
+      ...review,
+    },
+  });
+
+  if (!data.createReview?.id) {
+    return null;
+  }
+
+  return data.createReview;
 };
 
 export const createAccount = async ({
