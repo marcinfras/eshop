@@ -234,25 +234,26 @@ export const createReview = async (review: {
   slug: string;
 }) => {
   if (!review) return;
+  try {
+    const data = await fetcher({
+      query: CreateReviewDocument,
+      cache: "no-store",
+      headers: {
+        Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+      },
+      variables: {
+        ...review,
+      },
+    });
 
-  console.log(review);
+    if (!data.createReview?.id) {
+      return null;
+    }
 
-  const data = await fetcher({
-    query: CreateReviewDocument,
-    cache: "no-store",
-    headers: {
-      Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
-    },
-    variables: {
-      ...review,
-    },
-  });
-
-  if (!data.createReview?.id) {
+    return data.createReview;
+  } catch (error) {
     return null;
   }
-
-  return data.createReview;
 };
 
 export const createAccount = async ({
