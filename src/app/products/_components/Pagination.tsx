@@ -1,17 +1,20 @@
 "use client";
 
 import { useLoader } from "@/app/_components/contexts/LoaderContext.tsx/LoaderContext";
-import { productsPerPage } from "@/helpers/helpers";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useQueryState } from "nuqs";
 
-export const ProductsPagination = ({
-  allProducts,
+export const Pagination = ({
+  allItems,
+  itemsPerPage,
+  queryParam,
 }: {
-  allProducts: number;
+  allItems: number;
+  itemsPerPage: number;
+  queryParam: string;
 }) => {
-  const [page, setPage] = useQueryState("page");
+  const [page, setPage] = useQueryState(queryParam);
 
   const { startTransition } = useLoader();
   const router = useRouter();
@@ -35,7 +38,11 @@ export const ProductsPagination = ({
         className="p-2 border rounded-full disabled:opacity-50 disabled:cursor-not-allowed"
         aria-label="Next page"
         disabled={
-          page && Number(page) * productsPerPage > allProducts ? true : false
+          page && Number(page) * itemsPerPage >= allItems
+            ? true
+            : itemsPerPage >= allItems
+            ? true
+            : false
         }
         onClick={() => {
           startTransition(async () => {

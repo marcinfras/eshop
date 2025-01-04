@@ -2,7 +2,7 @@ import { productsPerPage } from "@/helpers/helpers";
 import { getCartByIdHygraph, getProducts } from "../../../lib/graphql";
 
 import { ProductItem } from "../_components/ProductItem";
-import { ProductsPagination } from "./_components/ProductsPagination";
+import { Pagination } from "./_components/Pagination";
 
 export const metadata = {
   title: "Products",
@@ -53,7 +53,11 @@ export default async function Products({
           );
         })}
       </div>
-      <ProductsPagination allProducts={allProducts} />
+      <Pagination
+        allItems={allProducts}
+        itemsPerPage={productsPerPage}
+        queryParam="page"
+      />
     </main>
   );
 }

@@ -1,8 +1,10 @@
-query GetReviewsBySlug($slug: String!) {
+query GetReviewsBySlug($slug: String!, $first: Int!, $skip: Int!) {
   reviews(
     where: { product: { slug: $slug } }
     stage: DRAFT
     orderBy: createdAt_DESC
+    first: $first
+    skip: $skip
   ) {
     content
     name
@@ -10,6 +12,12 @@ query GetReviewsBySlug($slug: String!) {
     headline
     createdAt
     id
+    email
+  }
+  reviewsConnection(where: { product: { slug: $slug } }, stage: DRAFT) {
+    aggregate {
+      count
+    }
   }
 }
 

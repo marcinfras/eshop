@@ -12986,10 +12986,12 @@ export type CreateReviewMutation = { createReview?: { id: string } | null };
 
 export type GetReviewsBySlugQueryVariables = Exact<{
   slug: Scalars['String']['input'];
+  first: Scalars['Int']['input'];
+  skip: Scalars['Int']['input'];
 }>;
 
 
-export type GetReviewsBySlugQuery = { reviews: Array<{ content: string, name: string, rating: number, headline: string, createdAt: string, id: string }> };
+export type GetReviewsBySlugQuery = { reviews: Array<{ content: string, name: string, rating: number, headline: string, createdAt: string, id: string, email: string }>, reviewsConnection: { aggregate: { count: number } } };
 
 export type GetRatingBySlugQueryVariables = Exact<{
   slug: Scalars['String']['input'];
@@ -13285,14 +13287,26 @@ export const CreateReviewDocument = new TypedDocumentString(`
 }
     `) as unknown as TypedDocumentString<CreateReviewMutation, CreateReviewMutationVariables>;
 export const GetReviewsBySlugDocument = new TypedDocumentString(`
-    query GetReviewsBySlug($slug: String!) {
-  reviews(where: {product: {slug: $slug}}, stage: DRAFT, orderBy: createdAt_DESC) {
+    query GetReviewsBySlug($slug: String!, $first: Int!, $skip: Int!) {
+  reviews(
+    where: {product: {slug: $slug}}
+    stage: DRAFT
+    orderBy: createdAt_DESC
+    first: $first
+    skip: $skip
+  ) {
     content
     name
     rating
     headline
     createdAt
     id
+    email
+  }
+  reviewsConnection(where: {product: {slug: $slug}}, stage: DRAFT) {
+    aggregate {
+      count
+    }
   }
 }
     `) as unknown as TypedDocumentString<GetReviewsBySlugQuery, GetReviewsBySlugQueryVariables>;

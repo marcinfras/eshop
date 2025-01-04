@@ -1,8 +1,9 @@
 import { Separator } from "@/app/_components/ui/separator";
 import { formatDate } from "@/helpers/helpers";
 import { StarRating } from "./StarRating";
+import { getServerSession } from "next-auth";
 
-export const Review = ({
+export const Review = async ({
   review,
 }: {
   review: {
@@ -12,16 +13,21 @@ export const Review = ({
     headline: string;
     createdAt: string;
     id: string;
+    email: string;
   };
 }) => {
-  const { name, content, rating, headline, createdAt } = review;
+  const session = await getServerSession();
+  const { name, content, rating, headline, createdAt, email } = review;
   return (
     <>
       <div className="flex gap-4">
         <div className="grid gap-4">
           <div className="flex gap-4 items-start">
             <div className="grid gap-0.5 text-sm">
-              <h3 className="font-semibold">{name}</h3>
+              <h3 className="font-semibold">
+                {session?.user?.email === email && "⭐"}
+                {name}
+              </h3>
               <time className="text-sm text-muted-foreground">
                 {formatDate(createdAt)}
               </time>

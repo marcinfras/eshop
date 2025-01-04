@@ -178,8 +178,16 @@ export const getProductBySlug = async (slug: string) => {
   return mapperProduct(data.product);
 };
 
-export const getReviewsBySlug = async (slug: string) => {
-  if (!slug) return;
+export const getReviewsBySlug = async ({
+  slug,
+  first,
+  skip,
+}: {
+  slug: string;
+  first: number;
+  skip: number;
+}) => {
+  if (!slug || first == null || skip == null) return;
 
   const data = await fetcher({
     query: GetReviewsBySlugDocument,
@@ -189,14 +197,22 @@ export const getReviewsBySlug = async (slug: string) => {
     },
     variables: {
       slug,
+      first,
+      skip,
     },
   });
 
   if (!data.reviews || data.reviews.length === 0) {
-    return [];
+    return {
+      reviews: [],
+      allReviews: data.reviewsConnection.aggregate.count,
+    };
   }
 
-  return data.reviews;
+  return {
+    reviews: data.reviews,
+    allReviews: data.reviewsConnection.aggregate.count,
+  };
 };
 
 export const getAverageRatingBySlug = async (slug: string) => {

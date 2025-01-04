@@ -38,7 +38,18 @@ export async function generateMetadata({
   } satisfies Metadata;
 }
 
-const Page = async ({ params }: { params: { productSlug: string } }) => {
+const Page = async ({
+  params,
+  searchParams,
+}: {
+  params: { productSlug: string };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) => {
+  const reviewsParams = (await searchParams).reviewsPage || null;
+
+  if (Number.isNaN(Number(reviewsParams)))
+    throw Error("Invalid reviewsPage param");
+
   const { name, price, description, images } = await getProductBySlug(
     params.productSlug
   );
@@ -108,7 +119,7 @@ const Page = async ({ params }: { params: { productSlug: string } }) => {
           <ProductDetails description={description} />
 
           <Separator />
-          <Reviews slug={params.productSlug} />
+          <Reviews slug={params.productSlug} reviewsParams={reviewsParams} />
         </div>
       </div>
       <ProductsSwiper
