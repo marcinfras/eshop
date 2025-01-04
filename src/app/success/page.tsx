@@ -8,9 +8,9 @@ import { getOrderByStripeCheckoutIdHygraph } from "../../../lib/graphql";
 const Page = async ({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 }) => {
-  const sessionId = searchParams["session_id"];
+  const sessionId = (await searchParams).session_id || null;
 
   if (!sessionId || Array.isArray(sessionId))
     throw new Error("Failed to get order");
