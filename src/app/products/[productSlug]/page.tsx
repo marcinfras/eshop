@@ -1,5 +1,6 @@
 import Image from "next/image";
 import {
+  getAverageRatingBySlug,
   getCartByIdHygraph,
   getProductBySlug,
   getRecentlyViewedProducts,
@@ -15,8 +16,9 @@ import type { Metadata } from "next";
 
 import { ProductDetails } from "./_components/ProductDetails";
 import { Reviews } from "./_components/Reviews";
-import { StarIcon } from "../../_components/StarIcon";
+
 import { ProductsSwiper } from "@/app/_components/ProductsSwiper";
+import { StarRating } from "./_components/StarRating";
 
 export async function generateMetadata({
   params,
@@ -36,10 +38,24 @@ export async function generateMetadata({
   } satisfies Metadata;
 }
 
-const Page = async ({ params }: { params: { productSlug: string } }) => {
+const Page = async ({
+  params,
+  searchParams,
+}: {
+  params: { productSlug: string };
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) => {
+  const reviewsParams = (await searchParams).reviewsPage || null;
+
+  if (Number.isNaN(Number(reviewsParams)))
+    throw Error("Invalid reviewsPage param");
+
   const { name, price, description, images } = await getProductBySlug(
     params.productSlug
   );
+
+  const averageRating = await getAverageRatingBySlug(params.productSlug);
+
   const session = await getServerSession();
 
   const cart = await getCartByIdHygraph();
@@ -77,17 +93,11 @@ const Page = async ({ params }: { params: { productSlug: string } }) => {
             <h1 className="font-bold text-3xl lg:text-4xl">{name}</h1>
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-0.5">
-                {[...Array(5)].map((_, i) => (
-                  <StarIcon
-                    key={i}
-                    className={`w-5 h-5  ${
-                      i > 2
-                        ? "fill-muted stroke-muted-foreground"
-                        : "fill-primary"
-                    }`}
-                  />
-                ))}
+                <StarRating rating={averageRating || 0} />
               </div>
+              {typeof averageRating === "number" && averageRating > 0 && (
+                <p>{averageRating.toFixed(1)}</p>
+              )}
             </div>
 
             <div className="text-4xl font-bold">{formatCurrency(price)}</div>
@@ -109,7 +119,7 @@ const Page = async ({ params }: { params: { productSlug: string } }) => {
           <ProductDetails description={description} />
 
           <Separator />
-          <Reviews />
+          <Reviews slug={params.productSlug} reviewsParams={reviewsParams} />
         </div>
       </div>
       <ProductsSwiper

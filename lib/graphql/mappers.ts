@@ -31,8 +31,6 @@ export type ProductCart = {
   };
 };
 export const mapperCart = (cart: MapperCart) => {
-  console.log(cart?.cartProduct);
-
   return cart?.cartProduct
     .map((v) => {
       if (!v.product) return;
@@ -47,8 +45,6 @@ export const mapperCart = (cart: MapperCart) => {
     })
     .filter((v): v is ProductCart => Boolean(v));
 };
-
-/////////////////////////////////////////////////////////
 
 type VariantType = {
   size: ProductSize;
@@ -89,16 +85,3 @@ export const mapperProduct = (product: MapperProduct) => {
     variants: filteredVariants.length > 0 ? filteredVariants : undefined,
   };
 };
-// type MapperProduct = (product: {
-//   name: string;
-//   price: number;
-//   id: string;
-//   description: string;
-//   images: {
-//       url: string;
-//   }[];
-//   variants: ({} | {
-//       size: ProductSize;
-//       id: string;
-//   })[];
-// })

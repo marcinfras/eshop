@@ -19,7 +19,6 @@ export const AccountPageHeader = () => {
       <div className="container mx-auto flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Avatar className="h-12 w-12">
-            {/* <AvatarImage src="/placeholder-user.jpg" /> */}
             <AvatarFallback>
               {data?.user?.name ? data.user.name[0].toUpperCase() : "U"}
             </AvatarFallback>

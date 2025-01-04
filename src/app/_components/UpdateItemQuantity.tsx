@@ -2,7 +2,6 @@
 
 import { MinusIcon, PlusIcon, XIcon } from "lucide-react";
 import { Button } from "./ui/button";
-// import { useCart } from "./contexts/CartContext/CartContext";
 import { removeFromCart } from "../../../lib/actions/removeFromCart";
 import { updateCart } from "../../../lib/actions/updateCart";
 import { useLoader } from "./contexts/LoaderContext.tsx/LoaderContext";
@@ -39,7 +38,6 @@ export const UpdateItemQuantity = ({
                 variant: "destructive",
                 title: res.error,
               });
-            // await queryClient.invalidateQueries({ queryKey: ["cart"] });
           });
         }}
         disabled={currentQuantity === 1}
@@ -63,8 +61,6 @@ export const UpdateItemQuantity = ({
                 variant: "destructive",
                 title: res.error,
               });
-
-            // await queryClient.invalidateQueries({ queryKey: ["cart"] });
           });
         }}
       >
@@ -84,8 +80,6 @@ export const UpdateItemQuantity = ({
                 title: res.error,
                 duration: 3000,
               });
-
-            // await queryClient.invalidateQueries({ queryKey: ["cart"] });
           });
         }}
       >

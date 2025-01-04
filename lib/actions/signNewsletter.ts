@@ -4,7 +4,6 @@ import { getEnv } from "@/app/utils/utils";
 import { cookies } from "next/headers";
 
 export const signNewsletter = async (email?: string) => {
-  //test
   try {
     const res = await fetch("https://connect.mailerlite.com/api/subscribers", {
       method: "POST",
@@ -23,7 +22,6 @@ export const signNewsletter = async (email?: string) => {
 
     return { id: data.id };
   } catch (error) {
-    console.error((error as Error).message);
     return { error: "Failed to Sign up for the newsletter" };
   }
 };

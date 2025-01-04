@@ -10697,7 +10697,7 @@ export type Review = Entity & Node & {
   publishedAt?: Maybe<Scalars['DateTime']['output']>;
   /** User that last published this document */
   publishedBy?: Maybe<User>;
-  rating?: Maybe<Scalars['Int']['output']>;
+  rating: Scalars['Int']['output'];
   scheduledIn: Array<ScheduledOperation>;
   /** System stage field */
   stage: Stage;
@@ -10780,7 +10780,7 @@ export type ReviewCreateInput = {
   headline: Scalars['String']['input'];
   name: Scalars['String']['input'];
   product?: InputMaybe<ProductCreateOneInlineInput>;
-  rating?: InputMaybe<Scalars['Int']['input']>;
+  rating: Scalars['Int']['input'];
   updatedAt?: InputMaybe<Scalars['DateTime']['input']>;
 };
 
@@ -12950,10 +12950,13 @@ export type GetProductBySlugQueryVariables = Exact<{
 
 export type GetProductBySlugQuery = { product?: { name: string, price: number, id: string, description: string, images: Array<{ url: string }>, variants: Array<{ size: ProductSize, id: string } | {}> } | null };
 
-export type GetProductsQueryVariables = Exact<{ [key: string]: never; }>;
+export type GetProductsQueryVariables = Exact<{
+  first: Scalars['Int']['input'];
+  skip: Scalars['Int']['input'];
+}>;
 
 
-export type GetProductsQuery = { products: Array<{ name: string, price: number, id: string, slug: string, images: Array<{ url: string }> }> };
+export type GetProductsQuery = { products: Array<{ name: string, price: number, id: string, slug: string, images: Array<{ url: string }> }>, productsConnection: { aggregate: { count: number } } };
 
 export type GetProductsBySlugsQueryVariables = Exact<{
   slug: Array<Scalars['String']['input']> | Scalars['String']['input'];
@@ -12968,6 +12971,42 @@ export type GetProductsByCollectionQueryVariables = Exact<{
 
 
 export type GetProductsByCollectionQuery = { products: Array<{ name: string, price: number, id: string, slug: string, images: Array<{ url: string }> }> };
+
+export type CreateReviewMutationVariables = Exact<{
+  headline: Scalars['String']['input'];
+  name: Scalars['String']['input'];
+  email: Scalars['String']['input'];
+  content: Scalars['String']['input'];
+  rating: Scalars['Int']['input'];
+  slug: Scalars['String']['input'];
+}>;
+
+
+export type CreateReviewMutation = { createReview?: { id: string } | null };
+
+export type GetReviewsBySlugQueryVariables = Exact<{
+  slug: Scalars['String']['input'];
+  first: Scalars['Int']['input'];
+  skip: Scalars['Int']['input'];
+}>;
+
+
+export type GetReviewsBySlugQuery = { reviews: Array<{ content: string, name: string, rating: number, headline: string, createdAt: string, id: string, email: string }>, reviewsConnection: { aggregate: { count: number } } };
+
+export type GetRatingBySlugQueryVariables = Exact<{
+  slug: Scalars['String']['input'];
+}>;
+
+
+export type GetRatingBySlugQuery = { reviews: Array<{ rating: number }> };
+
+export type CheckProductReviewByEmailQueryVariables = Exact<{
+  email: Scalars['String']['input'];
+  slug: Scalars['String']['input'];
+}>;
+
+
+export type CheckProductReviewByEmailQuery = { reviewsConnection: { aggregate: { count: number } } };
 
 export class TypedDocumentString<TResult, TVariables>
   extends String
@@ -13195,8 +13234,8 @@ export const GetProductBySlugDocument = new TypedDocumentString(`
 }
     `) as unknown as TypedDocumentString<GetProductBySlugQuery, GetProductBySlugQueryVariables>;
 export const GetProductsDocument = new TypedDocumentString(`
-    query GetProducts {
-  products {
+    query GetProducts($first: Int!, $skip: Int!) {
+  products(first: $first, skip: $skip) {
     images {
       url
     }
@@ -13204,6 +13243,11 @@ export const GetProductsDocument = new TypedDocumentString(`
     price
     id
     slug
+  }
+  productsConnection {
+    aggregate {
+      count
+    }
   }
 }
     `) as unknown as TypedDocumentString<GetProductsQuery, GetProductsQueryVariables>;
@@ -13233,3 +13277,52 @@ export const GetProductsByCollectionDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<GetProductsByCollectionQuery, GetProductsByCollectionQueryVariables>;
+export const CreateReviewDocument = new TypedDocumentString(`
+    mutation CreateReview($headline: String!, $name: String!, $email: String!, $content: String!, $rating: Int!, $slug: String!) {
+  createReview(
+    data: {headline: $headline, name: $name, email: $email, content: $content, product: {connect: {slug: $slug}}, rating: $rating}
+  ) {
+    id
+  }
+}
+    `) as unknown as TypedDocumentString<CreateReviewMutation, CreateReviewMutationVariables>;
+export const GetReviewsBySlugDocument = new TypedDocumentString(`
+    query GetReviewsBySlug($slug: String!, $first: Int!, $skip: Int!) {
+  reviews(
+    where: {product: {slug: $slug}}
+    stage: DRAFT
+    orderBy: createdAt_DESC
+    first: $first
+    skip: $skip
+  ) {
+    content
+    name
+    rating
+    headline
+    createdAt
+    id
+    email
+  }
+  reviewsConnection(where: {product: {slug: $slug}}, stage: DRAFT) {
+    aggregate {
+      count
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<GetReviewsBySlugQuery, GetReviewsBySlugQueryVariables>;
+export const GetRatingBySlugDocument = new TypedDocumentString(`
+    query GetRatingBySlug($slug: String!) {
+  reviews(where: {product: {slug: $slug}}, stage: DRAFT) {
+    rating
+  }
+}
+    `) as unknown as TypedDocumentString<GetRatingBySlugQuery, GetRatingBySlugQueryVariables>;
+export const CheckProductReviewByEmailDocument = new TypedDocumentString(`
+    query CheckProductReviewByEmail($email: String!, $slug: String!) {
+  reviewsConnection(where: {email: $email, product: {slug: $slug}}, stage: DRAFT) {
+    aggregate {
+      count
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<CheckProductReviewByEmailQuery, CheckProductReviewByEmailQueryVariables>;

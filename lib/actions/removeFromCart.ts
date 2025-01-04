@@ -21,7 +21,4 @@ export const removeFromCart = async (prodId: string) => {
   revalidateTag("cart");
 
   return res;
-
-  //   console.log(hygraphId.cartProduct[hygraphId.cartProduct.length - 1].id);
-  //   return hygraphId.cartProduct[hygraphId.cartProduct.length - 1].id;
 };

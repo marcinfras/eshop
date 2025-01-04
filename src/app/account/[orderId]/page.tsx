@@ -1,5 +1,4 @@
 import { getServerSession } from "next-auth";
-// import { OrderDetail } from "./_components/OrderDetail";
 
 import Link from "next/link";
 import { formatDate } from "@/helpers/helpers";
@@ -10,7 +9,6 @@ import { ArrowLeft } from "lucide-react";
 import { OrderSummary } from "./_components/OrderSummary";
 import { getOrderByIdHygraph } from "../../../../lib/graphql";
 import type { Metadata } from "next";
-import { title } from "process";
 
 export async function generateMetadata({
   params,
@@ -58,16 +56,12 @@ const Page = async ({ params }: { params: { orderId: string } }) => {
 
   return (
     <div className="container mx-auto px-3 md:px-6 py-8">
-      {/* {JSON.stringify(session, null, 2)} */}
-
-      {/* <OrderDetail orderId={params.orderId} /> */}
       <div className="flex items-center gap-4 mb-6">
         <Link
           href="/account/orders"
           className="inline-flex items-center text-sm sm:text-base gap-2 text-muted-foreground hover:text-foreground"
           prefetch={false}
         >
-          {/* <ArrowLeftIcon className="h-4 w-4" /> */}
           <ArrowLeft className="w-4" />
           Back to Orders
         </Link>

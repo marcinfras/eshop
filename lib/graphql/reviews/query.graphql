@@ -1,0 +1,39 @@
+query GetReviewsBySlug($slug: String!, $first: Int!, $skip: Int!) {
+  reviews(
+    where: { product: { slug: $slug } }
+    stage: DRAFT
+    orderBy: createdAt_DESC
+    first: $first
+    skip: $skip
+  ) {
+    content
+    name
+    rating
+    headline
+    createdAt
+    id
+    email
+  }
+  reviewsConnection(where: { product: { slug: $slug } }, stage: DRAFT) {
+    aggregate {
+      count
+    }
+  }
+}
+
+query GetRatingBySlug($slug: String!) {
+  reviews(where: { product: { slug: $slug } }, stage: DRAFT) {
+    rating
+  }
+}
+
+query CheckProductReviewByEmail($email: String!, $slug: String!) {
+  reviewsConnection(
+    where: { email: $email, product: { slug: $slug } }
+    stage: DRAFT
+  ) {
+    aggregate {
+      count
+    }
+  }
+}

@@ -4,35 +4,6 @@ mutation CreateCart($cart: CartCreateInput!) {
   }
 }
 
-# mutation CreateCart($quantity: Int!, $slug: String!, $email: String!) {
-#   createCart(
-#     data: {
-#       cartProduct: {
-#         create: {
-#           quantity: $quantity
-#           product: { connect: { slug: $slug } }
-#           account: { connect: { email: $email } }
-#         }
-#       }
-#     }
-#   ) {
-#     id
-#   }
-# }
-
-# mutation CreateCart($quantity: Int!, $slug: String!, $email: String) {
-#   createCart(
-#     data: {
-#       cartProduct: {
-#         create: { quantity: $quantity, product: { connect: { slug: $slug } } }
-#       }
-#       account: { connect: { email: $email } }
-#     }
-#   ) {
-#     id
-#   }
-# }
-
 mutation UpdateCart($cartId: ID!, $prodId: ID!, $quantity: Int!) {
   updateCart(
     where: { id: $cartId }

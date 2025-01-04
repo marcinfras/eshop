@@ -40,5 +40,3 @@ export const LoginRegisterFormTemplate = ({
     </div>
   );
 };
-
-//https://v0.dev/r/gl6VD99Wth9
