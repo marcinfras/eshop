@@ -1,7 +1,4 @@
-// https://v0.dev/r/1fLhZtmpPLK
-
 import { getServerSession } from "next-auth";
-// import { OrdersList } from "./_components/OrdersList";
 
 import { OrdersItem } from "./_components/OrdersItem";
 import { OrdersFilters } from "./_components/OrdersFilters";
@@ -43,17 +40,12 @@ const Page = async ({
 
   return (
     <div className="container mx-auto px-4 md:px-6 py-8 sm:px-2 max-w-[800px]">
-      {/* {JSON.stringify(session, null, 2)} */}
-      {JSON.stringify(searchParams, null, 2)}
-      {/* {JSON.stringify(orders)} */}
       <h1 className="text-2xl font-bold mb-6">Your Orders</h1>
 
-      {/* <OrdersList /> */}
       <div className="flex flex-col md:flex-row items-start md:items-center justify-between mb-4">
         <OrdersFilters />
       </div>
       <div className="overflow-x-auto">
-        {/* {JSON.stringify(session, null, 4)} */}
         <div>
           {orders && !("error" in orders) && orders.length === 0 ? (
             <p>You havent ordered anything yet</p>

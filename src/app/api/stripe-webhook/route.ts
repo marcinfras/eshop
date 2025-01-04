@@ -1,11 +1,10 @@
 import { Stripe } from "stripe";
 import { NextResponse } from "next/server";
-import type { NextRequest} from "next/server";
+import type { NextRequest } from "next/server";
 import { getEnv } from "@/app/utils/utils";
 
 import { createOrderHygraph } from "../../../../lib/graphql";
 import { OrderStatus } from "../../../../lib/hygraph/generated/graphql";
-
 
 const stripeKey = getEnv(process.env.STRIPE_KEY);
 
@@ -41,15 +40,8 @@ const eventStripeWebhook = async (event: Stripe.Event) => {
   const type = event.type;
 
   switch (type) {
-    // case "charge.succeeded":
     case "checkout.session.completed":
-      const { id, metadata, customer, customer_email } = event.data.object;
-      console.log({
-        id,
-        metadata,
-        customer,
-        customer_email,
-      });
+      const { id, metadata } = event.data.object;
 
       if (metadata) {
         const items = JSON.parse(metadata.items) as {
@@ -73,8 +65,6 @@ const eventStripeWebhook = async (event: Stripe.Event) => {
           stripeCheckoutId: id,
           currentStatus: OrderStatus.Paid,
         });
-
-        console.log("Orderiddddddddddddddd: " + orderId);
       }
 
       return;

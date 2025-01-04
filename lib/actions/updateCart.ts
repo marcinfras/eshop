@@ -11,8 +11,6 @@ export const updateCart = async ({
   prodId: string;
   quantity: number;
 }) => {
-  //test
-  //test
   const cartId = cookies().get("cart");
 
   if (!cartId?.value) return { error: "Failed to update cart" };

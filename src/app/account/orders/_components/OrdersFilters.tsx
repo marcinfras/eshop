@@ -76,8 +76,6 @@ export const OrdersFilters = () => {
 
   const { startTransition } = useLoader();
 
-  //   const searchParams = useSearchParams();
-
   const router = useRouter();
 
   return (

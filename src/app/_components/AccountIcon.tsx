@@ -1,5 +1,5 @@
 import { signOut, useSession } from "next-auth/react";
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
+import { Avatar, AvatarFallback } from "./ui/avatar";
 import { Button } from "./ui/button";
 import {
   DropdownMenu,
@@ -25,7 +25,6 @@ export const AccountNavIcon = () => {
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="icon" className="rounded-full">
           <Avatar>
-            {/* <AvatarImage src="/placeholder-user.jpg" /> */}
             <AvatarFallback>
               {data?.user?.name ? data.user.name[0].toUpperCase() : "U"}
             </AvatarFallback>

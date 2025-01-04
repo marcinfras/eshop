@@ -12,8 +12,6 @@ const Page = async ({
 }) => {
   const sessionId = searchParams["session_id"];
 
-  console.log("sessionIddddddd: " + sessionId);
-
   if (!sessionId || Array.isArray(sessionId))
     throw new Error("Failed to get order");
 
@@ -56,14 +54,6 @@ const Page = async ({
                 <div className="text-right">{formatCurrency(item.total)}</div>
               </div>
             ))}
-
-            {/* <div className="grid grid-cols-[1fr_auto] items-center gap-2">
-              <div>
-                <h3 className="text-sm font-medium">Aqua Filters</h3>
-                <p className="text-sm text-muted-foreground">Quantity: 3</p>
-              </div>
-              <div className="text-right">$49.00</div>
-            </div> */}
             <Separator className="my-4" />
             <div className="grid grid-cols-[1fr_auto] items-center gap-2 font-medium">
               <div>Total</div>

@@ -1,6 +1,5 @@
 import { getEnv } from "@/app/utils/utils";
 import type {
-  OrderOrderByInput,
   OrderStatus,
   TypedDocumentString,
 } from "../hygraph/generated/graphql";
@@ -8,7 +7,6 @@ import {
   AddToCartDocument,
   CheckProductReviewByEmailDocument,
   ConnectAccountWithCartDocument,
-  // ConnectAccountWithCartDocument,
   CreateAccountDocument,
   CreateCartDocument,
   CreateOrderDocument,
@@ -328,7 +326,6 @@ export const createAccount = async ({
 
     return data.createAccount;
   } catch (error) {
-    console.error((error as Error).message);
     return null;
   }
 };
@@ -364,10 +361,6 @@ export const getCartByEmail = async (email: string) => {
     },
   });
 
-  // if (!data.account?.cart) {
-  //   throw Error(`Failed to get cart`);
-  // }
-
   return data?.account?.cart;
 };
 
@@ -389,10 +382,6 @@ export const connectAccountWithCartHygraph = async ({
       cartId,
     },
   });
-
-  // if (!data.account?.cart) {
-  //   throw Error(`Failed to get cart`);
-  // }
 
   return data.updateAccount;
 };
@@ -419,8 +408,6 @@ export const getCartByIdHygraph = async () => {
   if (!data.cart) return { error: "Failed to get cart" };
 
   revalidateTag("cart");
-
-  // console.log(data.cart);
 
   return mapperCart(data.cart);
 };
@@ -455,13 +442,11 @@ export const createCartHygraph = async (
     });
 
     if (!data.createCart) {
-      console.error(`Failed to create cart`);
       return { error: "Failed to create cart" };
     }
 
     return data.createCart;
   } catch (error) {
-    console.error((error as Error).message);
     return { error: "Failed to create cart" };
   }
 };
@@ -490,13 +475,11 @@ export const updateCartHygraph = async ({
     });
 
     if (!data.updateCart?.updatedProduct[0].id) {
-      console.error(`Failed to update cart`);
       return { error: "Failed to update cart" };
     }
 
     return data.updateCart;
   } catch (error) {
-    console.error((error as Error).message);
     return { error: "Failed to update cart" };
   }
 };
@@ -525,13 +508,11 @@ export const addToCartHygraph = async ({
     });
 
     if (!data.updateCart) {
-      console.error(`Failed to add to cart`);
       return { error: "Failed to add to cart" };
     }
 
     return data.updateCart;
   } catch (error) {
-    console.error((error as Error).message);
     return { error: "Failed to add to cart" };
   }
 };
@@ -557,13 +538,11 @@ export const removeFromCartHygraph = async ({
     });
 
     if (!data.updateCart) {
-      console.error(`Failed to remove item from cart`);
       return { error: "Failed to remove item from cart" };
     }
 
     return data.updateCart;
   } catch (error) {
-    console.error((error as Error).message);
     return { error: "Failed to remove item from cart" };
   }
 };
@@ -582,13 +561,11 @@ export const deleteCartHygraph = async (cartId: string) => {
     });
 
     if (!data.deleteCart) {
-      console.error("Failed to delete cart");
       return { error: "Failed to delete cart" };
     }
 
     return { id: data.deleteCart.id };
   } catch (error) {
-    console.error((error as Error).message);
     return { error: "Failed to delete cart" };
   }
 };
@@ -621,7 +598,6 @@ export const isProductInCartHygraph = async ({
 
     return data.cart?.cartProduct[0];
   } catch (error) {
-    console.error((error as Error).message);
     return { error: (error as Error).message };
   }
 };
@@ -652,7 +628,6 @@ export const updateNameHygraph = async ({
 
     return data.updateAccount;
   } catch (error) {
-    console.error((error as Error).message);
     return { error: "Failed to update your name" };
   }
 };
@@ -683,7 +658,6 @@ export const updatePasswordHygraph = async ({
 
     return data.updateAccount;
   } catch (error) {
-    console.error((error as Error).message);
     return { error: "Failed to update your password" };
   }
 };
@@ -733,7 +707,6 @@ export const createOrderHygraph = async (orderData: {
 
     return data.createOrder.id;
   } catch (error) {
-    console.error((error as Error).message);
     return { error: "Failed to create order" };
   }
 };
@@ -753,15 +726,12 @@ export const getOrderByStripeCheckoutIdHygraph = async (
       },
     });
 
-    console.log(data);
-
     if (!data.order) {
       return { error: "Failed to get order" };
     }
 
     return data.order;
   } catch (error) {
-    console.error((error as Error).message);
     return { error: "Failed to get order" };
   }
 };
@@ -790,7 +760,6 @@ export const getOrderByIdHygraph = async ({
       },
     });
 
-    console.log(data);
     revalidateTag(orderId);
 
     if (!data.order || data.order.email !== email) {
@@ -799,22 +768,9 @@ export const getOrderByIdHygraph = async ({
 
     return data.order;
   } catch (error) {
-    console.error((error as Error).message);
     return { error: "Failed to get order" };
   }
 };
-
-// {
-//   where,
-//   orderBy,
-// }: {
-//   where:
-//     | {
-//         email: string;
-//       }
-//     | { email: string; currentStatus: OrderStatus };
-//   orderBy: OrderOrderByInput;
-// }
 
 export const getOrdersByEmailHygraph = async ({
   email,
@@ -857,8 +813,6 @@ export const getOrdersByEmailHygraph = async ({
       },
     });
 
-    console.log(data);
-
     if (!data.orders) {
       return [];
     }
@@ -867,7 +821,6 @@ export const getOrdersByEmailHygraph = async ({
 
     return data.orders;
   } catch (error) {
-    console.error((error as Error).message);
     return { error: "Failed to get orders" };
   }
 };

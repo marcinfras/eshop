@@ -8,7 +8,6 @@ import {
 } from "../graphql";
 
 import { revalidateTag } from "next/cache";
-// import { addToCartAction } from "./addToCart";
 
 export const createCart = async (
   product: {
