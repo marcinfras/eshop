@@ -56,7 +56,7 @@ export const AddReview = () => {
     },
   });
 
-  const { control, handleSubmit } = form;
+  const { control, handleSubmit, reset } = form;
 
   const onSubmit = handleSubmit(async (data) => {
     setIsSubmitting(true);
@@ -71,7 +71,16 @@ export const AddReview = () => {
     };
     const res = await createReviewAction(review);
 
-    if (res?.id) {
+    if ("error" in res) {
+      toast({
+        variant: "destructive",
+        title: "Something went wrong",
+        description: res.error,
+        duration: 5000,
+      });
+    }
+
+    if ("id" in res) {
       toast({
         title: "Review Submitted!",
         description:
@@ -80,17 +89,10 @@ export const AddReview = () => {
       });
       router.refresh();
     }
-    if (!res?.id) {
-      toast({
-        variant: "destructive",
-        title: "Something went wrong",
-        description: "We couldn't submit your review. Please try again later.",
-        duration: 5000,
-      });
-    }
 
     setIsSubmitting(false);
     setIsOpen(false);
+    reset();
   });
 
   return (

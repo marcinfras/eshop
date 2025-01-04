@@ -12998,6 +12998,14 @@ export type GetRatingBySlugQueryVariables = Exact<{
 
 export type GetRatingBySlugQuery = { reviews: Array<{ rating: number }> };
 
+export type CheckProductReviewByEmailQueryVariables = Exact<{
+  email: Scalars['String']['input'];
+  slug: Scalars['String']['input'];
+}>;
+
+
+export type CheckProductReviewByEmailQuery = { reviewsConnection: { aggregate: { count: number } } };
+
 export class TypedDocumentString<TResult, TVariables>
   extends String
   implements DocumentTypeDecoration<TResult, TVariables>
@@ -13295,3 +13303,12 @@ export const GetRatingBySlugDocument = new TypedDocumentString(`
   }
 }
     `) as unknown as TypedDocumentString<GetRatingBySlugQuery, GetRatingBySlugQueryVariables>;
+export const CheckProductReviewByEmailDocument = new TypedDocumentString(`
+    query CheckProductReviewByEmail($email: String!, $slug: String!) {
+  reviewsConnection(where: {email: $email, product: {slug: $slug}}, stage: DRAFT) {
+    aggregate {
+      count
+    }
+  }
+}
+    `) as unknown as TypedDocumentString<CheckProductReviewByEmailQuery, CheckProductReviewByEmailQueryVariables>;

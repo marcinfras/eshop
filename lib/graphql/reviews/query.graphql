@@ -18,3 +18,14 @@ query GetRatingBySlug($slug: String!) {
     rating
   }
 }
+
+query CheckProductReviewByEmail($email: String!, $slug: String!) {
+  reviewsConnection(
+    where: { email: $email, product: { slug: $slug } }
+    stage: DRAFT
+  ) {
+    aggregate {
+      count
+    }
+  }
+}

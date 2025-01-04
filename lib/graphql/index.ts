@@ -6,6 +6,7 @@ import type {
 } from "../hygraph/generated/graphql";
 import {
   AddToCartDocument,
+  CheckProductReviewByEmailDocument,
   ConnectAccountWithCartDocument,
   // ConnectAccountWithCartDocument,
   CreateAccountDocument,
@@ -225,6 +226,30 @@ export const getAverageRatingBySlug = async (slug: string) => {
   return averageRating;
 };
 
+export const checkProductReviewByEmail = async ({
+  email,
+  slug,
+}: {
+  email: string;
+  slug: string;
+}) => {
+  if (!email || !slug) return;
+
+  const data = await fetcher({
+    query: CheckProductReviewByEmailDocument,
+    cache: "no-store",
+    headers: {
+      Authorization: `Bearer ${getEnv(process.env.AUTH_TOKEN)}`,
+    },
+    variables: {
+      email,
+      slug,
+    },
+  });
+
+  return data.reviewsConnection.aggregate.count;
+};
+
 export const createReview = async (review: {
   headline: string;
   name: string;
@@ -247,12 +272,14 @@ export const createReview = async (review: {
     });
 
     if (!data.createReview?.id) {
-      return null;
+      return {
+        error: "We couldn't submit your review. Please try again later.",
+      };
     }
 
     return data.createReview;
   } catch (error) {
-    return null;
+    return { error: "We couldn't submit your review. Please try again later." };
   }
 };
 

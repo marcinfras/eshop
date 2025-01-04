@@ -1,6 +1,6 @@
 "use server";
 
-import { createReview } from "../graphql";
+import { checkProductReviewByEmail, createReview } from "../graphql";
 
 export const createReviewAction = async (review: {
   headline: string;
@@ -10,7 +10,18 @@ export const createReviewAction = async (review: {
   rating: number;
   slug: string;
 }) => {
+  const existingReviewCount = await checkProductReviewByEmail({
+    email: review.email,
+    slug: review.slug,
+  });
+
+  if (existingReviewCount && existingReviewCount > 0)
+    return { error: "You have already reviewed this product." };
+
   const res = await createReview(review);
+
+  if (!res)
+    return { error: "We couldn't submit your review. Please try again later." };
 
   return res;
 };
