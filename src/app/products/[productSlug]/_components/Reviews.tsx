@@ -1,7 +1,7 @@
 import { getReviewsBySlug } from "../../../../../lib/graphql";
 import { Review } from "./Review";
 import { AddReview } from "./AddReview";
-import { reviewsPerPage } from "@/helpers/helpers";
+import { REVIEWS_PER_PAGE } from "@/helpers/helpers";
 import { Pagination } from "../../_components/Pagination";
 
 export const Reviews = async ({
@@ -13,11 +13,11 @@ export const Reviews = async ({
 }) => {
   const res = await getReviewsBySlug({
     slug,
-    first: reviewsPerPage,
+    first: REVIEWS_PER_PAGE,
     skip:
       reviewsParams === null || reviewsParams === "1"
         ? 0
-        : (Number(reviewsParams) - 1) * reviewsPerPage,
+        : (Number(reviewsParams) - 1) * REVIEWS_PER_PAGE,
   });
 
   if (!res) return null;
@@ -36,10 +36,10 @@ export const Reviews = async ({
       ) : (
         reviews.map((review) => <Review key={review.id} review={review} />)
       )}
-      {allReviews > reviewsPerPage && (
+      {allReviews > REVIEWS_PER_PAGE && (
         <Pagination
           allItems={allReviews}
-          itemsPerPage={reviewsPerPage}
+          itemsPerPage={REVIEWS_PER_PAGE}
           queryParam="reviewsPage"
         />
       )}

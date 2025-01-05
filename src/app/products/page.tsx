@@ -1,4 +1,4 @@
-import { productsPerPage } from "@/helpers/helpers";
+import { PRODUCTS_PER_PAGE } from "@/helpers/helpers";
 import { getCartByIdHygraph, getProducts } from "../../../lib/graphql";
 
 import { ProductItem } from "../_components/ProductItem";
@@ -21,11 +21,11 @@ export default async function Products({
   if (Number.isNaN(Number(pageParams))) throw Error("Invalid page param");
 
   const { products, allProducts } = await getProducts({
-    first: productsPerPage,
+    first: PRODUCTS_PER_PAGE,
     skip:
       pageParams === null || pageParams === "1"
         ? 0
-        : (Number(pageParams) - 1) * productsPerPage,
+        : (Number(pageParams) - 1) * PRODUCTS_PER_PAGE,
   });
   const cart = await getCartByIdHygraph();
 
@@ -55,7 +55,7 @@ export default async function Products({
       </div>
       <Pagination
         allItems={allProducts}
-        itemsPerPage={productsPerPage}
+        itemsPerPage={PRODUCTS_PER_PAGE}
         queryParam="page"
       />
     </main>
