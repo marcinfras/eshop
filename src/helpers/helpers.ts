@@ -1,8 +1,8 @@
 import { OrderOrderByInput } from "../../lib/hygraph/generated/graphql";
 
-export const productsPerPage = 8;
+export const PRODUCTS_PER_PAGE = 8;
 
-export const reviewsPerPage = 3;
+export const REVIEWS_PER_PAGE = 3;
 
 export const formatCurrency = (value: number) => {
   return new Intl.NumberFormat("en", {

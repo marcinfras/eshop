@@ -40,7 +40,6 @@ type AddReviewInputs = {
 
 export const AddReview = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [isSubmitting, setIsSubmitting] = useState(false);
   const { data } = useSession();
   const router = useRouter();
   const param = useParams();
@@ -56,11 +55,14 @@ export const AddReview = () => {
     },
   });
 
-  const { control, handleSubmit, reset } = form;
+  const {
+    control,
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = form;
 
   const onSubmit = handleSubmit(async (data) => {
-    setIsSubmitting(true);
-
     const review = {
       headline: data.title,
       name: data.name,
@@ -90,7 +92,6 @@ export const AddReview = () => {
       router.refresh();
     }
 
-    setIsSubmitting(false);
     setIsOpen(false);
     reset();
   });
