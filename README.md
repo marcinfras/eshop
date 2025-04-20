@@ -42,3 +42,14 @@ npm run dev
 ```bash
 http://localhost:3000/
 ```  
+
+
+
+## Screenshots
+
+![Home page](https://i.imgur.com/f3lgsPY.png)
+![Products](https://i.imgur.com/vc6jq5n.png)
+![Product](https://i.imgur.com/rJ9E1dB.png)
+![Cart](https://i.imgur.com/lgYkcj4.png)
+![Success](https://i.imgur.com/221SO3C.png)
+![Orders](https://i.imgur.com/rqB3XXS.png)
