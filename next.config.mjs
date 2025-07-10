@@ -4,7 +4,7 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "media.graphassets.com",
+        hostname: "**.graphassets.com",
         port: "",
         pathname: "/**",
       },
